@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { db } from '../db.js';
-import { indicadoresDoDia, totalizar } from '../calculos.js';
-import { dataISO } from '../validacao.js';
+import { indicadoresDoDia, totalizar, fechamentoDoMes } from '../calculos.js';
+import { dataISO, erro } from '../validacao.js';
 import { buscarPerfil } from './perfil.js';
 
 export const resumoRouter = Router();
@@ -46,5 +46,35 @@ resumoRouter.get('/', (req, res) => {
     dias,
     totais: totalizar(dias),
     dias_meta_batida: meta > 0 ? dias.filter((d) => d.lancado && d.lucro >= meta).length : 0,
+  });
+});
+
+// GET /api/resumo/mes?mes=AAAA-MM&hoje=AAAA-MM-DD -> fechamento do mês (custos fixos previstos x cobertos)
+// "hoje" vem do front (data do aparelho): no mês atual, o fechamento considera só os dias até hoje.
+resumoRouter.get('/mes', (req, res) => {
+  const hoje = req.query.hoje ? dataISO(req.query.hoje) : new Date().toISOString().slice(0, 10);
+  const mes = req.query.mes || hoje.slice(0, 7);
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(mes)) throw erro('Mês inválido. Use o formato AAAA-MM.');
+  if (mes > hoje.slice(0, 7)) throw erro('Esse mês ainda não começou.');
+
+  const perfil = buscarPerfil();
+  if (!perfil) throw erro('Cadastre seu veículo antes de ver o fechamento.', 409);
+
+  const [ano, m] = mes.split('-').map(Number);
+  const diasNoMes = new Date(Date.UTC(ano, m, 0)).getUTCDate();
+  const mesAtual = mes === hoje.slice(0, 7);
+  // Os custos fixos só contam a partir do primeiro dia lançado no app: quem começou no dia 14
+  // não "deve" os custos dos dias 1 a 13, e meses anteriores ao primeiro uso ficam de fora.
+  const primeiro = db.prepare('SELECT MIN(data) AS data FROM lancamentos').get().data;
+  if (!primeiro || mes < primeiro.slice(0, 7)) return res.json({ mes, mes_atual: mesAtual, sem_uso: true, primeiro_mes: primeiro?.slice(0, 7) || null });
+
+  const inicio = primeiro.slice(0, 7) === mes ? Number(primeiro.slice(8, 10)) : 1;
+  const fim = mesAtual ? Number(hoje.slice(8, 10)) : diasNoMes;
+  const diasConsiderados = Math.max(fim - inicio + 1, 0);
+  const lancamentos = db.prepare('SELECT * FROM lancamentos WHERE data BETWEEN ? AND ? ORDER BY data').all(`${mes}-01`, `${mes}-31`);
+
+  res.json({
+    mes, mes_atual: mesAtual, primeiro_mes: primeiro.slice(0, 7), dia_inicio: inicio,
+    ...fechamentoDoMes(lancamentos, perfil, { diasNoMes, diasConsiderados }),
   });
 });

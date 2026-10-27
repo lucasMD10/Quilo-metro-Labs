@@ -5,6 +5,7 @@ import ValorAnimado from '../components/ValorAnimado.jsx';
 import FaixaMeta from '../components/FaixaMeta.jsx';
 import GraficoSemana from '../components/GraficoSemana.jsx';
 import KmIcon from '../components/KmIcon.jsx';
+import FechamentoMes from '../components/FechamentoMes.jsx';
 
 export default function Inicio({ perfil, onLancar, onPerfil }) {
   const [resumo, setResumo] = useState(null);
@@ -77,6 +78,8 @@ export default function Inicio({ perfil, onLancar, onPerfil }) {
           <div><dt><KmIcon name="meta" size={18} /> Dias com meta batida</dt><dd>{resumo.dias_meta_batida} de {totais.dias_trabalhados}</dd></div>
         </dl>
       </section>
+
+      <FechamentoMes />
     </div>
   );
 }

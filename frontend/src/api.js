@@ -19,6 +19,7 @@ export const api = {
   perfil: () => chamar('/perfil'),
   salvarPerfil: (dados) => chamar('/perfil', { method: 'PUT', body: dados }),
   resumo: (ate, dias = 7) => chamar(`/resumo?ate=${ate}&dias=${dias}`),
+  fechamento: (mes, hoje) => chamar(`/resumo/mes?mes=${mes}&hoje=${hoje}`),
   lancamentos: () => chamar('/lancamentos'),
   lancamento: (data) => chamar(`/lancamentos/${data}`),
   salvarLancamento: (data, dados) => chamar(`/lancamentos/${data}`, { method: 'PUT', body: dados }),

@@ -117,6 +117,15 @@ Depois, abra **http://localhost:5173** no navegador. A API fica em http://localh
 
 Sem o passo 3, o app abre na tela de cadastro inicial. Para recomeçar do zero, apague o arquivo `backend/data/km.db`.
 
+### Abrir no celular
+
+1. Ligue o computador e o celular **na mesma rede Wi-Fi**.
+2. Rode o sistema (`npm start` ou `npm run dev`). O terminal mostra uma linha como `No celular (mesmo Wi-Fi): http://192.168.0.10:3001`.
+3. Digite esse endereço no navegador do celular. Com `npm run dev`, use o endereço "Network" que o Vite mostra (porta 5173).
+4. Na primeira vez, o Windows pode perguntar se o Node.js pode usar a rede: escolha **Permitir** em redes privadas.
+
+Dica: no Chrome do celular, menu ⋮ → **Adicionar à tela inicial** cria um atalho com cara de app.
+
 ### Scripts disponíveis
 
 | Comando | O que faz |

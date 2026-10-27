@@ -1,0 +1,198 @@
+# KM Real
+
+**Quanto sobra de verdade a cada quilômetro que você roda.**
+
+Aplicativo de gestão financeira para motoristas de aplicativo (Uber e 99), desenvolvido pela **Quilômetro Labs** como Projeto Integrador da disciplina de Design Profissional (Universidade Positivo).
+
+---
+
+## O problema
+
+O motorista vê o valor bruto de cada corrida no app, mas esse número não desconta combustível, seguro, IPVA, parcela ou aluguel do carro, manutenção e gastos do dia. Muitos acham que estão lucrando bem e, na prática, rodam perto do prejuízo.
+
+O segmento "Gestão Financeira para Uber/99" apareceu com **92% de necessidade** na pesquisa de mercado do Prof. Sedenilso Machado (mais de 40 mil entrevistados), o maior índice entre os 15 segmentos estudados.
+
+## A solução
+
+O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a cada dia lançado, mostra o **lucro líquido**, o progresso da **meta diária** e a evolução da semana.
+
+## Funcionalidades do MVP
+
+- **Cadastro inicial** em duas etapas: dados do motorista (nome, apps, meta diária) e do veículo (consumo, combustível, custos fixos, km por mês).
+- **Custo real por km**, separado entre combustível e custos fixos.
+- **Lançamento do dia** com ganhos por app, km rodados, horas online e gastos extras, com prévia do lucro enquanto digita.
+- **Dashboard** com o lucro de hoje, a meta diária como faixa de estrada, indicadores rápidos e gráfico dos últimos 7 dias.
+- **Histórico** com edição e exclusão de dias lançados.
+- **Edição do perfil e do veículo**, com recálculo automático do custo por km.
+
+## Equipe
+
+| Integrante | Função | Responsabilidades |
+|---|---|---|
+| Lucas | Product Owner | Visão do produto, prioridades do backlog, pesquisa com motoristas, pitch |
+| _[nome]_ | Tech Lead / Dev Full-stack | Arquitetura, back-end, banco de dados, integração e repositório |
+| _[nome]_ | UX/UI Designer | Protótipos no Figma, identidade visual, telas e testes de usabilidade |
+
+---
+
+## Tecnologias
+
+| Camada | Tecnologia |
+|---|---|
+| Front-end | React 18 + Vite 6 (JavaScript), CSS puro |
+| Back-end | Node.js 22+ com Express 4 (API REST) |
+| Banco de dados | SQLite, via módulo nativo `node:sqlite` |
+| Orquestração | npm workspaces + concurrently |
+
+O banco usa o SQLite embutido no próprio Node, então **não é preciso instalar nem compilar nenhum driver**. Isso evita os erros de build comuns no Windows.
+
+## Arquitetura
+
+```mermaid
+flowchart LR
+  U[Motorista<br/>navegador] -->|HTTP| F[Front-end<br/>React + Vite<br/>porta 5173]
+  F -->|/api via proxy| B[Back-end<br/>Node + Express<br/>porta 3001]
+  B --> C[calculos.js<br/>regras de negócio]
+  B -->|SQL| D[(SQLite<br/>backend/data/km.db)]
+```
+
+O front-end nunca acessa o banco diretamente. Ele chama a API REST, que valida os dados, aplica as regras de cálculo e grava no SQLite. As regras ficam isoladas em `backend/src/calculos.js`, como funções puras.
+
+### Estrutura de pastas
+
+```
+.
+├── backend/
+│   ├── data/               # arquivo km.db (criado automaticamente)
+│   └── src/
+│       ├── server.js       # inicializa o Express e as rotas
+│       ├── db.js           # conexão e criação das tabelas
+│       ├── calculos.js     # custo por km, lucro do dia, totais
+│       ├── validacao.js    # validação dos dados recebidos
+│       ├── seed.js         # dados de exemplo para demonstração
+│       └── routes/         # perfil, lancamentos, resumo
+├── frontend/
+│   ├── index.html
+│   ├── vite.config.js      # proxy /api -> backend
+│   └── src/
+│       ├── App.jsx         # navegação entre as telas
+│       ├── api.js          # chamadas à API
+│       ├── util.js         # formatação e prévias de cálculo
+│       ├── styles.css      # identidade visual
+│       ├── components/     # Odometro, FaixaMeta, GraficoSemana, Campo, NavInferior
+│       └── pages/          # BoasVindas, Inicio, LancarDia, Historico, Veiculo
+├── docs/                   # materiais de apoio do projeto
+└── package.json            # scripts da raiz (workspaces)
+```
+
+---
+
+## Como rodar localmente
+
+### Pré-requisitos
+
+- **Node.js 22.13 ou mais novo** (recomendado: a versão LTS mais recente em [nodejs.org](https://nodejs.org)). Confira com `node -v`.
+- Git
+
+### Passo a passo
+
+```bash
+# 1. Clonar o repositório
+git clone https://github.com/lucasMD10/Quil-metro-Labs.git
+cd Quil-metro-Labs
+
+# 2. Instalar as dependências (front e back de uma vez)
+npm install
+
+# 3. (Opcional) Popular o banco com um motorista e 2 semanas de exemplo
+npm run seed
+
+# 4. Subir front-end e back-end juntos
+npm run dev
+```
+
+Depois, abra **http://localhost:5173** no navegador. A API fica em http://localhost:3001.
+
+Sem o passo 3, o app abre na tela de cadastro inicial. Para recomeçar do zero, apague o arquivo `backend/data/km.db`.
+
+### Scripts disponíveis
+
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Sobe API (3001) e front (5173) juntos |
+| `npm run seed` | Recria o banco com dados de exemplo |
+| `npm run build` | Gera a versão de produção do front em `frontend/dist` |
+
+---
+
+## Regras de cálculo
+
+```
+combustível por km = preço do litro ÷ consumo (km/l)
+fixo por km        = custos fixos do mês ÷ km rodados por mês
+custo real por km  = combustível por km + fixo por km
+
+ganho bruto do dia = Uber + 99 + outros
+custo do dia       = km rodados × custo real por km + gastos extras
+lucro real do dia  = ganho bruto − custo do dia
+```
+
+Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`). Assim, se o preço do combustível mudar, os dias antigos não são recalculados com o valor novo.
+
+## Modelo de dados
+
+```mermaid
+erDiagram
+  PERFIL {
+    int id PK "sempre 1 no MVP"
+    text nome
+    text apps "ex.: uber,99"
+    real meta_diaria
+    text modelo_veiculo
+    real consumo_km_l
+    real preco_combustivel
+    real custos_fixos_mensais
+    real km_mensal_estimado
+  }
+  LANCAMENTOS {
+    int id PK
+    text data UK "AAAA-MM-DD"
+    real ganho_uber
+    real ganho_99
+    real ganho_outros
+    real km_rodados
+    real horas_trabalhadas
+    real gastos_extras
+    real custo_km_aplicado
+    text observacao
+  }
+```
+
+## API REST
+
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/api/saude` | Verifica se a API está no ar |
+| GET | `/api/perfil` | Perfil + custo por km (ou `null` se não cadastrado) |
+| PUT | `/api/perfil` | Cria ou atualiza o perfil |
+| GET | `/api/lancamentos?de=&ate=` | Lista os dias lançados com indicadores |
+| GET | `/api/lancamentos/:data` | Lançamento de um dia |
+| PUT | `/api/lancamentos/:data` | Cria ou atualiza o lançamento do dia |
+| DELETE | `/api/lancamentos/:data` | Exclui o lançamento do dia |
+| GET | `/api/resumo?ate=&dias=7` | Hoje, meta, série diária e totais do período |
+
+Erros retornam `{ "erro": "mensagem" }` com o status HTTP adequado (400, 404, 409).
+
+---
+
+## Próximos passos (fora do MVP)
+
+- Importação automática de ganhos. Uber e 99 não oferecem API pública para isso hoje, então o lançamento é manual.
+- Múltiplos usuários com login.
+- Simulador de corrida: "essa corrida compensa?" antes de aceitar.
+- Alertas de manutenção por quilometragem.
+- Versão instalável no celular (PWA).
+
+---
+
+Quilômetro Labs · Projeto Integrador · Design Profissional · Universidade Positivo · 2026

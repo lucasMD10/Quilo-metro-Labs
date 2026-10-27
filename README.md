@@ -120,6 +120,7 @@ Sem o passo 3, o app abre na tela de cadastro inicial. Para recomeçar do zero, 
 | Comando | O que faz |
 |---|---|
 | `npm run dev` | Sobe API (3001) e front (5173) juntos |
+| `npm start` | Compila o front e sobe tudo numa porta só (http://localhost:3001), sem o Vite |
 | `npm run seed` | Recria o banco com dados de exemplo |
 | `npm run build` | Gera a versão de produção do front em `frontend/dist` |
 

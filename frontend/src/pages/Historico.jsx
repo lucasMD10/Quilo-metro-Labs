@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api.js';
 import { moeda, numeroBR, dataBR } from '../util.js';
+import KmIcon from '../components/KmIcon.jsx';
+
+// "segunda-feira, 26 de outubro" -> "Segunda-feira, 26 de outubro"
+const titulo = (iso) => { const t = dataBR(iso); return t.charAt(0).toUpperCase() + t.slice(1); };
 
 export default function Historico({ onEditar }) {
   const [lista, setLista] = useState(null);
@@ -22,25 +26,33 @@ export default function Historico({ onEditar }) {
   if (erro) return <p className="erro">{erro}</p>;
   if (!lista) return <p className="carregando">Carregando…</p>;
 
+  if (lista.length === 0) {
+    return (
+      <section className="cartao vazio">
+        <KmIcon name="historico" size={40} />
+        <p>Nenhum dia lançado ainda. Use a aba Lançar para registrar seu primeiro dia.</p>
+      </section>
+    );
+  }
+
   return (
-    <section className="painel">
-      <h2>Histórico</h2>
-      {lista.length === 0 ? (
-        <p className="vazio">Nenhum dia lançado ainda. Use a aba Lançar para registrar seu primeiro dia.</p>
-      ) : (
-        <ul className="historico">
-          {lista.map((l) => (
-            <li key={l.data} className="historico__item">
-              <button className="historico__abrir" onClick={() => onEditar(l.data)}>
-                <span className="historico__data">{dataBR(l.data)}</span>
-                <span className="historico__meta">{numeroBR(l.km_rodados)} km · bruto {moeda(l.bruto)}</span>
-                <span className={`historico__lucro ${l.lucro < 0 ? 'neg' : ''}`}>{moeda(l.lucro)}</span>
-              </button>
-              <button className="historico__excluir" onClick={() => excluir(l.data)} aria-label={`Excluir ${dataBR(l.data)}`}>Excluir</button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
+    <ul className="historico">
+      {lista.map((l) => (
+        <li key={l.data} className="historico__item">
+          <button className="historico__abrir" onClick={() => onEditar(l.data)}>
+            <span className="historico__data">{titulo(l.data)}</span>
+            <span className="historico__meta">
+              <span><KmIcon name="quilometragem" size={16} /> {numeroBR(l.km_rodados)} km</span>
+              <span><KmIcon name="ganhos" size={16} /> bruto {moeda(l.bruto)}</span>
+            </span>
+            <span className={`historico__lucro ${l.lucro < 0 ? 'neg' : 'pos'}`}>{moeda(l.lucro)}</span>
+          </button>
+          <div className="historico__acoes">
+            <button className="icone-botao" onClick={() => onEditar(l.data)} aria-label={`Editar ${dataBR(l.data)}`}><KmIcon name="editar" size={20} /></button>
+            <button className="icone-botao icone-botao--perigo" onClick={() => excluir(l.data)} aria-label={`Excluir ${dataBR(l.data)}`}><KmIcon name="excluir" size={20} /></button>
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }

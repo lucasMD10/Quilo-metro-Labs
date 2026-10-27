@@ -1,0 +1,199 @@
+/* KM Real — identidade visual
+   Inspiração: sinalização de rodovia. Asfalto, faixa amarela e o verde do lucro.
+   Tipografia Barlow (família pensada a partir de placas de estrada). */
+:root {
+  --asfalto: #232A31;
+  --asfalto-claro: #36404A;
+  --faixa: #F5C518;
+  --lucro: #1E9E55;
+  --prejuizo: #D64545;
+  --concreto: #EEF0EB;
+  --papel: #FFFFFF;
+  --texto: #20262C;
+  --texto-suave: #5E6872;
+  --borda: #D5D9D2;
+
+  --fonte: 'Barlow', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fonte-placa: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+
+  --raio: 10px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: var(--fonte);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--texto);
+  background: var(--concreto);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2 { font-family: var(--fonte-placa); font-weight: 700; line-height: 1.1; margin: 0 0 16px; }
+h2 { font-size: 1.5rem; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--faixa); outline-offset: 2px; }
+
+/* Estrutura */
+.app { max-width: 520px; margin: 0 auto; min-height: 100%; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+.topo {
+  display: flex; align-items: center; gap: 10px;
+  padding: calc(14px + env(safe-area-inset-top)) 20px 14px;
+  background: var(--asfalto); color: #fff;
+}
+.topo__marca { font-family: var(--fonte-placa); font-weight: 700; font-size: 1.35rem; }
+.topo__carro { margin-left: auto; font-size: .875rem; color: #B8C0C8; }
+.conteudo { padding: 0 16px 24px; }
+
+/* Hero: lucro do dia como odômetro */
+.hero {
+  background: var(--asfalto); color: #fff;
+  margin: 0 -16px 16px; padding: 8px 20px 24px;
+  border-radius: 0 0 22px 22px;
+}
+.hero__saudacao { margin: 0 0 10px; color: #B8C0C8; }
+
+.odometro { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.odometro__moeda { font-family: var(--fonte-placa); font-size: 1.5rem; font-weight: 600; margin-right: 6px; color: var(--faixa); }
+.odometro__digito {
+  font-family: var(--fonte-placa); font-weight: 700; font-size: 2.75rem; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  min-width: 1.05em; padding: 8px 2px; text-align: center;
+  background: linear-gradient(#1A2026, #2C343C 50%, #1A2026);
+  border: 1px solid #485360; border-radius: 6px;
+  color: #fff;
+}
+.odometro__sep { font-family: var(--fonte-placa); font-size: 2.25rem; font-weight: 700; color: #8F9AA5; }
+.odometro--negativo .odometro__digito { color: #FF9C9C; }
+.odometro--negativo .odometro__moeda { color: #FF9C9C; }
+
+/* Faixa da meta */
+.faixa { margin-top: 20px; }
+.faixa__pista {
+  display: flex; gap: 6px; align-items: center;
+  height: 22px; padding: 0 8px; border-radius: 4px;
+  background: var(--asfalto-claro);
+}
+.faixa__traco { flex: 1; height: 5px; border-radius: 2px; background: #56616C; transition: background .4s; }
+.faixa__traco--aceso { background: var(--faixa); }
+.faixa__texto { margin: 8px 0 0; font-size: .9375rem; color: #D7DCE0; }
+@media (prefers-reduced-motion: reduce) { .faixa__traco { transition: none; } }
+
+/* Indicadores rápidos */
+.indicadores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--borda); border: 1px solid var(--borda); border-radius: var(--raio); overflow: hidden; margin-bottom: 16px; }
+.indicadores > div { background: var(--papel); padding: 12px; display: flex; flex-direction: column; }
+.indicadores__valor { font-family: var(--fonte-placa); font-weight: 700; font-size: 1.375rem; font-variant-numeric: tabular-nums; }
+.indicadores__rotulo { font-size: .8125rem; color: var(--texto-suave); line-height: 1.25; }
+
+/* Painéis */
+.painel { background: var(--papel); border: 1px solid var(--borda); border-radius: var(--raio); padding: 20px; margin-top: 16px; }
+.carregando, .vazio { color: var(--texto-suave); padding: 24px 4px; }
+
+/* Gráfico */
+.grafico__barras { position: relative; display: flex; align-items: flex-end; gap: 8px; height: 160px; border-bottom: 2px solid var(--asfalto); }
+.grafico__coluna { flex: 1; height: 100%; display: flex; align-items: flex-end; }
+.grafico__bruto { width: 100%; border: 2px solid var(--asfalto-claro); border-bottom: 0; border-radius: 4px 4px 0 0; display: flex; align-items: flex-end; min-height: 0; }
+.grafico__lucro { width: 100%; background: var(--lucro); }
+.grafico__lucro--neg { background: var(--prejuizo); }
+.grafico__meta { position: absolute; left: 0; right: 0; border-top: 2px dashed #C9A100; z-index: 1; }
+.grafico__eixo { display: flex; gap: 8px; margin-top: 6px; }
+.grafico__eixo span { flex: 1; text-align: center; font-size: .8125rem; color: var(--texto-suave); }
+.grafico__legenda { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: .8125rem; color: var(--texto-suave); }
+.leg { display: inline-block; width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px; border-radius: 2px; }
+.leg--lucro { background: var(--lucro); }
+.leg--bruto { border: 2px solid var(--asfalto-claro); }
+.leg--meta { border-top: 2px dashed #C9A100; height: 0; border-radius: 0; vertical-align: 3px; }
+
+/* Totais */
+.totais { margin: 20px 0 0; }
+.totais > div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--concreto); }
+.totais dt { color: var(--texto-suave); }
+.totais dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.totais__destaque dt { color: var(--texto); font-weight: 600; }
+.totais__destaque dd { color: var(--lucro); font-family: var(--fonte-placa); font-size: 1.375rem; }
+.neg { color: var(--prejuizo) !important; }
+
+/* Formulários */
+.campo { display: block; border: 0; padding: 0; margin: 0 0 14px; min-width: 0; }
+.campo__rotulo { display: block; font-weight: 600; font-size: .9375rem; margin-bottom: 4px; padding: 0; }
+.campo__caixa {
+  display: flex; align-items: center;
+  border: 1.5px solid var(--borda); border-radius: 8px; background: var(--papel);
+}
+.campo__caixa:focus-within { border-color: var(--asfalto); box-shadow: 0 0 0 3px rgba(245, 197, 24, .45); }
+.campo__caixa input { flex: 1; min-width: 0; border: 0; background: transparent; padding: 11px 12px; outline: none; font-variant-numeric: tabular-nums; }
+.campo__afixo { padding: 0 10px; color: var(--texto-suave); font-size: .9375rem; white-space: nowrap; }
+.campo__afixo:first-child { padding-right: 0; }
+.campo__afixo:last-child { padding-left: 0; }
+.campo__dica { display: block; font-size: .8125rem; color: var(--texto-suave); margin-top: 4px; }
+.duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.chips { display: flex; gap: 8px; }
+.chip { padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--borda); background: var(--papel); cursor: pointer; font-weight: 600; }
+.chip--ativo { background: var(--asfalto); border-color: var(--asfalto); color: #fff; }
+
+.resultado { background: var(--concreto); border-radius: 8px; padding: 12px 14px; margin: 6px 0 16px; }
+.resultado > div { display: flex; justify-content: space-between; padding: 4px 0; font-variant-numeric: tabular-nums; }
+.resultado span { color: var(--texto-suave); }
+.resultado__lucro { border-top: 1px solid var(--borda); margin-top: 4px; padding-top: 8px !important; }
+.resultado__lucro span { color: var(--texto); font-weight: 600; }
+.resultado__lucro strong { font-family: var(--fonte-placa); font-size: 1.5rem; color: var(--lucro); }
+
+.previa { background: var(--concreto); padding: 10px 14px; border-radius: 8px; margin: 0 0 16px; }
+
+.botao {
+  display: block; width: 100%; padding: 13px 18px; border: 0; border-radius: 8px;
+  background: var(--asfalto); color: #fff; font-weight: 600; font-size: 1rem; cursor: pointer;
+}
+.botao:disabled { opacity: .6; cursor: progress; }
+.botao--secundario { background: transparent; color: var(--texto); border: 1.5px solid var(--borda); }
+.botao--faixa { background: var(--faixa); color: var(--asfalto); margin-top: 18px; }
+.acoes { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+
+.erro { color: var(--prejuizo); background: #FCEAEA; padding: 10px 12px; border-radius: 8px; }
+.sucesso { color: #146B3A; background: #E3F4EA; padding: 10px 12px; border-radius: 8px; }
+
+/* Histórico */
+.historico { list-style: none; margin: 0; padding: 0; }
+.historico__item { display: flex; align-items: stretch; border-bottom: 1px solid var(--concreto); }
+.historico__abrir {
+  flex: 1; display: grid; grid-template-columns: 1fr auto; text-align: left;
+  background: none; border: 0; padding: 12px 0; cursor: pointer;
+}
+.historico__data { font-weight: 600; text-transform: capitalize; }
+.historico__meta { grid-column: 1; font-size: .875rem; color: var(--texto-suave); }
+.historico__lucro { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-family: var(--fonte-placa); font-weight: 700; font-size: 1.25rem; color: var(--lucro); }
+.historico__excluir { background: none; border: 0; color: var(--texto-suave); font-size: .8125rem; padding: 0 0 0 14px; cursor: pointer; }
+.historico__excluir:hover { color: var(--prejuizo); }
+
+/* Navegação inferior */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; justify-content: center;
+  background: var(--papel); border-top: 1px solid var(--borda);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav__item {
+  flex: 1; max-width: 130px; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 10px 4px 12px; background: none; border: 0; border-top: 3px solid transparent;
+  font-size: .8125rem; color: var(--texto-suave); cursor: pointer;
+}
+.nav__item--ativo { color: var(--asfalto); font-weight: 600; border-top-color: var(--faixa); }
+
+/* Boas-vindas */
+.boas-vindas { max-width: 480px; margin: 0 auto; padding: 0 16px 32px; }
+.boas-vindas__topo {
+  background: var(--asfalto); color: #fff; margin: 0 -16px;
+  padding: calc(36px + env(safe-area-inset-top)) 24px 56px;
+  border-bottom: 6px dashed var(--faixa);
+}
+.boas-vindas__topo h1 { font-size: 3rem; margin: 12px 0 6px; }
+.boas-vindas__topo p { margin: 0; color: #C9D0D6; font-size: 1.0625rem; max-width: 30ch; }
+.boas-vindas .painel { margin-top: -28px; position: relative; }
+
+@media (min-width: 560px) {
+  .conteudo { padding: 0 0 32px; }
+  .hero { margin: 0 0 16px; border-radius: 0 0 22px 22px; }
+}
+.grafico__bruto--vazio { border: 0; }

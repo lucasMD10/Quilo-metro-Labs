@@ -1,0 +1,21 @@
+{
+  "name": "km-real",
+  "version": "0.1.0",
+  "private": true,
+  "description": "KM Real - gestão financeira para motoristas de aplicativo (Quilômetro Labs)",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c yellow,green \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "seed": "npm run seed -w backend",
+    "build": "npm run build -w frontend"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

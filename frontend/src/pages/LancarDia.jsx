@@ -3,6 +3,8 @@ import Campo from '../components/Campo.jsx';
 import { api } from '../api.js';
 import { moeda, numeroBR, hojeISO, previaDoDia, paraNumero } from '../util.js';
 
+const NUMERICOS = ['ganho_uber', 'ganho_99', 'ganho_outros', 'km_rodados', 'horas_trabalhadas', 'gastos_extras'];
+
 const VAZIO = { ganho_uber: '', ganho_99: '', ganho_outros: '', km_rodados: '', horas_trabalhadas: '', gastos_extras: '', observacao: '' };
 const txt = (v) => (v ? String(v).replace('.', ',') : '');
 
@@ -13,7 +15,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
   const [erro, setErro] = useState('');
   const [salvando, setSalvando] = useState(false);
   const apps = perfil.apps.split(',');
-  const mudar = (nome, valor) => setForm((f) => ({ ...f, [nome]: valor }));
+  const mudar = (nome, valor) => { setErro(''); setForm((f) => ({ ...f, [nome]: valor })); };
 
   // Ao trocar a data, carrega o lançamento daquele dia (se já existir) para editar.
   useEffect(() => {
@@ -35,6 +37,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
   async function salvar(e) {
     e.preventDefault();
     setErro('');
+    if (NUMERICOS.some((k) => Number.isNaN(paraNumero(form[k])))) return setErro('Corrija os campos marcados em vermelho.');
     setSalvando(true);
     try {
       const dados = Object.fromEntries(
@@ -70,8 +73,8 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
       <div className="resultado">
         <p className="resultado__titulo">Como fica o seu dia</p>
         <div><span>Ganho bruto<small>Uber + 99 + outros</small></span><strong>{moeda(previa.bruto)}</strong></div>
-        <div><span>Combustível<small>{numeroBR(paraNumero(form.km_rodados), paraNumero(form.km_rodados) % 1 ? 1 : 0)} km × {moeda(perfil.custo.combustivel_km)}/km</small></span><strong>−{moeda(previa.combustivel)}</strong></div>
-        <div><span>Custos fixos do carro<small>{numeroBR(paraNumero(form.km_rodados), paraNumero(form.km_rodados) % 1 ? 1 : 0)} km × {moeda(perfil.custo.fixo_km)}/km</small></span><strong>−{moeda(previa.fixo)}</strong></div>
+        <div><span>Combustível<small>{numeroBR(paraNumero(form.km_rodados) || 0, paraNumero(form.km_rodados) % 1 ? 1 : 0)} km × {moeda(perfil.custo.combustivel_km)}/km</small></span><strong>−{moeda(previa.combustivel)}</strong></div>
+        <div><span>Custos fixos do carro<small>{numeroBR(paraNumero(form.km_rodados) || 0, paraNumero(form.km_rodados) % 1 ? 1 : 0)} km × {moeda(perfil.custo.fixo_km)}/km</small></span><strong>−{moeda(previa.fixo)}</strong></div>
         <div><span>Outros gastos do dia</span><strong>−{moeda(previa.gastos)}</strong></div>
         <div className="resultado__lucro"><span>Lucro real</span><strong className={previa.lucro < 0 ? 'neg' : ''}>{moeda(previa.lucro)}</strong></div>
         <p className="resultado__nota">O combustível e os custos fixos saem do custo por km do seu carro ({moeda(perfil.custo.total_km)}/km). Se esse valor parecer errado, ajuste na aba Veículo.</p>

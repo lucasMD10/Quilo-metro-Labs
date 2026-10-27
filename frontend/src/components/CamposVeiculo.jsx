@@ -1,5 +1,5 @@
 import Campo from './Campo.jsx';
-import { moeda, numeroBR } from '../util.js';
+import { moeda, numeroBR, lerNumero } from '../util.js';
 import { CUSTOS_FIXOS, previaCusto, avisosVeiculo } from '../pages/campos-perfil.js';
 
 // Campos do carro agrupados por assunto, com a conta do custo por km aberta no final.
@@ -7,6 +7,8 @@ import { CUSTOS_FIXOS, previaCusto, avisosVeiculo } from '../pages/campos-perfil
 export default function CamposVeiculo({ form, onChange }) {
   const custo = previaCusto(form);
   const avisos = avisosVeiculo(form);
+  const meta = lerNumero(form.meta_diaria) || 0;
+  const kmDia = lerNumero(form.km_por_dia) || 0;
 
   return (
     <>
@@ -47,7 +49,7 @@ export default function CamposVeiculo({ form, onChange }) {
       <div className="resultado">
         <p className="resultado__titulo">Quanto cada km rodado custa para você</p>
         <div>
-          <span>Combustível<small>{moeda(Number(String(form.preco_combustivel).replace(',', '.')) || 0)} o litro ÷ {form.consumo_km_l || 0} km/l</small></span>
+          <span>Combustível<small>{moeda(lerNumero(form.preco_combustivel) || 0)} o litro ÷ {form.consumo_km_l || 0} km/l</small></span>
           <strong>{moeda(custo.combustivel)}/km</strong>
         </div>
         <div>
@@ -59,6 +61,25 @@ export default function CamposVeiculo({ form, onChange }) {
           <p className="resultado__nota">Ou seja: a cada 100 km rodados, {moeda(custo.total * 100)} vão para o carro.</p>
         )}
       </div>
+
+      {custo.kmMes > 0 && custo.total > 0 && (
+        <div className="resultado">
+          <p className="resultado__titulo">Quanto o carro custa no seu mês</p>
+          <div>
+            <span>Combustível<small>{numeroBR(custo.kmMes)} km × {moeda(custo.combustivel)}/km</small></span>
+            <strong>{moeda(custo.combustivel * custo.kmMes)}</strong>
+          </div>
+          <div><span>Custos fixos<small>soma dos campos acima</small></span><strong>{moeda(custo.custosMes)}</strong></div>
+          <div className="resultado__lucro"><span>Total por mês</span><strong>{moeda(custo.total * custo.kmMes)}</strong></div>
+          <p className="resultado__nota">Esse valor sai do que você fatura antes de sobrar lucro.</p>
+          {meta > 0 && kmDia > 0 && (
+            <p className="resultado__meta">
+              Para lucrar <strong>{moeda(meta)}</strong> num dia de {numeroBR(kmDia)} km, você precisa faturar
+              {' '}<strong>{moeda(meta + kmDia * custo.total)}</strong> nos apps.
+            </p>
+          )}
+        </div>
+      )}
 
       {avisos.map((a) => <p key={a} className="aviso">{a}</p>)}
     </>

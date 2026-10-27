@@ -1,6 +1,8 @@
+import { lerNumero } from '../util.js';
+
 // Valores do perfil como texto, para preencher os inputs (vírgula no lugar do ponto).
 const txt = (v) => (v === null || v === undefined || v === 0 ? '' : String(v).replace('.', ','));
-const n = (v) => Number(String(v).replace(',', '.')) || 0;
+const n = (v) => lerNumero(v) || 0;
 
 const SEMANAS_POR_MES = 52 / 12;
 
@@ -33,10 +35,14 @@ export function perfilParaForm(p) {
   };
 }
 
+const NUMERICOS = ['meta_diaria', 'consumo_km_l', 'preco_combustivel', 'km_por_dia', 'dias_por_semana', ...CUSTOS_FIXOS.map((c) => c.nome)];
+
 export function formParaPerfil(f) {
-  const numericos = ['meta_diaria', 'consumo_km_l', 'preco_combustivel', 'km_por_dia', 'dias_por_semana', ...CUSTOS_FIXOS.map((c) => c.nome)];
-  return { ...f, ...Object.fromEntries(numericos.map((k) => [k, n(f[k])])) };
+  return { ...f, ...Object.fromEntries(NUMERICOS.map((k) => [k, n(f[k])])) };
 }
+
+// true se algum campo numérico tem texto que não é número (o campo já aparece em vermelho).
+export const temNumeroInvalido = (f) => NUMERICOS.some((k) => Number.isNaN(lerNumero(f[k])));
 
 // Mesmas contas do backend (calculos.js), para mostrar a prévia enquanto o motorista preenche.
 export function previaCusto(f) {

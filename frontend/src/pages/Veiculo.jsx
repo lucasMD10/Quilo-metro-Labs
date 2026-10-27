@@ -3,17 +3,18 @@ import Campo from '../components/Campo.jsx';
 import SeletorApps from './SeletorApps.jsx';
 import { api } from '../api.js';
 import CamposVeiculo from '../components/CamposVeiculo.jsx';
-import { perfilParaForm, formParaPerfil } from './campos-perfil.js';
+import { perfilParaForm, formParaPerfil, temNumeroInvalido } from './campos-perfil.js';
 
 export default function Veiculo({ perfil, onSalvo }) {
   const [form, setForm] = useState(perfilParaForm(perfil));
   const [msg, setMsg] = useState('');
   const [erro, setErro] = useState('');
-  const mudar = (nome, valor) => { setMsg(''); setForm((f) => ({ ...f, [nome]: valor })); };
+  const mudar = (nome, valor) => { setMsg(''); setErro(''); setForm((f) => ({ ...f, [nome]: valor })); };
 
   async function salvar(e) {
     e.preventDefault();
     setErro('');
+    if (temNumeroInvalido(form)) return setErro('Corrija os campos marcados em vermelho.');
     try {
       onSalvo(await api.salvarPerfil(formParaPerfil(form)));
       setMsg('Alterações salvas. Os próximos lançamentos já usam o novo custo por km.');

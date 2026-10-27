@@ -127,6 +127,9 @@ button, input { font: inherit; color: inherit; }
 .campo__afixo:first-child { padding-right: 0; }
 .campo__afixo:last-child { padding-left: 0; }
 .campo__dica { display: block; font-size: .8125rem; color: var(--texto-suave); margin-top: 4px; }
+.campo__erro { display: block; font-size: .8125rem; color: var(--prejuizo); font-weight: 600; margin-top: 4px; }
+.campo--invalido .campo__caixa { border-color: var(--prejuizo); }
+.resultado__meta { margin: 10px 0 2px; padding: 10px 12px; background: var(--papel); border-radius: 6px; font-size: .9375rem; }
 .duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 .chips { display: flex; gap: 8px; }

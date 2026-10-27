@@ -170,9 +170,10 @@ svg { flex-shrink: 0; }
 .calculo { animation: entrar .3s ease-out; }
 
 /* Gráfico */
-.grafico__barras { position: relative; display: flex; align-items: flex-end; gap: 8px; height: 170px; border-bottom: 1px solid var(--marca-linha); }
+.grafico__barras { position: relative; display: flex; align-items: stretch; gap: 8px; height: 170px; }
+.grafico__base { position: absolute; left: 0; right: 0; border-top: 1px solid var(--marca-linha); z-index: 1; pointer-events: none; }
 .grafico__coluna {
-  flex: 1; height: 100%; display: flex; align-items: flex-end;
+  flex: 1; height: 100%; display: flex; flex-direction: column;
   background: none; border: 0; padding: 0; cursor: pointer; border-radius: 8px 8px 0 0;
 }
 .grafico__bruto {
@@ -182,8 +183,14 @@ svg { flex-shrink: 0; }
 }
 .grafico__bruto--vazio { background: none; }
 .grafico__lucro { width: 100%; background: var(--lucro); border-radius: 8px 8px 2px 2px; }
-.grafico__lucro--neg { background: var(--prejuizo); }
-.grafico__meta { position: absolute; left: 0; right: 0; border-top: 2px dashed var(--marca); opacity: .55; z-index: 1; }
+.grafico__positivo { display: flex; align-items: flex-end; width: 100%; }
+.grafico__negativo { display: block; width: 100%; }
+.grafico__prejuizo {
+  display: block; width: 100%; background: var(--prejuizo); border-radius: 2px 2px 8px 8px;
+  transform-origin: top; animation: crescer .6s cubic-bezier(.2, .8, .2, 1) both; transition: opacity .2s;
+}
+.grafico--foco .grafico__coluna:not(.grafico__coluna--ativa) .grafico__prejuizo { opacity: .4; }
+.grafico__meta { position: absolute; left: 0; right: 0; border-top: 2px dashed var(--marca); opacity: .55; z-index: 1; pointer-events: none; }
 .grafico__eixo { display: flex; gap: 8px; margin-top: 6px; }
 .grafico__eixo span { flex: 1; text-align: center; font-size: .8125rem; color: var(--texto-suave); transition: color .2s; }
 .grafico__eixo span.ativo { color: var(--marca); font-weight: 800; }
@@ -195,6 +202,7 @@ svg { flex-shrink: 0; }
   white-space: nowrap; font-size: .75rem; font-weight: 800; color: #fff; background: var(--marca);
   padding: 3px 8px; border-radius: 6px; z-index: 2; pointer-events: none; animation: entrar .15s ease-out;
 }
+.grafico__rotulo--neg { background: var(--prejuizo); }
 .grafico__detalhe {
   margin-top: 14px; padding: 12px 14px; border-radius: var(--raio-p); background: var(--fundo);
   animation: entrar .2s ease-out;
@@ -208,6 +216,7 @@ svg { flex-shrink: 0; }
 .grafico__legenda { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: .8125rem; color: var(--texto-suave); }
 .leg { display: inline-block; width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px; border-radius: 3px; }
 .leg--lucro { background: var(--lucro); }
+.leg--prejuizo { background: var(--prejuizo); }
 .leg--bruto { background: var(--marca-suave); border: 1px solid var(--marca-linha); }
 .leg--meta { border-top: 2px dashed var(--marca); height: 0; border-radius: 0; vertical-align: 3px; opacity: .55; }
 @keyframes crescer { from { transform: scaleY(0); } }

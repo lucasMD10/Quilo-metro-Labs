@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import Campo from '../components/Campo.jsx';
 import KmIcon from '../components/KmIcon.jsx';
 import { api } from '../api.js';
-import { moeda, numeroBR, hojeISO, previaDoDia, paraNumero } from '../util.js';
+import { moeda, numeroBR, hojeISO, previaDoDia, paraNumero, lerHoras, horasTexto } from '../util.js';
 
 const NUMERICOS = ['ganho_uber', 'ganho_99', 'ganho_outros', 'km_rodados', 'horas_trabalhadas', 'gastos_extras'];
 
 const VAZIO = { ganho_uber: '', ganho_99: '', ganho_outros: '', km_rodados: '', horas_trabalhadas: '', gastos_extras: '', observacao: '' };
 const txt = (v) => (v ? String(v).replace('.', ',') : '');
+const ler = (k, v) => (k === 'horas_trabalhadas' ? lerHoras(v) : paraNumero(v));
 const DICA_TAXA = 'O que caiu pra você, já sem a taxa do app.';
 
 export default function LancarDia({ perfil, dataInicial, onSalvo }) {
@@ -35,7 +36,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
         setSalvo(l);
         setForm({
           ganho_uber: txt(l.ganho_uber), ganho_99: txt(l.ganho_99), ganho_outros: txt(l.ganho_outros),
-          km_rodados: txt(l.km_rodados), horas_trabalhadas: txt(l.horas_trabalhadas),
+          km_rodados: txt(l.km_rodados), horas_trabalhadas: horasTexto(l.horas_trabalhadas),
           gastos_extras: txt(l.gastos_extras), observacao: l.observacao || '',
         });
         setCarga('ok');
@@ -62,8 +63,8 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
   async function salvar(e) {
     e.preventDefault();
     setErro('');
-    if (NUMERICOS.some((k) => Number.isNaN(paraNumero(form[k])))) return setErro('Corrija os campos marcados em vermelho.');
-    const v = Object.fromEntries(NUMERICOS.map((k) => [k, paraNumero(form[k])]));
+    if (NUMERICOS.some((k) => Number.isNaN(ler(k, form[k])))) return setErro('Corrija os campos marcados em vermelho.');
+    const v = Object.fromEntries(NUMERICOS.map((k) => [k, ler(k, form[k])]));
     const ganhos = v.ganho_uber + v.ganho_99 + v.ganho_outros;
     if (NUMERICOS.every((k) => !v[k])) return setErro('O dia está vazio. Preencha pelo menos os ganhos ou os km rodados.');
     if (v.horas_trabalhadas > 24) return setErro('Um dia tem no máximo 24 horas. Confira as horas online.');
@@ -72,7 +73,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
     setSalvando(true);
     try {
       const dados = Object.fromEntries(
-        Object.entries(form).map(([k, v]) => [k, k === 'observacao' ? v : paraNumero(v)])
+        Object.entries(form).map(([k, v]) => [k, k === 'observacao' ? v : ler(k, v)])
       );
       await api.salvarLancamento(data, { ...dados, recalcular_custo: recalcular });
       onSalvo(salvo ? 'Alterações salvas.' : 'Dia salvo. Bom trabalho!');
@@ -113,7 +114,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
         <h3 className="grupo"><KmIcon name="quilometragem" size={20} /> Rodagem</h3>
         <div className="duas-colunas">
           <Campo rotulo="Km rodados" nome="km_rodados" valor={form.km_rodados} onChange={mudar} sufixo="km" dica="Pelo painel do carro." />
-          <Campo rotulo="Horas online" nome="horas_trabalhadas" valor={form.horas_trabalhadas} onChange={mudar} sufixo="h" dica="Tempo logado nos apps." />
+          <Campo rotulo="Horas online" nome="horas_trabalhadas" valor={form.horas_trabalhadas} onChange={mudar} sufixo="h" dica="Tempo logado nos apps." ler={lerHoras} caracteres={/[^\d.,:hH]/g} placeholder="8:30" />
         </div>
 
         <h3 className="grupo"><KmIcon name="gastos-extras" size={20} /> Outros gastos</h3>

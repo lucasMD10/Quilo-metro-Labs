@@ -319,11 +319,16 @@ svg { flex-shrink: 0; }
 .boas-vindas { min-height: 100vh; }
 .boas-vindas__marca {
   background: var(--marca); color: #fff;
-  padding: calc(28px + env(safe-area-inset-top)) 24px 28px;
+  padding: calc(20px + env(safe-area-inset-top)) 20px 22px;
   background-image: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, .10), transparent 60%);
 }
-.boas-vindas__logo { display: block; align-self: flex-start; height: 96px; width: auto; filter: brightness(0) invert(1); }
-.boas-vindas__frase { margin: 16px 0 0; font-size: 1.125rem; font-weight: 600; max-width: 32ch; opacity: .92; }
+.boas-vindas__logo { display: none; align-self: flex-start; height: 180px; width: auto; filter: brightness(0) invert(1); }
+/* No celular a marca vira uma linha compacta: o formulário é o que importa. */
+.boas-vindas__topo-cel { display: flex; align-items: center; gap: 10px; font-size: 1.375rem; font-weight: 800; }
+.boas-vindas__topo-cel img { filter: brightness(0) invert(1); }
+.boas-vindas__frase { margin: 12px 0 0; font-size: 1.0625rem; font-weight: 600; max-width: 32ch; opacity: .92; }
+.boas-vindas--etapa2 .boas-vindas__frase { display: none; }
+.boas-vindas--etapa2 .boas-vindas__marca { padding-bottom: 16px; }
 .boas-vindas__lista { display: none; }
 .boas-vindas__form { max-width: 560px; margin: 0 auto; padding: 20px 16px 40px; }
 .boas-vindas__form .cartao { margin-top: 12px; animation: entrar .35s ease-out; }
@@ -378,7 +383,10 @@ svg { flex-shrink: 0; }
     position: sticky; top: 0; height: 100vh;
     display: flex; flex-direction: column; justify-content: center; padding: 48px 56px;
   }
-  .boas-vindas__logo { height: 180px; }
+  .boas-vindas__logo { display: block; }
+  .boas-vindas__topo-cel { display: none; }
+  .boas-vindas--etapa2 .boas-vindas__frase { display: block; }
+  .boas-vindas--etapa2 .boas-vindas__marca { padding-bottom: 48px; }
   .boas-vindas__frase { font-size: 1.5rem; margin-top: 28px; }
   .boas-vindas__lista { display: grid; gap: 16px; list-style: none; margin: 36px 0 0; padding: 0; }
   .boas-vindas__lista li { display: flex; align-items: center; gap: 12px; font-size: 1.0625rem; opacity: .92; }

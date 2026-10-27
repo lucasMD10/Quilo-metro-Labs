@@ -4,14 +4,14 @@ import SeletorApps from './SeletorApps.jsx';
 import CamposVeiculo, { ResumoVeiculo } from '../components/CamposVeiculo.jsx';
 import KmIcon from '../components/KmIcon.jsx';
 import { api } from '../api.js';
-import { perfilParaForm, formParaPerfil, temNumeroInvalido } from './campos-perfil.js';
+import { moeda } from '../util.js';
+import { perfilParaForm, formParaPerfil, temNumeroInvalido, previaCusto } from './campos-perfil.js';
 
 export default function Veiculo({ perfil, onSalvo }) {
   const [form, setForm] = useState(perfilParaForm(perfil));
-  const [msg, setMsg] = useState('');
   const [erro, setErro] = useState('');
   const [salvando, setSalvando] = useState(false);
-  const mudar = (nome, valor) => { setMsg(''); setErro(''); setForm((f) => ({ ...f, [nome]: valor })); };
+  const mudar = (nome, valor) => { setErro(''); setForm((f) => ({ ...f, [nome]: valor })); };
 
   async function salvar(e) {
     e.preventDefault();
@@ -20,7 +20,6 @@ export default function Veiculo({ perfil, onSalvo }) {
     setSalvando(true);
     try {
       onSalvo(await api.salvarPerfil(formParaPerfil(form)));
-      setMsg('Alterações salvas. Os próximos lançamentos já usam o novo custo por km.');
     } catch (err) {
       setErro(err.message);
     } finally {
@@ -42,10 +41,15 @@ export default function Veiculo({ perfil, onSalvo }) {
       <aside className="pagina-form__resumo">
         <ResumoVeiculo form={form} />
         {erro && <p className="erro">{erro}</p>}
-        {msg && <p className="sucesso"><KmIcon name="confirmar" size={20} /> {msg}</p>}
-        <button className="botao" disabled={salvando}>
-          <KmIcon name="confirmar" size={20} /> {salvando ? 'Salvando…' : 'Salvar alterações'}
-        </button>
+        <div className="barra-acao">
+          <div className="barra-acao__resumo">
+            <span>Custo por km</span>
+            <strong>{moeda(previaCusto(form).total)}</strong>
+          </div>
+          <button className="botao" disabled={salvando}>
+            <KmIcon name="confirmar" size={20} /> {salvando ? 'Salvando…' : 'Salvar alterações'}
+          </button>
+        </div>
       </aside>
     </form>
   );

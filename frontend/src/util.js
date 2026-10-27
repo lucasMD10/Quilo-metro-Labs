@@ -30,8 +30,9 @@ export function previaDoDia(form, custo) {
   const n = (v) => lerNumero(v) || 0;
   const bruto = n(form.ganho_uber) + n(form.ganho_99) + n(form.ganho_outros);
   const km = n(form.km_rodados);
-  const combustivel = km * custo.combustivel_km;
-  const fixo = km * custo.fixo_km;
+  // Dias lançados antes da separação só têm o custo total: ele entra inteiro como "combustível".
+  const combustivel = km * (custo.combustivel_km ?? custo.total_km);
+  const fixo = km * (custo.fixo_km ?? 0);
   const gastos = n(form.gastos_extras);
   return { bruto, combustivel, fixo, gastos, lucro: bruto - combustivel - fixo - gastos };
 }

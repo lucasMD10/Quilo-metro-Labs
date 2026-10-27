@@ -24,7 +24,7 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 - **Dashboard** com o lucro de hoje, o progresso da meta diária, indicadores rápidos (com "Entender o cálculo" do custo por km) e gráfico dos últimos 7 dias.
 - **Layout para celular e computador**: barra de navegação inferior no celular, menu lateral e telas em duas colunas no computador.
 - **Histórico** com edição e exclusão de dias lançados.
-- **Edição do perfil e do veículo**, com recálculo automático do custo por km.
+- **Perfil e veículo** editáveis, com recálculo automático do custo por km para os próximos lançamentos.
 
 ## Equipe
 
@@ -145,7 +145,7 @@ lucro real do dia  = ganho bruto − custo do dia
 
 O motorista informa cada custo fixo separado e quantos km roda num dia normal; o backend calcula o total do mês e os km do mês (`calculos.js`). Bancos criados antes desse detalhamento ganham as colunas novas automaticamente ao iniciar.
 
-Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`). Assim, se o preço do combustível mudar, os dias antigos não são recalculados com o valor novo.
+Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`, mais as partes `combustivel_km_aplicado` e `fixo_km_aplicado`). Se o preço do combustível mudar, os dias antigos não são recalculados, nem quando editados. Para usar o custo atual num dia antigo, o motorista marca "Recalcular com o custo de hoje" (a API recebe `recalcular_custo: true`).
 
 ## Modelo de dados
 
@@ -179,7 +179,9 @@ erDiagram
     real km_rodados
     real horas_trabalhadas
     real gastos_extras
-    real custo_km_aplicado
+    real custo_km_aplicado "foto do custo/km no dia"
+    real combustivel_km_aplicado
+    real fixo_km_aplicado
     text observacao
   }
 ```

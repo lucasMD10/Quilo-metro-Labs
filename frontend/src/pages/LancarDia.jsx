@@ -100,7 +100,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
     <form className="pagina-form" onSubmit={salvar}>
       <div className="cartao pagina-form__campos">
         <h2 className="cartao__titulo">{salvo ? 'Editando um dia já lançado' : 'Novo dia'}</h2>
-        <Campo rotulo={<><KmIcon name="calendario" size={18} /> Data</>} nome="data" tipo="date" valor={data} max={hojeISO()} onChange={(_, v) => setData(v)} />
+        <Campo rotulo={<><KmIcon name="calendario" size={18} /> Data</>} nome="data" tipo="date" valor={data} max={hojeISO()} onChange={(_, v) => setData(v || hojeISO())} />
 
         <fieldset className="campos" disabled={carga !== 'ok'}>
         <h3 className="grupo"><KmIcon name="ganhos" size={20} /> Ganhos do dia</h3>

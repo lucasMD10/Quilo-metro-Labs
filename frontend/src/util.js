@@ -12,10 +12,22 @@ export const diaCurto = (iso) => diaSemana[new Date(`${iso}T12:00:00`).getDay()]
 export const dataBR = (iso) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
 
+/**
+ * Lê um número digitado do jeito brasileiro. Devolve 0 para campo vazio e NaN para texto inválido.
+ *  "6" -> 6 · "6,00" -> 6 · "6.29" -> 6.29 · "1.000" -> 1000 · "1.000,50" -> 1000.5 · "abc" -> NaN
+ */
+export function lerNumero(valor) {
+  let t = String(valor ?? '').replace(/R\$|\s/g, '');
+  if (t === '') return 0;
+  if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.'); // vírgula é o decimal, pontos são milhar
+  else if (/^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, ''); // "1.000" e "12.500" são milhar
+  return /^\d+(\.\d+)?$/.test(t) ? Number(t) : NaN;
+}
+
 // Mesmo cálculo do backend, usado para mostrar a prévia enquanto o motorista digita.
 // O custo do carro é separado em combustível e custos fixos, as duas partes do custo por km.
 export function previaDoDia(form, custo) {
-  const n = (v) => Number(String(v).replace(',', '.')) || 0;
+  const n = (v) => lerNumero(v) || 0;
   const bruto = n(form.ganho_uber) + n(form.ganho_99) + n(form.ganho_outros);
   const km = n(form.km_rodados);
   const combustivel = km * custo.combustivel_km;
@@ -25,4 +37,4 @@ export function previaDoDia(form, custo) {
 }
 
 // Converte "12,5" -> 12.5 antes de mandar para a API.
-export const paraNumero = (v) => (v === '' || v === null || v === undefined ? 0 : Number(String(v).replace(',', '.')));
+export const paraNumero = (v) => lerNumero(v);

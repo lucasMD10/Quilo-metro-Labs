@@ -3,7 +3,7 @@ import Campo from '../components/Campo.jsx';
 import SeletorApps from './SeletorApps.jsx';
 import { api } from '../api.js';
 import CamposVeiculo from '../components/CamposVeiculo.jsx';
-import { perfilParaForm, formParaPerfil } from './campos-perfil.js';
+import { perfilParaForm, formParaPerfil, temNumeroInvalido } from './campos-perfil.js';
 
 // Cadastro inicial em duas etapas: 1) você e sua meta, 2) seu carro.
 export default function BoasVindas({ onConcluir }) {
@@ -11,11 +11,12 @@ export default function BoasVindas({ onConcluir }) {
   const [form, setForm] = useState(perfilParaForm(null));
   const [erro, setErro] = useState('');
   const [salvando, setSalvando] = useState(false);
-  const mudar = (nome, valor) => setForm((f) => ({ ...f, [nome]: valor }));
+  const mudar = (nome, valor) => { setErro(''); setForm((f) => ({ ...f, [nome]: valor })); };
 
   async function concluir(e) {
     e.preventDefault();
     setErro('');
+    if (temNumeroInvalido(form)) return setErro('Corrija os campos marcados em vermelho.');
     setSalvando(true);
     try {
       onConcluir(await api.salvarPerfil(formParaPerfil(form)));
@@ -35,7 +36,7 @@ export default function BoasVindas({ onConcluir }) {
       </header>
 
       {etapa === 1 ? (
-        <form className="painel" onSubmit={(e) => { e.preventDefault(); if (form.nome.trim()) setEtapa(2); else setErro('Informe seu nome.'); }}>
+        <form className="painel" onSubmit={(e) => { e.preventDefault(); if (!form.nome.trim()) setErro('Informe seu nome.'); else if (temNumeroInvalido(form)) setErro('Corrija os campos marcados em vermelho.'); else { setErro(''); setEtapa(2); } }}>
           <h2>Primeiro, sobre você</h2>
           <Campo rotulo="Como podemos te chamar?" nome="nome" valor={form.nome} onChange={mudar} autoFocus />
           <SeletorApps valor={form.apps} onChange={(v) => mudar('apps', v)} />

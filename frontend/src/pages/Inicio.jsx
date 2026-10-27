@@ -32,11 +32,11 @@ export default function Inicio({ perfil, onLancar }) {
       <section className="indicadores">
         <div>
           <span className="indicadores__valor">{moeda(perfil.custo.total_km)}</span>
-          <span className="indicadores__rotulo">custo por km</span>
+          <span className="indicadores__rotulo">seu custo por km</span>
         </div>
         <div>
           <span className="indicadores__valor">{hoje.lancado ? moeda(hoje.ganho_por_km) : '—'}</span>
-          <span className="indicadores__rotulo">ganho por km hoje</span>
+          <span className="indicadores__rotulo">ganho bruto por km hoje</span>
         </div>
         <div>
           <span className="indicadores__valor">{numeroBR(hoje.km_rodados)}</span>
@@ -49,7 +49,7 @@ export default function Inicio({ perfil, onLancar }) {
         <GraficoSemana dias={dias} meta={meta_diaria} />
         <dl className="totais">
           <div><dt>Ganho bruto</dt><dd>{moeda(totais.bruto)}</dd></div>
-          <div><dt>Custos do carro</dt><dd>−{moeda(totais.custo_total)}</dd></div>
+          <div><dt>Custos do carro e gastos</dt><dd>−{moeda(totais.custo_total)}</dd></div>
           <div className="totais__destaque"><dt>Lucro real</dt><dd className={totais.lucro < 0 ? 'neg' : ''}>{moeda(totais.lucro)}</dd></div>
           <div><dt>Lucro por hora</dt><dd>{moeda(totais.lucro_por_hora)}</dd></div>
           <div><dt>Dias com meta batida</dt><dd>{resumo.dias_meta_batida} de {totais.dias_trabalhados}</dd></div>

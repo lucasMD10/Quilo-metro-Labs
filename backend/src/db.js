@@ -46,6 +46,8 @@ db.exec(`
     horas_trabalhadas  REAL    NOT NULL DEFAULT 0,
     gastos_extras      REAL    NOT NULL DEFAULT 0, -- lavagem, alimentação, pedágio...
     custo_km_aplicado  REAL    NOT NULL,           -- foto do custo/km no momento do lançamento
+    combustivel_km_aplicado REAL,                  -- as duas partes dessa foto (nulas em dias antigos)
+    fixo_km_aplicado        REAL,
     observacao         TEXT,
     criado_em          TEXT    NOT NULL DEFAULT (datetime('now')),
     atualizado_em      TEXT    NOT NULL DEFAULT (datetime('now'))
@@ -59,4 +61,9 @@ const colunasNovas = ['km_por_dia', 'dias_por_semana', 'custo_parcela', 'custo_s
 const colunasPerfil = db.prepare('PRAGMA table_info(perfil)').all().map((c) => c.name);
 for (const coluna of colunasNovas) {
   if (!colunasPerfil.includes(coluna)) db.exec(`ALTER TABLE perfil ADD COLUMN ${coluna} REAL`);
+}
+
+const colunasLancamentos = db.prepare('PRAGMA table_info(lancamentos)').all().map((c) => c.name);
+for (const coluna of ['combustivel_km_aplicado', 'fixo_km_aplicado']) {
+  if (!colunasLancamentos.includes(coluna)) db.exec(`ALTER TABLE lancamentos ADD COLUMN ${coluna} REAL`);
 }

@@ -24,7 +24,7 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 - **Dashboard** com o lucro de hoje, o progresso da meta diária, indicadores rápidos (com "Entender o cálculo" do custo por km) e gráfico dos últimos 7 dias.
 - **Layout para celular e computador**: barra de navegação inferior no celular, menu lateral e telas em duas colunas no computador.
 - **Histórico** com edição e exclusão de dias lançados.
-- **Edição do perfil e do veículo**, com recálculo automático do custo por km.
+- **Perfil e veículo** editáveis, com recálculo automático do custo por km para os próximos lançamentos.
 
 ## Equipe
 
@@ -117,6 +117,15 @@ Depois, abra **http://localhost:5173** no navegador. A API fica em http://localh
 
 Sem o passo 3, o app abre na tela de cadastro inicial. Para recomeçar do zero, apague o arquivo `backend/data/km.db`.
 
+### Abrir no celular
+
+1. Ligue o computador e o celular **na mesma rede Wi-Fi**.
+2. Rode o sistema (`npm start` ou `npm run dev`). O terminal mostra uma linha como `No celular (mesmo Wi-Fi): http://192.168.0.10:3001`.
+3. Digite esse endereço no navegador do celular. Com `npm run dev`, use o endereço "Network" que o Vite mostra (porta 5173).
+4. Na primeira vez, o Windows pode perguntar se o Node.js pode usar a rede: escolha **Permitir** em redes privadas.
+
+Dica: no Chrome do celular, menu ⋮ → **Adicionar à tela inicial** cria um atalho com cara de app.
+
 ### Scripts disponíveis
 
 | Comando | O que faz |
@@ -130,8 +139,10 @@ Sem o passo 3, o app abre na tela de cadastro inicial. Para recomeçar do zero, 
 
 ## Regras de cálculo
 
+**Lucro, no KM Real, é a sobra no bolso:** ganhos menos tudo o que sai do bolso por causa do carro (combustível, parcela ou aluguel, seguro, IPVA, manutenção, reserva para troca do carro e outros). É uma **estimativa**: os custos fixos do mês são divididos pelos km que o motorista prevê rodar. Num mês em que ele roda menos que o previsto, o custo real de cada km é maior que o estimado.
+
 ```
-custos fixos do mês = parcela/aluguel + seguro + IPVA ÷ 12 + manutenção + depreciação + outros
+custos fixos do mês = parcela/aluguel + seguro + IPVA ÷ 12 + manutenção + reserva para troca + outros
 km rodados por mês  = km por dia × dias por semana × 4,33 (52 semanas ÷ 12 meses)
 
 combustível por km = preço do litro ÷ consumo (km/l)
@@ -145,7 +156,7 @@ lucro real do dia  = ganho bruto − custo do dia
 
 O motorista informa cada custo fixo separado e quantos km roda num dia normal; o backend calcula o total do mês e os km do mês (`calculos.js`). Bancos criados antes desse detalhamento ganham as colunas novas automaticamente ao iniciar.
 
-Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`). Assim, se o preço do combustível mudar, os dias antigos não são recalculados com o valor novo.
+Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`, mais as partes `combustivel_km_aplicado` e `fixo_km_aplicado`). Se o preço do combustível mudar, os dias antigos não são recalculados, nem quando editados. Para usar o custo atual num dia antigo, o motorista marca "Recalcular com o custo de hoje" (a API recebe `recalcular_custo: true`).
 
 ## Modelo de dados
 
@@ -165,7 +176,7 @@ erDiagram
     real custo_seguro "R$ por mês"
     real custo_ipva "R$ por ano"
     real custo_manutencao "R$ por mês"
-    real custo_depreciacao "R$ por mês"
+    real custo_depreciacao "reserva para troca, R$ por mês"
     real custo_outros "R$ por mês"
     real custos_fixos_mensais "calculado"
     real km_mensal_estimado "calculado"
@@ -179,7 +190,9 @@ erDiagram
     real km_rodados
     real horas_trabalhadas
     real gastos_extras
-    real custo_km_aplicado
+    real custo_km_aplicado "foto do custo/km no dia"
+    real combustivel_km_aplicado
+    real fixo_km_aplicado
     text observacao
   }
 ```

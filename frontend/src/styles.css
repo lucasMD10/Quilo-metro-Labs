@@ -225,6 +225,8 @@ svg { flex-shrink: 0; }
 .grupo--primeiro { margin-top: 0; padding-top: 0; border-top: 0; }
 .grupo__dica { font-size: .875rem; color: var(--texto-suave); margin: -4px 0 14px; }
 
+.campos { border: 0; padding: 0; margin: 0; min-width: 0; transition: opacity .15s; }
+.campos:disabled { opacity: .55; }
 .campo { display: block; border: 0; padding: 0; margin: 0 0 14px; min-width: 0; }
 .campo__rotulo { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: .9375rem; margin-bottom: 6px; padding: 0; }
 .campo__rotulo svg { color: var(--marca); }

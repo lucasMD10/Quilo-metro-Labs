@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db } from '../db.js';
-import { custoPorKm } from '../calculos.js';
+import { custoPorKm, custosFixosMensais, kmMensal } from '../calculos.js';
 import { numero, erro } from '../validacao.js';
 
 export const perfilRouter = Router();
@@ -22,25 +22,34 @@ perfilRouter.put('/', (req, res) => {
   const nome = String(b.nome || '').trim();
   if (!nome) throw erro('Informe seu nome.');
 
+  const dias = numero(b.dias_por_semana, { campo: 'os dias por semana', obrigatorio: true, maiorQueZero: true });
+  if (dias > 7) throw erro('Os dias por semana vão de 1 a 7.');
+
   const dados = {
     nome,
     apps: String(b.apps || 'uber,99'),
     meta_diaria: numero(b.meta_diaria, { campo: 'a meta diária' }),
     modelo_veiculo: String(b.modelo_veiculo || '').trim() || null,
-    consumo_km_l: numero(b.consumo_km_l, { campo: 'o consumo (km/l)', obrigatorio: true, maiorQueZero: true }),
-    preco_combustivel: numero(b.preco_combustivel, { campo: 'o preço do combustível', obrigatorio: true, maiorQueZero: true }),
-    custos_fixos_mensais: numero(b.custos_fixos_mensais, { campo: 'os custos fixos' }),
-    km_mensal_estimado: numero(b.km_mensal_estimado, { campo: 'os km rodados por mês', obrigatorio: true, maiorQueZero: true }),
+    consumo_km_l: numero(b.consumo_km_l, { campo: 'quantos km o carro faz por litro', obrigatorio: true, maiorQueZero: true }),
+    preco_combustivel: numero(b.preco_combustivel, { campo: 'o preço do litro', obrigatorio: true, maiorQueZero: true }),
+    km_por_dia: numero(b.km_por_dia, { campo: 'quantos km você roda por dia', obrigatorio: true, maiorQueZero: true }),
+    dias_por_semana: dias,
+    custo_parcela: numero(b.custo_parcela, { campo: 'a parcela ou aluguel' }),
+    custo_seguro: numero(b.custo_seguro, { campo: 'o seguro' }),
+    custo_ipva: numero(b.custo_ipva, { campo: 'o IPVA' }),
+    custo_manutencao: numero(b.custo_manutencao, { campo: 'a manutenção' }),
+    custo_depreciacao: numero(b.custo_depreciacao, { campo: 'a depreciação' }),
+    custo_outros: numero(b.custo_outros, { campo: 'os outros custos' }),
   };
+  dados.custos_fixos_mensais = custosFixosMensais(dados);
+  dados.km_mensal_estimado = kmMensal(dados);
 
+  const colunas = Object.keys(dados);
   db.prepare(`
-    INSERT INTO perfil (id, nome, apps, meta_diaria, modelo_veiculo, consumo_km_l, preco_combustivel, custos_fixos_mensais, km_mensal_estimado)
-    VALUES (1, :nome, :apps, :meta_diaria, :modelo_veiculo, :consumo_km_l, :preco_combustivel, :custos_fixos_mensais, :km_mensal_estimado)
+    INSERT INTO perfil (id, ${colunas.join(', ')})
+    VALUES (1, ${colunas.map((c) => `:${c}`).join(', ')})
     ON CONFLICT(id) DO UPDATE SET
-      nome = excluded.nome, apps = excluded.apps, meta_diaria = excluded.meta_diaria,
-      modelo_veiculo = excluded.modelo_veiculo, consumo_km_l = excluded.consumo_km_l,
-      preco_combustivel = excluded.preco_combustivel, custos_fixos_mensais = excluded.custos_fixos_mensais,
-      km_mensal_estimado = excluded.km_mensal_estimado, atualizado_em = datetime('now')
+      ${colunas.map((c) => `${c} = excluded.${c}`).join(', ')}, atualizado_em = datetime('now')
   `).run(dados);
 
   const perfil = buscarPerfil();

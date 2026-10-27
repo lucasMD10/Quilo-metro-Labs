@@ -129,6 +129,9 @@ Sem o passo 3, o app abre na tela de cadastro inicial. Para recomeçar do zero, 
 ## Regras de cálculo
 
 ```
+custos fixos do mês = parcela/aluguel + seguro + IPVA ÷ 12 + manutenção + depreciação + outros
+km rodados por mês  = km por dia × dias por semana × 4,33 (52 semanas ÷ 12 meses)
+
 combustível por km = preço do litro ÷ consumo (km/l)
 fixo por km        = custos fixos do mês ÷ km rodados por mês
 custo real por km  = combustível por km + fixo por km
@@ -137,6 +140,8 @@ ganho bruto do dia = Uber + 99 + outros
 custo do dia       = km rodados × custo real por km + gastos extras
 lucro real do dia  = ganho bruto − custo do dia
 ```
+
+O motorista informa cada custo fixo separado e quantos km roda num dia normal; o backend calcula o total do mês e os km do mês (`calculos.js`). Bancos criados antes desse detalhamento ganham as colunas novas automaticamente ao iniciar.
 
 Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`). Assim, se o preço do combustível mudar, os dias antigos não são recalculados com o valor novo.
 
@@ -152,8 +157,16 @@ erDiagram
     text modelo_veiculo
     real consumo_km_l
     real preco_combustivel
-    real custos_fixos_mensais
-    real km_mensal_estimado
+    real km_por_dia
+    real dias_por_semana
+    real custo_parcela "R$ por mês"
+    real custo_seguro "R$ por mês"
+    real custo_ipva "R$ por ano"
+    real custo_manutencao "R$ por mês"
+    real custo_depreciacao "R$ por mês"
+    real custo_outros "R$ por mês"
+    real custos_fixos_mensais "calculado"
+    real km_mensal_estimado "calculado"
   }
   LANCAMENTOS {
     int id PK

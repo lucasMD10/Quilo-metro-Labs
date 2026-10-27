@@ -1,7 +1,7 @@
 // Popula o banco com um motorista de exemplo e 14 dias de lançamentos.
 // Útil para a demonstração na apresentação: npm run seed
 import { db } from './db.js';
-import { custoPorKm } from './calculos.js';
+import { custoPorKm, custosFixosMensais, kmMensal } from './calculos.js';
 
 const perfil = {
   nome: 'Carlos',
@@ -10,15 +10,21 @@ const perfil = {
   modelo_veiculo: 'Onix 1.0 2020',
   consumo_km_l: 12,
   preco_combustivel: 6.29,
-  custos_fixos_mensais: 1450,
-  km_mensal_estimado: 5000,
+  km_por_dia: 190,
+  dias_por_semana: 6,
+  custo_parcela: 800,
+  custo_seguro: 180,
+  custo_ipva: 1800, // por ano
+  custo_manutencao: 200,
+  custo_depreciacao: 120,
+  custo_outros: 0,
 };
+perfil.custos_fixos_mensais = custosFixosMensais(perfil);
+perfil.km_mensal_estimado = kmMensal(perfil);
 
 db.exec('DELETE FROM lancamentos; DELETE FROM perfil;');
-db.prepare(`
-  INSERT INTO perfil (id, nome, apps, meta_diaria, modelo_veiculo, consumo_km_l, preco_combustivel, custos_fixos_mensais, km_mensal_estimado)
-  VALUES (1, :nome, :apps, :meta_diaria, :modelo_veiculo, :consumo_km_l, :preco_combustivel, :custos_fixos_mensais, :km_mensal_estimado)
-`).run(perfil);
+const colunas = Object.keys(perfil);
+db.prepare(`INSERT INTO perfil (id, ${colunas.join(', ')}) VALUES (1, ${colunas.map((c) => `:${c}`).join(', ')})`).run(perfil);
 
 const custoKm = custoPorKm(perfil).total_km;
 const inserir = db.prepare(`

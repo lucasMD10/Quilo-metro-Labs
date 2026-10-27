@@ -231,6 +231,19 @@ svg { flex-shrink: 0; }
   font-size: 1rem; font-weight: 800; color: var(--marca);
   margin: 24px 0 12px; padding-top: 18px; border-top: 1px solid var(--borda);
 }
+.grupo--sanfona { display: block; }
+.sanfona {
+  display: flex; align-items: center; gap: 8px; width: 100%; min-height: 48px; padding: 4px 0;
+  background: none; border: 0; cursor: pointer; text-align: left; font: inherit; color: inherit;
+}
+.sanfona__titulo { flex: 1; }
+.sanfona__resumo { font-size: .875rem; font-weight: 700; color: var(--texto-suave); white-space: nowrap; }
+.sanfona__seta {
+  width: 10px; height: 10px; margin: 0 4px 4px 6px; border-right: 2px solid var(--marca); border-bottom: 2px solid var(--marca);
+  transform: rotate(45deg); transition: transform .2s;
+}
+.sanfona[aria-expanded="true"] .sanfona__seta { transform: rotate(225deg); margin-bottom: -4px; }
+.sanfona__conteudo { animation: entrar .25s ease-out; }
 .grupo--primeiro { margin-top: 0; padding-top: 0; border-top: 0; }
 .grupo__dica { font-size: .875rem; color: var(--texto-suave); margin: -4px 0 14px; }
 

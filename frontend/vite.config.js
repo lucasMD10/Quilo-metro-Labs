@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    host: true, // também abre no celular pela rede local (npm run dev mostra o endereço)
     proxy: { '/api': 'http://localhost:3001' },
   },
 });

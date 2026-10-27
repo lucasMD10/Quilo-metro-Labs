@@ -5,7 +5,7 @@ const ABAS = [
   { id: 'inicio', rotulo: 'Início' },
   { id: 'lancar', rotulo: 'Lançar' },
   { id: 'historico', rotulo: 'Histórico' },
-  { id: 'veiculo', rotulo: 'Veículo' },
+  { id: 'perfil', rotulo: 'Perfil' },
 ];
 
 // No celular é a barra de baixo; no computador vira o menu lateral (ver styles.css).

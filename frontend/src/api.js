@@ -7,7 +7,11 @@ async function chamar(caminho, opcoes = {}) {
   });
   if (resp.status === 204) return null;
   const dados = await resp.json().catch(() => null);
-  if (!resp.ok) throw new Error(dados?.erro || 'Não foi possível falar com o servidor.');
+  if (!resp.ok) {
+    const erro = new Error(dados?.erro || 'Não foi possível falar com o servidor.');
+    erro.status = resp.status; // 404 = não existe; o resto é falha de verdade
+    throw erro;
+  }
   return dados;
 }
 

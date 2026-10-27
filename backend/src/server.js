@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { existsSync } from 'node:fs';
 import { exec } from 'node:child_process';
+import { networkInterfaces } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import './db.js';
@@ -38,6 +39,9 @@ app.use((err, req, res, next) => {
 const servidor = app.listen(PORTA, () => {
   const url = `http://localhost:${PORTA}`;
   console.log(`KM Real rodando em ${url}`);
+  // Endereços na rede local, para abrir no celular conectado ao mesmo Wi-Fi.
+  const ips = Object.values(networkInterfaces()).flat().filter((i) => i && i.family === 'IPv4' && !i.internal);
+  for (const { address } of ips) console.log(`No celular (mesmo Wi-Fi): http://${address}:${PORTA}`);
   // Usado pelo INICIAR.bat: o navegador só abre depois que o servidor subiu de verdade.
   if (process.env.ABRIR_NAVEGADOR) {
     const comando = process.platform === 'win32' ? `start "" ${url}` : process.platform === 'darwin' ? `open ${url}` : `xdg-open ${url}`;

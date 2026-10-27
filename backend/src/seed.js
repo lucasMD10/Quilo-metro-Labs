@@ -16,8 +16,8 @@ const perfil = {
   custo_seguro: 180,
   custo_ipva: 1800, // por ano
   custo_manutencao: 200,
-  custo_depreciacao: 120,
-  custo_outros: 0,
+  custo_depreciacao: 0, // carro financiado: a parcela já cobre a perda de valor
+  custo_outros: 120, // rastreador e internet do celular
 };
 perfil.custos_fixos_mensais = custosFixosMensais(perfil);
 perfil.km_mensal_estimado = kmMensal(perfil);
@@ -26,10 +26,11 @@ db.exec('DELETE FROM lancamentos; DELETE FROM perfil;');
 const colunas = Object.keys(perfil);
 db.prepare(`INSERT INTO perfil (id, ${colunas.join(', ')}) VALUES (1, ${colunas.map((c) => `:${c}`).join(', ')})`).run(perfil);
 
-const custoKm = custoPorKm(perfil).total_km;
+const custo = custoPorKm(perfil);
 const inserir = db.prepare(`
-  INSERT INTO lancamentos (data, ganho_uber, ganho_99, ganho_outros, km_rodados, horas_trabalhadas, gastos_extras, custo_km_aplicado)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO lancamentos (data, ganho_uber, ganho_99, ganho_outros, km_rodados, horas_trabalhadas, gastos_extras,
+                           custo_km_aplicado, combustivel_km_aplicado, fixo_km_aplicado)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `);
 
 const hoje = new Date();
@@ -41,7 +42,7 @@ for (let i = 13; i >= 1; i--) {
   const km = 150 + Math.round(Math.random() * 90);
   const uber = Math.round(km * (1.1 + Math.random() * 0.6));
   const noventa = Math.round(km * (0.3 + Math.random() * 0.4));
-  inserir.run(data, uber, noventa, 0, km, 8 + Math.round(Math.random() * 3), Math.round(Math.random() * 40), custoKm);
+  inserir.run(data, uber, noventa, 0, km, 8 + Math.round(Math.random() * 3), Math.round(Math.random() * 40), custo.total_km, custo.combustivel_km, custo.fixo_km);
 }
 
-console.log('Banco populado com dados de exemplo. Custo por km:', custoKm);
+console.log('Banco populado com dados de exemplo. Custo por km:', custo.total_km);

@@ -1,5 +1,5 @@
 // Validações simples dos dados que chegam do front.
-export function numero(valor, { campo, min = 0, obrigatorio = false, maiorQueZero = false }) {
+export function numero(valor, { campo, min = 0, max = Infinity, obrigatorio = false, maiorQueZero = false }) {
   if (valor === undefined || valor === null || valor === '') {
     if (obrigatorio) throw erro(`Informe ${campo}.`);
     return 0;
@@ -8,6 +8,7 @@ export function numero(valor, { campo, min = 0, obrigatorio = false, maiorQueZer
   if (Number.isNaN(n)) throw erro(`${campo} precisa ser um número.`);
   if (maiorQueZero && n <= 0) throw erro(`${campo} precisa ser maior que zero.`);
   if (n < min) throw erro(`${campo} não pode ser negativo.`);
+  if (n > max) throw erro(`${campo} não pode passar de ${max.toLocaleString('pt-BR')}.`);
   return n;
 }
 

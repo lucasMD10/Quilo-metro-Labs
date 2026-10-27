@@ -39,7 +39,7 @@ export default function Historico({ onEditar }) {
     <ul className="historico">
       {lista.map((l) => (
         <li key={l.data} className="historico__item">
-          <button className="historico__abrir" onClick={() => onEditar(l.data)}>
+          <button className="historico__abrir" onClick={() => onEditar(l.data)} aria-label={`Abrir ${dataBR(l.data)}`}>
             <span className="historico__data">{titulo(l.data)}</span>
             <span className="historico__meta">
               <span><KmIcon name="quilometragem" size={16} /> {numeroBR(l.km_rodados)} km</span>
@@ -47,10 +47,8 @@ export default function Historico({ onEditar }) {
             </span>
             <span className={`historico__lucro ${l.lucro < 0 ? 'neg' : 'pos'}`}>{moeda(l.lucro)}</span>
           </button>
-          <div className="historico__acoes">
-            <button className="icone-botao" onClick={() => onEditar(l.data)} aria-label={`Editar ${dataBR(l.data)}`}><KmIcon name="editar" size={20} /></button>
-            <button className="icone-botao icone-botao--perigo" onClick={() => excluir(l.data)} aria-label={`Excluir ${dataBR(l.data)}`}><KmIcon name="excluir" size={20} /></button>
-          </div>
+          {/* Tocar no dia já abre a edição; o único botão extra é o de excluir. */}
+          <button className="icone-botao icone-botao--perigo" onClick={() => excluir(l.data)} aria-label={`Excluir ${dataBR(l.data)}`}><KmIcon name="excluir" size={20} /></button>
         </li>
       ))}
     </ul>

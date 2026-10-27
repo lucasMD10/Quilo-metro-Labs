@@ -1,13 +1,21 @@
+import KmIcon from './KmIcon.jsx';
+import marca from '../assets/marca.svg';
+
 const ABAS = [
-  { id: 'inicio', rotulo: 'Início', icone: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
-  { id: 'lancar', rotulo: 'Lançar', icone: 'M12 5v14M5 12h14' },
-  { id: 'historico', rotulo: 'Histórico', icone: 'M4 6h16M4 12h16M4 18h10' },
-  { id: 'veiculo', rotulo: 'Veículo', icone: 'M5 16l1.5-5h11L19 16M4 16h16v3H4zM7.5 19v1.5M16.5 19v1.5' },
+  { id: 'inicio', rotulo: 'Início' },
+  { id: 'lancar', rotulo: 'Lançar' },
+  { id: 'historico', rotulo: 'Histórico' },
+  { id: 'veiculo', rotulo: 'Veículo' },
 ];
 
+// No celular é a barra de baixo; no computador vira o menu lateral (ver styles.css).
 export default function NavInferior({ aba, onTrocar }) {
   return (
-    <nav className="nav">
+    <nav className="nav" aria-label="Navegação principal">
+      <div className="nav__marca">
+        <img src={marca} alt="" width="28" height="33" />
+        <span>KM Real</span>
+      </div>
       {ABAS.map((a) => (
         <button
           key={a.id}
@@ -15,9 +23,7 @@ export default function NavInferior({ aba, onTrocar }) {
           onClick={() => onTrocar(a.id)}
           aria-current={aba === a.id ? 'page' : undefined}
         >
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d={a.icone} />
-          </svg>
+          <KmIcon name={a.id} />
           {a.rotulo}
         </button>
       ))}

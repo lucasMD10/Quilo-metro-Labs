@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api.js';
 import { moeda, numeroBR, hojeISO } from '../util.js';
-import Odometro from '../components/Odometro.jsx';
+import ValorAnimado from '../components/ValorAnimado.jsx';
 import FaixaMeta from '../components/FaixaMeta.jsx';
 import GraficoSemana from '../components/GraficoSemana.jsx';
+import KmIcon from '../components/KmIcon.jsx';
 
 export default function Inicio({ perfil, onLancar }) {
   const [resumo, setResumo] = useState(null);
   const [erro, setErro] = useState('');
+  const [verCalculo, setVerCalculo] = useState(false);
 
   useEffect(() => {
     api.resumo(hojeISO(), 7).then(setResumo).catch((e) => setErro(e.message));
@@ -17,44 +19,65 @@ export default function Inicio({ perfil, onLancar }) {
   if (!resumo) return <p className="carregando">Carregando…</p>;
 
   const { hoje, totais, dias, meta_diaria } = resumo;
+  const { custo } = perfil;
 
   return (
-    <>
+    <div className="inicio">
       <section className="hero">
-        <p className="hero__saudacao">Olá, {perfil.nome}. Lucro de hoje</p>
-        <Odometro valor={hoje.lucro} />
+        <p className="hero__saudacao">Olá, {perfil.nome}</p>
+        <p className="hero__rotulo">Lucro real de hoje</p>
+        <ValorAnimado valor={hoje.lucro} className="hero__valor" />
         <FaixaMeta lucro={hoje.lucro} meta={meta_diaria} />
-        {!hoje.lancado && (
-          <button className="botao botao--faixa" onClick={() => onLancar(hojeISO())}>Lançar o dia de hoje</button>
-        )}
+        <button className="botao botao--claro" onClick={() => onLancar(hojeISO())}>
+          <KmIcon name={hoje.lancado ? 'editar' : 'lancar'} size={20} />
+          {hoje.lancado ? 'Editar o dia de hoje' : 'Lançar o dia de hoje'}
+        </button>
       </section>
 
-      <section className="indicadores">
-        <div>
-          <span className="indicadores__valor">{moeda(perfil.custo.total_km)}</span>
-          <span className="indicadores__rotulo">seu custo por km</span>
+      <section className="indicadores" aria-label="Indicadores de hoje">
+        <div className="indicador">
+          <span className="indicador__icone"><KmIcon name="custo-km" size={20} /></span>
+          <span className="indicador__valor">{moeda(custo.total_km)}</span>
+          <span className="indicador__rotulo">seu custo por km</span>
+          <button className="indicador__info" onClick={() => setVerCalculo((v) => !v)} aria-expanded={verCalculo}>
+            <KmIcon name="detalhar" size={16} /> {verCalculo ? 'Fechar' : 'Entender o cálculo'}
+          </button>
         </div>
-        <div>
-          <span className="indicadores__valor">{hoje.lancado ? moeda(hoje.ganho_por_km) : '—'}</span>
-          <span className="indicadores__rotulo">ganho bruto por km hoje</span>
+        <div className="indicador">
+          <span className="indicador__icone"><KmIcon name="ganhos" size={20} /></span>
+          <span className="indicador__valor">{hoje.lancado ? moeda(hoje.ganho_por_km) : '—'}</span>
+          <span className="indicador__rotulo">ganho bruto por km hoje</span>
         </div>
-        <div>
-          <span className="indicadores__valor">{numeroBR(hoje.km_rodados)}</span>
-          <span className="indicadores__rotulo">km hoje</span>
+        <div className="indicador">
+          <span className="indicador__icone"><KmIcon name="quilometragem" size={20} /></span>
+          <span className="indicador__valor">{numeroBR(hoje.km_rodados)} km</span>
+          <span className="indicador__rotulo">rodados hoje</span>
         </div>
       </section>
 
-      <section className="painel">
-        <h2>Últimos 7 dias</h2>
+      {verCalculo && (
+        <section className="cartao calculo" aria-label="Como o custo por km é calculado">
+          <h2 className="cartao__titulo"><KmIcon name="detalhar" size={20} /> Como chegamos em {moeda(custo.total_km)} por km</h2>
+          <dl className="linhas">
+            <div><dt><KmIcon name="combustivel" size={18} /> Combustível<small>{moeda(perfil.preco_combustivel)} o litro ÷ {numeroBR(perfil.consumo_km_l, 1)} km/l</small></dt><dd>{moeda(custo.combustivel_km)}/km</dd></div>
+            <div><dt><KmIcon name="custos-fixos" size={18} /> Custos fixos<small>{moeda(perfil.custos_fixos_mensais)} por mês ÷ {numeroBR(perfil.km_mensal_estimado)} km por mês</small></dt><dd>{moeda(custo.fixo_km)}/km</dd></div>
+            <div className="linhas__total"><dt>Custo por km</dt><dd>{moeda(custo.total_km)}</dd></div>
+          </dl>
+          <p className="nota">Cada km rodado no dia é descontado por esse valor. Para mudar, ajuste os dados na aba Veículo.</p>
+        </section>
+      )}
+
+      <section className="cartao semana">
+        <h2 className="cartao__titulo"><KmIcon name="calendario" size={20} /> Últimos 7 dias</h2>
         <GraficoSemana dias={dias} meta={meta_diaria} />
-        <dl className="totais">
+        <dl className="linhas">
           <div><dt>Ganho bruto</dt><dd>{moeda(totais.bruto)}</dd></div>
-          <div><dt>Custos do carro e gastos</dt><dd>−{moeda(totais.custo_total)}</dd></div>
-          <div className="totais__destaque"><dt>Lucro real</dt><dd className={totais.lucro < 0 ? 'neg' : ''}>{moeda(totais.lucro)}</dd></div>
-          <div><dt>Lucro por hora</dt><dd>{moeda(totais.lucro_por_hora)}</dd></div>
-          <div><dt>Dias com meta batida</dt><dd>{resumo.dias_meta_batida} de {totais.dias_trabalhados}</dd></div>
+          <div><dt>Custos do carro e gastos</dt><dd className="custo">−{moeda(totais.custo_total)}</dd></div>
+          <div className="linhas__total"><dt>Lucro real</dt><dd className={totais.lucro < 0 ? 'neg' : 'pos'}>{moeda(totais.lucro)}</dd></div>
+          <div><dt><KmIcon name="horas" size={18} /> Lucro por hora</dt><dd>{moeda(totais.lucro_por_hora)}</dd></div>
+          <div><dt><KmIcon name="meta" size={18} /> Dias com meta batida</dt><dd>{resumo.dias_meta_batida} de {totais.dias_trabalhados}</dd></div>
         </dl>
       </section>
-    </>
+    </div>
   );
 }

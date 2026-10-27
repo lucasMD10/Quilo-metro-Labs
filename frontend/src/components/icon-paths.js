@@ -1,0 +1,22 @@
+export const iconPaths = {
+  "inicio": "M3 10.5 12 3l9 7.5 M5 9v10a2 2 0 0 0 2 2h3v-7h4v7h3a2 2 0 0 0 2-2V9",
+  "lancar": "M12 5v14 M5 12h14",
+  "historico": "M4 8a8.5 8.5 0 1 1-.5 7 M4 3v5h5 M12 7v5l3 2",
+  "veiculo": "M4 11l2-6h12l2 6 M4 11h16a1 1 0 0 1 1 1v6H3v-6a1 1 0 0 1 1-1Z M5 18v3 M19 18v3 M6 14h2 M16 14h2",
+  "ganhos": "M4 6h15v14H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h13 M19 11h-6v5h6 M16 13.5h.01",
+  "lucro-real": "M4 5h13a2 2 0 0 1 2 2v4 M19 18v2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12 M12 14l3 3 6-6 M6 8h4",
+  "custo-km": "M5 3h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z M8 7h8 M8 12h1 M15 12h1 M8 17h1 M15 17h1",
+  "quilometragem": "M8 3 4 21 M16 3l4 18 M12 4v3 M12 11v3 M12 18v2",
+  "horas": "M21 12a9 9 0 1 1-18 0 9 9 0 1 1 18 0 M12 6v6l4 2",
+  "meta": "M20.5 9a9 9 0 1 1-5.5-5.5 M16.5 10a5 5 0 1 1-2.5-2.5 M12 12l8-8 M16 4h4v4",
+  "combustivel": "M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16 M3 21h12 M7 7h4v4H7Z M14 12h2a1 1 0 0 1 1 1v4a2 2 0 0 0 4 0V9l-3-4 M19 7v3h2",
+  "manutencao": "M14 4a5 5 0 0 0-6 6L3 15a3 3 0 0 0 4 4l5-5a5 5 0 0 0 6-6l-3 3-3-3 3-3Z",
+  "custos-fixos": "M6 3h12v18l-3-2-3 2-3-2-3 2V3Z M9 7h6 M9 11h6 M9 15h3",
+  "gastos-extras": "M6 3h12v18l-3-2-3 2-3-2-3 2V3Z M9 7h6 M9 12h6 M12 9v6",
+  "calendario": "M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z M7 3v4 M17 3v4 M3 10h18 M7 14h.01 M12 14h.01 M17 14h.01 M7 17h.01 M12 17h.01",
+  "detalhar": "M21 12a9 9 0 1 1-18 0 9 9 0 1 1 18 0 M12 11v6 M12 7h.01",
+  "editar": "M14 5l5 5 M4 20l1-5L16 4a2.1 2.1 0 0 1 3 3L8 18l-4 2Z",
+  "excluir": "M3 6h18 M9 6V3h6v3 M5 6l1 15h12l1-15 M10 10v7 M14 10v7",
+  "confirmar": "M4 12l5 5L20 6",
+  "alerta": "M10.3 4.5 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 4.5a2 2 0 0 0-3.4 0Z M12 9v5 M12 17h.01"
+};

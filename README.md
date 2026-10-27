@@ -30,9 +30,9 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 
 | Integrante | Função | Responsabilidades |
 |---|---|---|
-| Lucas | Product Owner | Visão do produto, prioridades do backlog, pesquisa com motoristas, pitch |
-| _[nome]_ | Tech Lead / Dev Full-stack | Arquitetura, back-end, banco de dados, integração e repositório |
-| _[nome]_ | UX/UI Designer | Protótipos no Figma, identidade visual, telas e testes de usabilidade |
+| Lucas/Vinicius | Product Owner | Visão do produto, prioridades do backlog, pesquisa com motoristas, pitch |
+| _Rafael/lucas_ | Tech Lead / Dev Full-stack | Arquitetura, back-end, banco de dados, integração e repositório |
+| _Rafael/Vinicius_ | UX/UI Designer | Protótipos no Figma, identidade visual, telas e testes de usabilidade |
 
 ---
 

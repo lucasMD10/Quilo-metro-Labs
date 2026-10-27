@@ -25,7 +25,7 @@ export default function Inicio({ perfil, onLancar, onPerfil }) {
     <div className="inicio">
       <section className="hero">
         <p className="hero__saudacao">Olá, {perfil.nome}</p>
-        <p className="hero__rotulo">Lucro real de hoje</p>
+        <p className="hero__rotulo">Lucro estimado de hoje</p>
         <ValorAnimado valor={hoje.lucro} className="hero__valor" />
         <FaixaMeta lucro={hoje.lucro} meta={meta_diaria} />
         <button className="botao botao--claro" onClick={() => onLancar(hojeISO())}>
@@ -61,7 +61,7 @@ export default function Inicio({ perfil, onLancar, onPerfil }) {
             <div><dt><KmIcon name="custos-fixos" size={18} /> Custos fixos<small>{moeda(perfil.custos_fixos_mensais)} por mês ÷ {numeroBR(perfil.km_mensal_estimado)} km por mês</small></dt><dd>{moeda(custo.fixo_km)}/km</dd></div>
             <div className="linhas__total"><dt>Custo por km</dt><dd>{moeda(custo.total_km)}</dd></div>
           </dl>
-          <p className="nota">Cada km rodado no dia é descontado por esse valor.</p>
+          <p className="nota">Cada km rodado no dia é descontado por esse valor. É uma estimativa: os custos fixos do mês são divididos pelos km que você prevê rodar. Se rodar menos, o custo real de cada km fica maior.</p>
           <button className="link-botao" onClick={onPerfil}><KmIcon name="editar" size={18} /> Ajustar os dados do carro</button>
         </section>
       )}
@@ -72,7 +72,7 @@ export default function Inicio({ perfil, onLancar, onPerfil }) {
         <dl className="linhas">
           <div><dt>Ganho bruto</dt><dd>{moeda(totais.bruto)}</dd></div>
           <div><dt>Custos do carro e gastos</dt><dd className="custo">−{moeda(totais.custo_total)}</dd></div>
-          <div className="linhas__total"><dt>Lucro real</dt><dd className={totais.lucro < 0 ? 'neg' : 'pos'}>{moeda(totais.lucro)}</dd></div>
+          <div className="linhas__total"><dt>Lucro estimado</dt><dd className={totais.lucro < 0 ? 'neg' : 'pos'}>{moeda(totais.lucro)}</dd></div>
           <div><dt><KmIcon name="horas" size={18} /> Lucro por hora</dt><dd>{moeda(totais.lucro_por_hora)}</dd></div>
           <div><dt><KmIcon name="meta" size={18} /> Dias com meta batida</dt><dd>{resumo.dias_meta_batida} de {totais.dias_trabalhados}</dd></div>
         </dl>

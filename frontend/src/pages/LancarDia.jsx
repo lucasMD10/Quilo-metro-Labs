@@ -152,7 +152,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
             </>
           )}
           <div><span>Outros gastos do dia</span><strong className="custo">−{moeda(previa.gastos)}</strong></div>
-          <div className="resultado__total"><span>Lucro real</span><strong className={previa.lucro < 0 ? 'neg' : 'pos'}>{moeda(previa.lucro)}</strong></div>
+          <div className="resultado__total"><span>Lucro estimado</span><strong className={previa.lucro < 0 ? 'neg' : 'pos'}>{moeda(previa.lucro)}</strong></div>
           <p className="resultado__nota">
             {salvo && !recalcular
               ? 'O combustível e os custos fixos usam o custo por km do dia em que ele foi lançado.'
@@ -163,10 +163,11 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
         {erro && <p className="erro">{erro}</p>}
         <div className="barra-acao">
           <div className="barra-acao__resumo">
-            <span>Lucro real</span>
+            <span>Lucro estimado</span>
             <strong className={previa.lucro < 0 ? 'neg' : 'pos'}>{moeda(previa.lucro)}</strong>
           </div>
-          <button className="botao" disabled={salvando || carga !== 'ok'}>
+          {/* onMouseDown: tocar em salvar não tira o foco do campo, senão a tela se mexe no meio do toque */}
+          <button className="botao" disabled={salvando || carga !== 'ok'} onMouseDown={(e) => e.preventDefault()}>
             <KmIcon name="confirmar" size={20} /> {salvando ? 'Salvando…' : salvo ? 'Salvar alterações' : 'Salvar dia'}
           </button>
         </div>

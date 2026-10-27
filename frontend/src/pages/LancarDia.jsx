@@ -25,11 +25,13 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
   // Ao trocar a data, carrega o lançamento daquele dia (se já existir) para editar.
   // Só um 404 significa "dia sem lançamento"; qualquer outra falha não pode virar formulário vazio.
   useEffect(() => {
+    let atual = true; // vira false se a data mudar antes da resposta chegar
     setErro('');
     setCarga('carregando');
     setRecalcular(false);
     api.lancamento(data)
       .then((l) => {
+        if (!atual) return;
         setSalvo(l);
         setForm({
           ganho_uber: txt(l.ganho_uber), ganho_99: txt(l.ganho_99), ganho_outros: txt(l.ganho_outros),
@@ -39,9 +41,11 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
         setCarga('ok');
       })
       .catch((e) => {
+        if (!atual) return;
         if (e.status === 404) { setSalvo(null); setForm(VAZIO); setCarga('ok'); }
         else setCarga('erro');
       });
+    return () => { atual = false; };
   }, [data, tentativa]);
 
   // Dia já lançado usa o custo por km da época, a não ser que o motorista peça para recalcular.
@@ -59,6 +63,12 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
     e.preventDefault();
     setErro('');
     if (NUMERICOS.some((k) => Number.isNaN(paraNumero(form[k])))) return setErro('Corrija os campos marcados em vermelho.');
+    const v = Object.fromEntries(NUMERICOS.map((k) => [k, paraNumero(form[k])]));
+    const ganhos = v.ganho_uber + v.ganho_99 + v.ganho_outros;
+    if (NUMERICOS.every((k) => !v[k])) return setErro('O dia está vazio. Preencha pelo menos os ganhos ou os km rodados.');
+    if (v.horas_trabalhadas > 24) return setErro('Um dia tem no máximo 24 horas. Confira as horas online.');
+    if (v.km_rodados > 1500) return setErro('Mais de 1.500 km num dia não parece real. Confira os km rodados.');
+    if (ganhos > 0 && !v.km_rodados && !window.confirm('Você lançou ganhos sem km rodados, então nenhum custo do carro será descontado. Salvar assim mesmo?')) return;
     setSalvando(true);
     try {
       const dados = Object.fromEntries(
@@ -91,6 +101,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
         <h2 className="cartao__titulo">{salvo ? 'Editando um dia já lançado' : 'Novo dia'}</h2>
         <Campo rotulo={<><KmIcon name="calendario" size={18} /> Data</>} nome="data" tipo="date" valor={data} max={hojeISO()} onChange={(_, v) => setData(v)} />
 
+        <fieldset className="campos" disabled={carga !== 'ok'}>
         <h3 className="grupo"><KmIcon name="ganhos" size={20} /> Ganhos do dia</h3>
         <p className="grupo__dica">Use o valor que caiu pra você, já sem a taxa do app. Ele aparece no resumo de ganhos da Uber e da 99.</p>
         <div className="duas-colunas">
@@ -108,6 +119,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
         <h3 className="grupo"><KmIcon name="gastos-extras" size={20} /> Outros gastos</h3>
         <Campo rotulo="Outros gastos do dia" nome="gastos_extras" valor={form.gastos_extras} onChange={mudar} prefixo="R$" dica="Lavagem, alimentação, pedágio, estacionamento. Não inclua combustível: ele já é descontado pelos km rodados." />
         <Campo rotulo="Observação" nome="observacao" valor={form.observacao} onChange={mudar} placeholder="Opcional" />
+        </fieldset>
       </div>
 
       <aside className="pagina-form__resumo">

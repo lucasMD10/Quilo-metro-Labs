@@ -46,14 +46,18 @@ lancamentosRouter.put('/:data', (req, res) => {
     ganho_uber: numero(b.ganho_uber, { campo: 'o ganho na Uber' }),
     ganho_99: numero(b.ganho_99, { campo: 'o ganho na 99' }),
     ganho_outros: numero(b.ganho_outros, { campo: 'outros ganhos' }),
-    km_rodados: numero(b.km_rodados, { campo: 'os km rodados' }),
-    horas_trabalhadas: numero(b.horas_trabalhadas, { campo: 'as horas trabalhadas' }),
+    km_rodados: numero(b.km_rodados, { campo: 'os km rodados', max: 1500 }),
+    horas_trabalhadas: numero(b.horas_trabalhadas, { campo: 'as horas trabalhadas', max: 24 }),
     gastos_extras: numero(b.gastos_extras, { campo: 'os gastos extras' }),
     custo_km_aplicado: custo.custo_km_aplicado,
     combustivel_km_aplicado: custo.combustivel_km_aplicado,
     fixo_km_aplicado: custo.fixo_km_aplicado,
     observacao: String(b.observacao || '').trim() || null,
   };
+
+  if (!dados.ganho_uber && !dados.ganho_99 && !dados.ganho_outros && !dados.km_rodados && !dados.horas_trabalhadas && !dados.gastos_extras) {
+    throw erro('O dia está vazio. Preencha pelo menos os ganhos ou os km rodados.');
+  }
 
   db.prepare(`
     INSERT INTO lancamentos (data, ganho_uber, ganho_99, ganho_outros, km_rodados, horas_trabalhadas, gastos_extras,

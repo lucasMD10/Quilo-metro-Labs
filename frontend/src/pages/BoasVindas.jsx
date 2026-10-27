@@ -5,6 +5,7 @@ import { api } from '../api.js';
 import CamposVeiculo, { ResumoVeiculo } from '../components/CamposVeiculo.jsx';
 import KmIcon from '../components/KmIcon.jsx';
 import marcaNome from '../assets/marca-nome.svg';
+import marca from '../assets/marca.svg';
 import { perfilParaForm, formParaPerfil, temNumeroInvalido } from './campos-perfil.js';
 
 // Cadastro inicial em duas etapas: 1) você e sua meta, 2) seu carro.
@@ -37,9 +38,13 @@ export default function BoasVindas({ onConcluir }) {
   }
 
   return (
-    <main className="boas-vindas">
+    <main className={`boas-vindas boas-vindas--etapa${etapa}`}>
       <section className="boas-vindas__marca">
         <img className="boas-vindas__logo" src={marcaNome} alt="KM Real" />
+        <div className="boas-vindas__topo-cel">
+          <img src={marca} alt="" width="34" height="41" />
+          <span>KM Real</span>
+        </div>
         <p className="boas-vindas__frase">Quanto sobra de verdade a cada quilômetro que você roda.</p>
         <ul className="boas-vindas__lista">
           <li><KmIcon name="custo-km" size={22} /> Descubra o custo real de cada km do seu carro</li>

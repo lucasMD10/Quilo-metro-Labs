@@ -18,10 +18,11 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 
 ## Funcionalidades do MVP
 
-- **Cadastro inicial** em duas etapas: dados do motorista (nome, apps, meta diária) e do veículo (consumo, combustível, custos fixos, km por mês).
+- **Cadastro inicial** em duas etapas: dados do motorista (nome, apps, meta diária) e do veículo (combustível, km por dia e dias por semana, custos fixos separados).
 - **Custo real por km**, separado entre combustível e custos fixos.
 - **Lançamento do dia** com ganhos por app, km rodados, horas online e gastos extras, com prévia do lucro enquanto digita.
-- **Dashboard** com o lucro de hoje, a meta diária como faixa de estrada, indicadores rápidos e gráfico dos últimos 7 dias.
+- **Dashboard** com o lucro de hoje, o progresso da meta diária, indicadores rápidos (com "Entender o cálculo" do custo por km) e gráfico dos últimos 7 dias.
+- **Layout para celular e computador**: barra de navegação inferior no celular, menu lateral e telas em duas colunas no computador.
 - **Histórico** com edição e exclusão de dias lançados.
 - **Edição do perfil e do veículo**, com recálculo automático do custo por km.
 
@@ -78,10 +79,11 @@ O front-end nunca acessa o banco diretamente. Ele chama a API REST, que valida o
 │       ├── App.jsx         # navegação entre as telas
 │       ├── api.js          # chamadas à API
 │       ├── util.js         # formatação e prévias de cálculo
-│       ├── styles.css      # identidade visual
-│       ├── components/     # Odometro, FaixaMeta, GraficoSemana, Campo, NavInferior
+│       ├── styles.css      # identidade visual (cores, layout celular e computador)
+│       ├── assets/         # logo em SVG
+│       ├── components/     # KmIcon, ValorAnimado, FaixaMeta, GraficoSemana, Campo, CamposVeiculo, NavInferior
 │       └── pages/          # BoasVindas, Inicio, LancarDia, Historico, Veiculo
-├── docs/                   # materiais de apoio do projeto
+├── docs/                   # materiais de apoio e pendências do projeto
 └── package.json            # scripts da raiz (workspaces)
 ```
 

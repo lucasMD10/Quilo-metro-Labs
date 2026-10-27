@@ -2,8 +2,8 @@ import { useState } from 'react';
 import Campo from '../components/Campo.jsx';
 import SeletorApps from './SeletorApps.jsx';
 import { api } from '../api.js';
-import { moeda } from '../util.js';
-import { perfilParaForm, formParaPerfil, previaCusto } from './campos-perfil.js';
+import CamposVeiculo from '../components/CamposVeiculo.jsx';
+import { perfilParaForm, formParaPerfil } from './campos-perfil.js';
 
 // Cadastro inicial em duas etapas: 1) você e sua meta, 2) seu carro.
 export default function BoasVindas({ onConcluir }) {
@@ -12,7 +12,6 @@ export default function BoasVindas({ onConcluir }) {
   const [erro, setErro] = useState('');
   const [salvando, setSalvando] = useState(false);
   const mudar = (nome, valor) => setForm((f) => ({ ...f, [nome]: valor }));
-  const custo = previaCusto(form);
 
   async function concluir(e) {
     e.preventDefault();
@@ -47,14 +46,8 @@ export default function BoasVindas({ onConcluir }) {
       ) : (
         <form className="painel" onSubmit={concluir}>
           <h2>Agora, o seu carro</h2>
-          <Campo rotulo="Modelo" nome="modelo_veiculo" valor={form.modelo_veiculo} onChange={mudar} placeholder="Ex.: Onix 1.0 2020" />
-          <div className="duas-colunas">
-            <Campo rotulo="Consumo" nome="consumo_km_l" valor={form.consumo_km_l} onChange={mudar} sufixo="km/l" />
-            <Campo rotulo="Combustível" nome="preco_combustivel" valor={form.preco_combustivel} onChange={mudar} prefixo="R$" sufixo="/l" />
-          </div>
-          <Campo rotulo="Custos fixos por mês" nome="custos_fixos_mensais" valor={form.custos_fixos_mensais} onChange={mudar} prefixo="R$" dica="Some seguro, IPVA, parcela ou aluguel do carro e manutenção." />
-          <Campo rotulo="Quantos km você roda por mês?" nome="km_mensal_estimado" valor={form.km_mensal_estimado} onChange={mudar} sufixo="km" dica="Uma estimativa já serve. Dá para ajustar depois." />
-          <p className="previa">Seu custo real: <strong>{moeda(custo.total)} por km</strong></p>
+          <p className="grupo__dica">Com esses dados o app calcula quanto cada km rodado custa para você. Uma estimativa já serve, dá para ajustar depois.</p>
+          <CamposVeiculo form={form} onChange={mudar} />
           {erro && <p className="erro">{erro}</p>}
           <div className="acoes">
             <button type="button" className="botao botao--secundario" onClick={() => setEtapa(1)}>Voltar</button>

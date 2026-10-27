@@ -140,6 +140,15 @@ button, input { font: inherit; color: inherit; }
 .resultado__lucro span { color: var(--texto); font-weight: 600; }
 .resultado__lucro strong { font-family: var(--fonte-placa); font-size: 1.5rem; color: var(--lucro); }
 
+.grupo { font-family: var(--fonte-placa); font-size: 1.125rem; margin: 22px 0 10px; padding-top: 14px; border-top: 1px solid var(--concreto); }
+.grupo__dica { font-size: .875rem; color: var(--texto-suave); margin: -4px 0 12px; }
+.chips--dias { flex-wrap: wrap; }
+.chips--dias .chip { padding: 8px 0; min-width: 42px; }
+.resultado__titulo { margin: 0 0 6px; font-weight: 600; }
+.resultado small { display: block; font-size: .75rem; }
+.resultado__nota { margin: 8px 0 0; font-size: .8125rem; color: var(--texto-suave); }
+.aviso { color: #6B5300; background: #FFF6D6; border-left: 4px solid var(--faixa); padding: 10px 12px; border-radius: 6px; font-size: .9375rem; }
+
 .previa { background: var(--concreto); padding: 10px 14px; border-radius: 8px; margin: 0 0 16px; }
 
 .botao {

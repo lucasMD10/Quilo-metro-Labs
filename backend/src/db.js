@@ -25,6 +25,14 @@ db.exec(`
     preco_combustivel     REAL    NOT NULL,  -- R$ por litro
     custos_fixos_mensais  REAL    NOT NULL DEFAULT 0, -- seguro, IPVA, parcela/aluguel, manutenção...
     km_mensal_estimado    REAL    NOT NULL,  -- usado para diluir os custos fixos por km
+    km_por_dia            REAL,              -- km num dia normal de trabalho
+    dias_por_semana       REAL,              -- dias trabalhados por semana
+    custo_parcela         REAL,              -- detalhamento dos custos fixos (R$ por mês)
+    custo_seguro          REAL,
+    custo_ipva            REAL,              -- R$ por ano (IPVA + licenciamento)
+    custo_manutencao      REAL,
+    custo_depreciacao     REAL,
+    custo_outros          REAL,
     atualizado_em         TEXT    NOT NULL DEFAULT (datetime('now'))
   );
 
@@ -45,3 +53,10 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_lancamentos_data ON lancamentos (data);
 `);
+
+// Bancos criados antes do detalhamento dos custos ganham as colunas novas.
+const colunasNovas = ['km_por_dia', 'dias_por_semana', 'custo_parcela', 'custo_seguro', 'custo_ipva', 'custo_manutencao', 'custo_depreciacao', 'custo_outros'];
+const colunasPerfil = db.prepare('PRAGMA table_info(perfil)').all().map((c) => c.name);
+for (const coluna of colunasNovas) {
+  if (!colunasPerfil.includes(coluna)) db.exec(`ALTER TABLE perfil ADD COLUMN ${coluna} REAL`);
+}

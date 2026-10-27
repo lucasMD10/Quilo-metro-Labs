@@ -13,11 +13,15 @@ export const dataBR = (iso) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
 
 // Mesmo cálculo do backend, usado para mostrar a prévia enquanto o motorista digita.
-export function previaDoDia(form, custoKm) {
+// O custo do carro é separado em combustível e custos fixos, as duas partes do custo por km.
+export function previaDoDia(form, custo) {
   const n = (v) => Number(String(v).replace(',', '.')) || 0;
   const bruto = n(form.ganho_uber) + n(form.ganho_99) + n(form.ganho_outros);
-  const custo = n(form.km_rodados) * custoKm + n(form.gastos_extras);
-  return { bruto, custo, lucro: bruto - custo };
+  const km = n(form.km_rodados);
+  const combustivel = km * custo.combustivel_km;
+  const fixo = km * custo.fixo_km;
+  const gastos = n(form.gastos_extras);
+  return { bruto, combustivel, fixo, gastos, lucro: bruto - combustivel - fixo - gastos };
 }
 
 // Converte "12,5" -> 12.5 antes de mandar para a API.

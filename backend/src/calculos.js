@@ -3,6 +3,21 @@
 
 const arred = (valor, casas = 2) => Math.round(valor * 10 ** casas) / 10 ** casas;
 
+export const SEMANAS_POR_MES = 52 / 12;
+
+/**
+ * Custos fixos do mês a partir do detalhamento.
+ * O IPVA é informado por ano, então entra dividido por 12.
+ */
+export function custosFixosMensais(p) {
+  return arred(p.custo_parcela + p.custo_seguro + p.custo_ipva / 12 + p.custo_manutencao + p.custo_depreciacao + p.custo_outros);
+}
+
+/** Km rodados no mês = km por dia × dias por semana × semanas no mês. */
+export function kmMensal(p) {
+  return arred(p.km_por_dia * p.dias_por_semana * SEMANAS_POR_MES, 0);
+}
+
 /**
  * Custo real por quilômetro do veículo.
  *  - combustível/km = preço do litro ÷ km por litro

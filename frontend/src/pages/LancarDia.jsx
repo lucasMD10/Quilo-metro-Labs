@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Campo from '../components/Campo.jsx';
 import { api } from '../api.js';
-import { moeda, hojeISO, previaDoDia, paraNumero } from '../util.js';
+import { moeda, numeroBR, hojeISO, previaDoDia, paraNumero } from '../util.js';
 
 const VAZIO = { ganho_uber: '', ganho_99: '', ganho_outros: '', km_rodados: '', horas_trabalhadas: '', gastos_extras: '', observacao: '' };
 const txt = (v) => (v ? String(v).replace('.', ',') : '');
@@ -30,7 +30,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
       .catch(() => { setExiste(false); setForm(VAZIO); });
   }, [data]);
 
-  const previa = previaDoDia(form, perfil.custo.total_km);
+  const previa = previaDoDia(form, perfil.custo);
 
   async function salvar(e) {
     e.preventDefault();
@@ -61,16 +61,20 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
       <Campo rotulo="Outros ganhos" nome="ganho_outros" valor={form.ganho_outros} onChange={mudar} prefixo="R$" dica="Gorjetas em dinheiro, corridas particulares." />
 
       <div className="duas-colunas">
-        <Campo rotulo="Km rodados" nome="km_rodados" valor={form.km_rodados} onChange={mudar} sufixo="km" />
-        <Campo rotulo="Horas online" nome="horas_trabalhadas" valor={form.horas_trabalhadas} onChange={mudar} sufixo="h" />
+        <Campo rotulo="Km rodados" nome="km_rodados" valor={form.km_rodados} onChange={mudar} sufixo="km" dica="Pelo painel do carro." />
+        <Campo rotulo="Horas online" nome="horas_trabalhadas" valor={form.horas_trabalhadas} onChange={mudar} sufixo="h" dica="Tempo logado nos apps." />
       </div>
-      <Campo rotulo="Gastos do dia" nome="gastos_extras" valor={form.gastos_extras} onChange={mudar} prefixo="R$" dica="Lavagem, alimentação, pedágio, estacionamento." />
+      <Campo rotulo="Outros gastos do dia" nome="gastos_extras" valor={form.gastos_extras} onChange={mudar} prefixo="R$" dica="Lavagem, alimentação, pedágio, estacionamento. Não inclua combustível: ele já é descontado pelos km rodados." />
       <Campo rotulo="Observação" nome="observacao" valor={form.observacao} onChange={mudar} placeholder="Opcional" />
 
       <div className="resultado">
-        <div><span>Ganho bruto</span><strong>{moeda(previa.bruto)}</strong></div>
-        <div><span>Custo do carro e gastos</span><strong>−{moeda(previa.custo)}</strong></div>
+        <p className="resultado__titulo">Como fica o seu dia</p>
+        <div><span>Ganho bruto<small>Uber + 99 + outros</small></span><strong>{moeda(previa.bruto)}</strong></div>
+        <div><span>Combustível<small>{numeroBR(paraNumero(form.km_rodados), paraNumero(form.km_rodados) % 1 ? 1 : 0)} km × {moeda(perfil.custo.combustivel_km)}/km</small></span><strong>−{moeda(previa.combustivel)}</strong></div>
+        <div><span>Custos fixos do carro<small>{numeroBR(paraNumero(form.km_rodados), paraNumero(form.km_rodados) % 1 ? 1 : 0)} km × {moeda(perfil.custo.fixo_km)}/km</small></span><strong>−{moeda(previa.fixo)}</strong></div>
+        <div><span>Outros gastos do dia</span><strong>−{moeda(previa.gastos)}</strong></div>
         <div className="resultado__lucro"><span>Lucro real</span><strong className={previa.lucro < 0 ? 'neg' : ''}>{moeda(previa.lucro)}</strong></div>
+        <p className="resultado__nota">O combustível e os custos fixos saem do custo por km do seu carro ({moeda(perfil.custo.total_km)}/km). Se esse valor parecer errado, ajuste na aba Veículo.</p>
       </div>
 
       {erro && <p className="erro">{erro}</p>}

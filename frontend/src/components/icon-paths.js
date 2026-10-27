@@ -1,4 +1,5 @@
 export const iconPaths = {
+  "perfil": "M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z M4 21a8 8 0 0 1 16 0",
   "inicio": "M3 10.5 12 3l9 7.5 M5 9v10a2 2 0 0 0 2 2h3v-7h4v7h3a2 2 0 0 0 2-2V9",
   "lancar": "M12 5v14 M5 12h14",
   "historico": "M4 8a8.5 8.5 0 1 1-.5 7 M4 3v5h5 M12 7v5l3 2",

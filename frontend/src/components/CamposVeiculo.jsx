@@ -3,7 +3,7 @@ import KmIcon from './KmIcon.jsx';
 import { moeda, numeroBR, lerNumero } from '../util.js';
 import { CUSTOS_FIXOS, previaCusto, avisosVeiculo } from '../pages/campos-perfil.js';
 
-// Campos do carro agrupados por assunto. Usado no cadastro inicial e na aba Veículo.
+// Campos do carro agrupados por assunto. Usado no cadastro inicial e na aba Perfil.
 export default function CamposVeiculo({ form, onChange }) {
   const custo = previaCusto(form);
   return (

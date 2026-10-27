@@ -3,7 +3,7 @@ import KmIcon from './KmIcon.jsx';
 
 // Progresso do lucro do dia até a meta. A barra é uma estrada: a parte percorrida acende.
 export default function FaixaMeta({ lucro, meta }) {
-  if (!meta) return <p className="meta__texto">Defina uma meta diária na aba Veículo para acompanhar seu progresso.</p>;
+  if (!meta) return <p className="meta__texto">Defina uma meta diária na aba Perfil para acompanhar seu progresso.</p>;
   const pct = Math.max(0, Math.min(lucro / meta, 1));
   const falta = Math.max(meta - lucro, 0);
   return (

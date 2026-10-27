@@ -139,8 +139,10 @@ Dica: no Chrome do celular, menu ⋮ → **Adicionar à tela inicial** cria um a
 
 ## Regras de cálculo
 
+**Lucro, no KM Real, é a sobra no bolso:** ganhos menos tudo o que sai do bolso por causa do carro (combustível, parcela ou aluguel, seguro, IPVA, manutenção, reserva para troca do carro e outros). É uma **estimativa**: os custos fixos do mês são divididos pelos km que o motorista prevê rodar. Num mês em que ele roda menos que o previsto, o custo real de cada km é maior que o estimado.
+
 ```
-custos fixos do mês = parcela/aluguel + seguro + IPVA ÷ 12 + manutenção + depreciação + outros
+custos fixos do mês = parcela/aluguel + seguro + IPVA ÷ 12 + manutenção + reserva para troca + outros
 km rodados por mês  = km por dia × dias por semana × 4,33 (52 semanas ÷ 12 meses)
 
 combustível por km = preço do litro ÷ consumo (km/l)
@@ -174,7 +176,7 @@ erDiagram
     real custo_seguro "R$ por mês"
     real custo_ipva "R$ por ano"
     real custo_manutencao "R$ por mês"
-    real custo_depreciacao "R$ por mês"
+    real custo_depreciacao "reserva para troca, R$ por mês"
     real custo_outros "R$ por mês"
     real custos_fixos_mensais "calculado"
     real km_mensal_estimado "calculado"

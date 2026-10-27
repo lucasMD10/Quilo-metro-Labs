@@ -413,6 +413,13 @@ svg { flex-shrink: 0; }
   .toast--acima { bottom: calc(var(--nav-altura) + env(safe-area-inset-bottom) + 84px); }
 }
 
+/* Com o teclado aberto no celular, o menu de abas some para sobrar espaço para o campo em edição.
+   A barra de salvar fica: assim dá para salvar direto do último campo, sem fechar o teclado. */
+@media (max-width: 959px) {
+  .app:has(.conteudo input:not([type="checkbox"]):focus) .nav { display: none; }
+  .app:has(.conteudo input:not([type="checkbox"]):focus) .barra-acao { bottom: 0; }
+}
+
 /* Efeitos de "passar o mouse" só onde existe mouse (no celular eles ficariam grudados após o toque). */
 @media (hover: hover) {
   .indicador:hover { transform: translateY(-2px); border-color: var(--marca-linha); box-shadow: 0 10px 24px rgba(16, 44, 70, .1); }

@@ -7,12 +7,14 @@ const n = (v) => lerNumero(v) || 0;
 const SEMANAS_POR_MES = 52 / 12;
 
 // Custos fixos do carro, um campo para cada. O IPVA é pedido por ano (é como o motorista conhece).
+// Tudo aqui é dinheiro que sai do bolso: o lucro do app é a sobra no bolso. Por isso a antiga
+// "depreciação" virou uma reserva opcional para a troca do carro (a coluna continua custo_depreciacao).
 export const CUSTOS_FIXOS = [
   { nome: 'custo_parcela', rotulo: 'Parcela ou aluguel do carro', sufixo: '/mês' },
   { nome: 'custo_seguro', rotulo: 'Seguro', sufixo: '/mês', dica: 'Se você paga por ano, divida por 12.' },
   { nome: 'custo_ipva', rotulo: 'IPVA e licenciamento', sufixo: '/ano', dica: 'Valor do ano inteiro. O app divide por 12.' },
   { nome: 'custo_manutencao', rotulo: 'Manutenção', sufixo: '/mês', dica: 'Média por mês com óleo, pneus, freios e revisão.' },
-  { nome: 'custo_depreciacao', rotulo: 'Depreciação', sufixo: '/mês', dica: 'Quanto o carro perde de valor. Ex.: perde R$ 6.000 por ano = R$ 500 por mês. Se o carro é alugado ou você já paga parcela de financiamento, deixe em branco.' },
+  { nome: 'custo_depreciacao', rotulo: 'Reserva para trocar de carro', sufixo: '/mês', dica: 'Opcional. Quanto você separa por mês para a troca do carro.' },
   { nome: 'custo_outros', rotulo: 'Outros custos fixos', sufixo: '/mês', dica: 'Rastreador, internet do celular, contador.' },
 ];
 
@@ -71,9 +73,6 @@ export function avisosVeiculo(f) {
   }
   if (kmDia > 600) {
     avisos.push(`${f.km_por_dia} km por dia é muita coisa. Confira se não digitou os km do mês.`);
-  }
-  if (n(f.custo_parcela) > 0 && n(f.custo_depreciacao) > 0) {
-    avisos.push('Você colocou parcela e depreciação. Se a parcela é do financiamento do próprio carro, ela já cobre a perda de valor: somar as duas conta o custo do carro duas vezes. Se for aluguel, a depreciação não é sua.');
   }
   if (total > 2) {
     avisos.push('Seu custo por km ficou alto. Confira os valores acima: um número errado aqui muda o lucro de todos os dias.');

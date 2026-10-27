@@ -48,7 +48,7 @@ export default function BoasVindas({ onConcluir }) {
         <p className="boas-vindas__frase">Quanto sobra de verdade a cada quilômetro que você roda.</p>
         <ul className="boas-vindas__lista">
           <li><KmIcon name="custo-km" size={22} /> Descubra o custo real de cada km do seu carro</li>
-          <li><KmIcon name="lucro-real" size={22} /> Veja o lucro limpo do dia, sem achismo</li>
+          <li><KmIcon name="lucro-real" size={22} /> Veja quanto sobra no bolso a cada dia</li>
           <li><KmIcon name="meta" size={22} /> Acompanhe sua meta diária e a semana</li>
         </ul>
       </section>
@@ -62,7 +62,7 @@ export default function BoasVindas({ onConcluir }) {
             <h2 className="cartao__titulo">Primeiro, sobre você</h2>
             <Campo rotulo="Como podemos te chamar?" nome="nome" valor={form.nome} onChange={mudar} autoFocus />
             <SeletorApps valor={form.apps} onChange={(v) => mudar('apps', v)} />
-            <Campo rotulo="Quanto você quer lucrar por dia?" nome="meta_diaria" valor={form.meta_diaria} onChange={mudar} prefixo="R$" dica="Lucro limpo, já descontando os custos do carro." />
+            <Campo rotulo="Quanto você quer lucrar por dia?" nome="meta_diaria" valor={form.meta_diaria} onChange={mudar} prefixo="R$" dica="O que sobra no bolso, depois dos custos do carro." />
             {erro && <p className="erro">{erro}</p>}
             <button className="botao">Continuar</button>
           </form>

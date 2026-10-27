@@ -14,6 +14,6 @@ Itens levantados na revisão do MVP.
 
 - O custo por km fica congelado no dia lançado (com as partes de combustível e custos fixos). Ao editar, aparece o custo da época e a opção "Recalcular com o custo de hoje".
 - Só um 404 vira "dia novo"; outras falhas mostram uma mensagem com "Tentar de novo" e não deixam salvar.
-- Dica no campo de depreciação e aviso quando parcela e depreciação estão preenchidas juntas.
+- Lucro definido como **sobra no bolso** (opção A). A depreciação virou "Reserva para trocar de carro", opcional, e os números passam a dizer "estimado".
 - Dicas nos campos de ganho: o valor que caiu para o motorista, já sem a taxa do app.
 - A aba virou "Perfil" (tela "Perfil e veículo"), com ícone próprio.

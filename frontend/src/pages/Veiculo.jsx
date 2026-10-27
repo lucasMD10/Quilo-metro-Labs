@@ -33,7 +33,7 @@ export default function Veiculo({ perfil, onSalvo }) {
         <h3 className="grupo grupo--primeiro">Sobre você</h3>
         <Campo rotulo="Nome" nome="nome" valor={form.nome} onChange={mudar} />
         <SeletorApps valor={form.apps} onChange={(v) => mudar('apps', v)} />
-        <Campo rotulo="Meta de lucro por dia" nome="meta_diaria" valor={form.meta_diaria} onChange={mudar} prefixo="R$" dica="Lucro limpo, depois de descontar os custos do carro." />
+        <Campo rotulo="Meta de lucro por dia" nome="meta_diaria" valor={form.meta_diaria} onChange={mudar} prefixo="R$" dica="O que sobra no bolso, depois dos custos do carro." />
         <h3 className="grupo"><KmIcon name="veiculo" size={20} /> Seu carro</h3>
         <CamposVeiculo form={form} onChange={mudar} />
       </div>
@@ -46,7 +46,8 @@ export default function Veiculo({ perfil, onSalvo }) {
             <span>Custo por km</span>
             <strong>{moeda(previaCusto(form).total)}</strong>
           </div>
-          <button className="botao" disabled={salvando}>
+          {/* onMouseDown: tocar em salvar não tira o foco do campo, senão a tela se mexe no meio do toque */}
+          <button className="botao" disabled={salvando} onMouseDown={(e) => e.preventDefault()}>
             <KmIcon name="confirmar" size={20} /> {salvando ? 'Salvando…' : 'Salvar alterações'}
           </button>
         </div>

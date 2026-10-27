@@ -13,7 +13,9 @@ export function numero(valor, { campo, min = 0, max = Infinity, obrigatorio = fa
 }
 
 export function dataISO(valor) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(valor || '')) throw erro('Data inválida. Use o formato AAAA-MM-DD.');
+  const d = new Date(`${valor}T12:00:00Z`);
+  const ok = /^\d{4}-\d{2}-\d{2}$/.test(valor || '') && !Number.isNaN(d.getTime()) && d.toISOString().startsWith(valor);
+  if (!ok) throw erro('Data inválida. Use o formato AAAA-MM-DD.');
   return valor;
 }
 

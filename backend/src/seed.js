@@ -34,7 +34,9 @@ const inserir = db.prepare(`
 `);
 
 const hoje = new Date();
-for (let i = 13; i >= 1; i--) {
+// Do dia 1 do mês até ontem (no mínimo 13 dias), para o gráfico e o fechamento do mês terem dados.
+const diasAtras = Math.max(13, hoje.getDate() - 1);
+for (let i = diasAtras; i >= 1; i--) {
   const d = new Date(hoje);
   d.setDate(d.getDate() - i);
   if (d.getDay() === 0) continue; // folga no domingo

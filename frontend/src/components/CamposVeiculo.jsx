@@ -1,11 +1,17 @@
+import { useState } from 'react';
 import Campo from './Campo.jsx';
 import KmIcon from './KmIcon.jsx';
 import { moeda, numeroBR, lerNumero } from '../util.js';
 import { CUSTOS_FIXOS, previaCusto, avisosVeiculo } from '../pages/campos-perfil.js';
 
 // Campos do carro agrupados por assunto. Usado no cadastro inicial e na aba Perfil.
+// Os custos fixos ficam numa seção que abre e fecha, mostrando o total quando fechada.
 export default function CamposVeiculo({ form, onChange }) {
   const custo = previaCusto(form);
+  const [custosAbertos, setCustosAbertos] = useState(false);
+  // Campo de custo com valor inválido nunca fica escondido.
+  const custoInvalido = CUSTOS_FIXOS.some((c) => Number.isNaN(lerNumero(form[c.nome])));
+  const mostrarCustos = custosAbertos || custoInvalido;
   return (
     <>
       <Campo rotulo="Modelo do carro" nome="modelo_veiculo" valor={form.modelo_veiculo} onChange={onChange} placeholder="Ex.: Onix 1.0 2020" />
@@ -36,11 +42,25 @@ export default function CamposVeiculo({ form, onChange }) {
         {custo.kmMes > 0 && <span className="campo__dica">Dá uns {numeroBR(custo.kmMes)} km por mês.</span>}
       </fieldset>
 
-      <h3 className="grupo"><KmIcon name="custos-fixos" size={20} /> Custos fixos do carro</h3>
-      <p className="grupo__dica">Gastos que existem mesmo com o carro parado. Deixe em branco o que não se aplica. Não coloque combustível aqui.</p>
-      {CUSTOS_FIXOS.map((c) => (
-        <Campo key={c.nome} rotulo={c.rotulo} nome={c.nome} valor={form[c.nome]} onChange={onChange} prefixo="R$" sufixo={c.sufixo} dica={c.dica} />
-      ))}
+      <h3 className="grupo grupo--sanfona">
+        <button type="button" className="sanfona" aria-expanded={mostrarCustos} onClick={() => setCustosAbertos((a) => !a)}>
+          <KmIcon name="custos-fixos" size={20} />
+          <span className="sanfona__titulo">Custos fixos do carro</span>
+          <span className="sanfona__resumo">{custo.custosMes > 0 ? `${moeda(custo.custosMes)}/mês` : 'Não informado'}</span>
+          <span className="sanfona__seta" aria-hidden="true" />
+        </button>
+      </h3>
+      {custo.custosMes === 0 && !mostrarCustos && (
+        <p className="grupo__dica">Sem parcela, seguro, IPVA e manutenção, o lucro estimado fica maior do que o real.</p>
+      )}
+      {mostrarCustos && (
+        <div className="sanfona__conteudo">
+          <p className="grupo__dica">Gastos que existem mesmo com o carro parado. Deixe em branco o que não se aplica. Não coloque combustível aqui.</p>
+          {CUSTOS_FIXOS.map((c) => (
+            <Campo key={c.nome} rotulo={c.rotulo} nome={c.nome} valor={form[c.nome]} onChange={onChange} prefixo="R$" sufixo={c.sufixo} dica={c.dica} />
+          ))}
+        </div>
+      )}
     </>
   );
 }

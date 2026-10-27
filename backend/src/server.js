@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { existsSync } from 'node:fs';
+import { exec } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import './db.js';
@@ -34,4 +35,19 @@ app.use((err, req, res, next) => {
   res.status(status).json({ erro: status === 500 ? 'Erro interno no servidor.' : err.message });
 });
 
-app.listen(PORTA, () => console.log(`KM Real rodando em http://localhost:${PORTA}`));
+const servidor = app.listen(PORTA, () => {
+  const url = `http://localhost:${PORTA}`;
+  console.log(`KM Real rodando em ${url}`);
+  // Usado pelo INICIAR.bat: o navegador só abre depois que o servidor subiu de verdade.
+  if (process.env.ABRIR_NAVEGADOR) {
+    const comando = process.platform === 'win32' ? `start "" ${url}` : process.platform === 'darwin' ? `open ${url}` : `xdg-open ${url}`;
+    exec(comando);
+  }
+});
+
+servidor.on('error', (err) => {
+  if (err.code !== 'EADDRINUSE') throw err;
+  console.error(`\nA porta ${PORTA} já está em uso. Provavelmente o KM Real já está aberto em outra janela.`);
+  console.error('Feche a outra janela (ou finalize o Node.js no Gerenciador de Tarefas) e tente de novo.\n');
+  process.exit(1);
+});

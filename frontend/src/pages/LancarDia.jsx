@@ -69,6 +69,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
     if (NUMERICOS.every((k) => !v[k])) return setErro('O dia está vazio. Preencha pelo menos os ganhos ou os km rodados.');
     if (v.horas_trabalhadas > 24) return setErro('Um dia tem no máximo 24 horas. Confira as horas online.');
     if (v.km_rodados > 1500) return setErro('Mais de 1.500 km num dia não parece real. Confira os km rodados.');
+    if (ganhos > 2000 && !window.confirm(`Ganho de ${moeda(ganhos)} num dia só. O valor está certo?`)) return;
     if (ganhos > 0 && !v.km_rodados && !window.confirm('Você lançou ganhos sem km rodados, então nenhum custo do carro será descontado. Salvar assim mesmo?')) return;
     setSalvando(true);
     try {

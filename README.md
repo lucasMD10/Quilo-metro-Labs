@@ -26,6 +26,17 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 - **Histórico** com edição e exclusão de dias lançados.
 - **Perfil e veículo** editáveis, com recálculo automático do custo por km para os próximos lançamentos.
 
+## Design
+
+| Wireframe | Protótipo e app |
+|---|---|
+| ![Wireframe do início](docs/wireframes/03-inicio.png) | ![Início no app](docs/telas/cel-03-inicio.png) |
+
+- **[Protótipo navegável no Figma](https://www.figma.com/design/WvEst2KBErrDpuNFzeXu67)**: componentes, 6 telas do celular e fluxos "Primeiro acesso" e "Uso diário".
+- [Wireframes de baixa fidelidade](docs/wireframes/): estrutura das 6 telas.
+- [Guia de estilo](docs/guia-de-estilo/): marca, cores, tipografia, ícones e componentes.
+- [Telas em alta fidelidade](docs/telas/): prints do app no celular e no computador.
+
 ## Equipe
 
 | Integrante | Função | Responsabilidades |

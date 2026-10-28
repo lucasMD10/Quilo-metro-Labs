@@ -93,5 +93,8 @@ Lista de requisitos do MVP, levantada a partir da pesquisa de mercado (segmento 
 | Não sabe se bateu a meta | RF01, RF12, RF14 |
 | Controla de cabeça ou no caderno, e perde a conta | RF08, RF16 |
 | Tem mês bom e mês ruim e não entende por quê | RF14, RF15 |
+| Esquece gastos como pneu e óleo até ter que pagar | RF03, RF06 |
+| Está cansado no fim do dia e precisa preencher rápido | RF08, RF09 |
+| Não sabe todos os gastos de cabeça | RF04, RF17 |
 
-Quando as entrevistas de campo forem consolidadas, as frases dos motoristas entram nesta tabela junto com a matriz de dores.
+As frases dos motoristas que deram origem a essas dores estão na [pesquisa](pesquisa.md).

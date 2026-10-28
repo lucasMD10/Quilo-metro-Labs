@@ -156,6 +156,16 @@ lucro real do dia  = ganho bruto − custo do dia
 
 O motorista informa cada custo fixo separado e quantos km roda num dia normal; o backend calcula o total do mês e os km do mês (`calculos.js`). Bancos criados antes desse detalhamento ganham as colunas novas automaticamente ao iniciar.
 
+**Fechamento do mês.** Como os custos fixos são rateados pelos km previstos, o fechamento compara o que os dias lançados já descontaram com o que os custos fixos custaram no período (proporcional aos dias, contando a partir do primeiro dia lançado no app):
+
+```
+custos fixos do período = custos fixos do mês × dias do período ÷ dias do mês
+diferença               = fixos descontados nos dias − custos fixos do período
+lucro do mês, ajustado  = lucro estimado dos dias + diferença
+```
+
+Diferença negativa: o motorista rodou menos que o previsto e parte dos custos fixos ainda sai do lucro. Positiva: rodou mais e os dias descontaram a mais.
+
 Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`, mais as partes `combustivel_km_aplicado` e `fixo_km_aplicado`). Se o preço do combustível mudar, os dias antigos não são recalculados, nem quando editados. Para usar o custo atual num dia antigo, o motorista marca "Recalcular com o custo de hoje" (a API recebe `recalcular_custo: true`).
 
 ## Modelo de dados
@@ -209,6 +219,7 @@ erDiagram
 | PUT | `/api/lancamentos/:data` | Cria ou atualiza o lançamento do dia |
 | DELETE | `/api/lancamentos/:data` | Exclui o lançamento do dia |
 | GET | `/api/resumo?ate=&dias=7` | Hoje, meta, série diária e totais do período |
+| GET | `/api/resumo/mes?mes=AAAA-MM&hoje=` | Fechamento do mês: custos fixos do período x descontados nos dias e lucro ajustado |
 
 Erros retornam `{ "erro": "mensagem" }` com o status HTTP adequado (400, 404, 409).
 

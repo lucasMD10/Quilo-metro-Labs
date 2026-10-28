@@ -25,9 +25,13 @@ perfilRouter.put('/', (req, res) => {
   const dias = numero(b.dias_por_semana, { campo: 'os dias por semana', obrigatorio: true, maiorQueZero: true });
   if (dias > 7) throw erro('Os dias por semana vão de 1 a 7.');
 
+  // Só Uber e 99, sem repetir. Nenhum app marcado é erro (antes virava "uber,99" sem avisar).
+  const apps = b.apps === undefined ? ['uber', '99'] : [...new Set(String(b.apps).split(','))].filter((a) => a === 'uber' || a === '99');
+  if (!apps.length) throw erro('Escolha pelo menos um app.');
+
   const dados = {
     nome,
-    apps: String(b.apps || 'uber,99'),
+    apps: apps.join(','),
     meta_diaria: numero(b.meta_diaria, { campo: 'a meta diária' }),
     modelo_veiculo: String(b.modelo_veiculo || '').trim() || null,
     consumo_km_l: numero(b.consumo_km_l, { campo: 'quantos km o carro faz por litro', obrigatorio: true, maiorQueZero: true }),
@@ -38,7 +42,7 @@ perfilRouter.put('/', (req, res) => {
     custo_seguro: numero(b.custo_seguro, { campo: 'o seguro' }),
     custo_ipva: numero(b.custo_ipva, { campo: 'o IPVA' }),
     custo_manutencao: numero(b.custo_manutencao, { campo: 'a manutenção' }),
-    custo_depreciacao: numero(b.custo_depreciacao, { campo: 'a depreciação' }),
+    custo_depreciacao: numero(b.custo_depreciacao, { campo: 'a reserva para trocar de carro' }),
     custo_outros: numero(b.custo_outros, { campo: 'os outros custos' }),
   };
   dados.custos_fixos_mensais = custosFixosMensais(dados);

@@ -169,6 +169,18 @@ svg { flex-shrink: 0; }
 .indicador__icone { transition: background .15s, color .15s; }
 .calculo { animation: entrar .3s ease-out; }
 
+/* Fechamento do mês */
+.fechamento__topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; margin-bottom: 4px; }
+.fechamento__topo .cartao__titulo { margin-bottom: 0; }
+.fechamento__nav { display: flex; align-items: center; gap: 2px; font-weight: 700; color: var(--marca); }
+.fechamento__nav span { min-width: 9.5em; text-align: center; }
+.fechamento__nav span::first-letter { text-transform: uppercase; }
+.fechamento__nav .icone-botao { font-size: 1.5rem; line-height: 1; color: var(--marca); }
+.fechamento__nav .icone-botao:disabled { opacity: .3; cursor: default; }
+.fechamento__periodo { margin: 8px 0 0; font-size: .875rem; color: var(--texto-suave); }
+.fechamento__barra { height: 8px; border-radius: 999px; background: var(--marca-suave); overflow: hidden; margin: 4px 0 6px; }
+.fechamento__barra span { display: block; height: 100%; background: var(--marca); border-radius: 999px; transition: width .6s cubic-bezier(.2, .8, .2, 1); }
+
 /* Gráfico */
 .grafico__barras { position: relative; display: flex; align-items: stretch; gap: 8px; height: 170px; }
 .grafico__base { position: absolute; left: 0; right: 0; border-top: 1px solid var(--marca-linha); z-index: 1; pointer-events: none; }
@@ -489,6 +501,7 @@ svg { flex-shrink: 0; }
   .inicio .indicadores { grid-column: 1; grid-row: 2; }
   .inicio .calculo { grid-column: 1; grid-row: 3; }
   .inicio .semana { grid-column: 2; grid-row: 1 / span 3; margin-top: 0; }
+  .inicio .fechamento { grid-column: 1; }
   .hero__valor { font-size: 3.25rem; }
 
   .pagina-form { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr); gap: 24px; align-items: start; }

@@ -17,7 +17,7 @@ export const dataBR = (iso) =>
  *  "6" -> 6 · "6,00" -> 6 · "6.29" -> 6.29 · "1.000" -> 1000 · "1.000,50" -> 1000.5 · "abc" -> NaN
  */
 export function lerNumero(valor) {
-  let t = String(valor ?? '').replace(/R\$|\s/g, '');
+  let t = String(valor ?? '').replace(/R\$|\s/g, '').replace(/[.,]$/, ''); // "6," é alguém digitando os centavos
   if (t === '') return 0;
   if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.'); // vírgula é o decimal, pontos são milhar
   else if (/^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, ''); // "1.000" e "12.500" são milhar

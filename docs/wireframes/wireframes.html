@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>KM Real · Wireframes</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 32px; background: #f2f2f2; font-family: 'DejaVu Sans', Arial, sans-serif; color: #333; }
+  .folha { display: flex; flex-wrap: wrap; gap: 40px; }
+  .tela { width: 400px; background: #f2f2f2; padding: 4px; }
+  .tela h1 { font-size: 15px; margin: 0 0 10px; color: #222; }
+  .tela h1 small { display: block; font-weight: normal; color: #777; font-size: 12px; margin-top: 2px; }
+  .cel { width: 360px; border: 2px solid #444; border-radius: 26px; background: #fff; padding: 14px 12px 0; position: relative; overflow: hidden; }
+  .cel::before { content: ''; display: block; width: 70px; height: 6px; border-radius: 3px; background: #bbb; margin: 0 auto 10px; }
+  .topo { display: flex; align-items: center; gap: 8px; padding: 6px 2px 10px; border-bottom: 1px dashed #bbb; margin-bottom: 10px; }
+  .img { width: 26px; height: 30px; border: 1.5px solid #888; position: relative; flex: none;
+         background: linear-gradient(to top right, transparent 48%, #999 49%, #999 51%, transparent 52%),
+                     linear-gradient(to top left, transparent 48%, #999 49%, #999 51%, transparent 52%); }
+  .img.grande { width: 46px; height: 54px; }
+  .chip-topo { margin-left: auto; border: 1.5px solid #999; border-radius: 12px; padding: 2px 10px; font-size: 11px; color: #666; }
+  b.tit { font-size: 15px; }
+  .bloco { border: 1.5px solid #999; border-radius: 10px; padding: 10px; margin-bottom: 10px; position: relative; }
+  .escuro { background: #555; border-color: #555; color: #fff; }
+  .escuro .rot { color: #ddd; }
+  .rot { font-size: 11px; color: #666; margin: 0 0 4px; }
+  .grande-num { font-size: 26px; font-weight: bold; letter-spacing: 1px; margin: 2px 0 8px; }
+  .campo { margin-bottom: 9px; }
+  .campo .caixa { height: 30px; border: 1.5px solid #999; border-radius: 6px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; color: #999; justify-content: space-between; }
+  .dois { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tres { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .mini { border: 1.5px solid #999; border-radius: 8px; padding: 6px; font-size: 10px; color: #666; height: 62px; position: relative; }
+  .mini .q { width: 16px; height: 16px; border: 1.5px dashed #888; border-radius: 50%; margin-bottom: 4px; }
+  .mini b { display: block; font-size: 12px; color: #333; }
+  .btn { height: 34px; border-radius: 8px; background: #444; color: #fff; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+  .btn.claro { background: #fff; color: #444; border: 1.5px solid #444; }
+  .btn.branco { background: #fff; color: #333; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { border: 1.5px solid #999; border-radius: 14px; padding: 4px 12px; font-size: 11px; }
+  .chip.on { background: #555; color: #fff; border-color: #555; }
+  .chip.dia { padding: 4px 0; width: 30px; text-align: center; }
+  .linha { height: 7px; background: #d6d6d6; border-radius: 4px; margin: 5px 0; }
+  .barra { height: 8px; border-radius: 4px; background: #ccc; overflow: hidden; margin: 4px 0 6px; }
+  .barra span { display: block; height: 100%; width: 60%; background: #888; }
+  .escuro .barra { background: #777; } .escuro .barra span { background: #eee; }
+  .grafico { display: flex; align-items: flex-end; gap: 6px; height: 70px; border-bottom: 1.5px solid #999; margin: 4px 0 4px; position: relative; }
+  .grafico i { flex: 1; background: #ddd; border: 1px solid #aaa; display: flex; align-items: flex-end; }
+  .grafico i s { display: block; width: 100%; background: #888; }
+  .grafico .meta { position: absolute; left: 0; right: 0; border-top: 1.5px dashed #666; }
+  .eixo { display: flex; gap: 6px; font-size: 9px; color: #888; margin-bottom: 6px; } .eixo span { flex: 1; text-align: center; }
+  .lin { display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid #e3e3e3; }
+  .lin:last-child { border-bottom: 0; }
+  .lin.total { font-weight: bold; font-size: 12px; }
+  .sec { font-size: 12px; font-weight: bold; margin: 10px 0 6px; padding-top: 8px; border-top: 1px dashed #ccc; display: flex; align-items: center; gap: 6px; }
+  .sec .q { width: 14px; height: 14px; border: 1.5px dashed #888; border-radius: 50%; }
+  .sanfona { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; border: 1.5px dashed #999; border-radius: 6px; padding: 8px; margin-bottom: 9px; }
+  .sanfona span { font-weight: normal; color: #777; font-size: 11px; }
+  .nav { display: flex; border-top: 1.5px solid #999; margin: 0 -12px; background: #fff; }
+  .nav div { flex: 1; text-align: center; padding: 8px 0 10px; font-size: 10px; color: #777; }
+  .nav div .q { width: 16px; height: 16px; border: 1.5px dashed #888; border-radius: 50%; margin: 0 auto 3px; }
+  .nav div.on { color: #222; font-weight: bold; border-top: 3px solid #444; margin-top: -1.5px; }
+  .nav div.on .q { border-color: #444; background: #ddd; }
+  .acao { display: flex; align-items: center; gap: 10px; border-top: 1.5px solid #999; margin: 0 -12px; padding: 8px 12px; background: #fafafa; }
+  .acao .r { flex: 1; font-size: 10px; color: #666; } .acao .r b { display: block; font-size: 14px; color: #222; }
+  .acao .btn { padding: 0 16px; }
+  .item { border: 1.5px solid #999; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .item .c { flex: 1; } .item .c b { font-size: 12px; display: block; } .item .c em { font-style: normal; font-weight: bold; font-size: 13px; display: block; margin: 2px 0; }
+  .item .c small { font-size: 10px; color: #777; }
+  .lixo { width: 20px; height: 20px; border: 1.5px solid #888; flex: none; background: linear-gradient(to top right, transparent 46%, #999 47%, #999 53%, transparent 54%), linear-gradient(to top left, transparent 46%, #999 47%, #999 53%, transparent 54%); }
+  .passos { font-size: 10px; color: #777; letter-spacing: 1px; margin-bottom: 4px; }
+  .passos-barra { height: 5px; background: #ddd; border-radius: 3px; margin-bottom: 10px; } .passos-barra span { display: block; height: 100%; background: #555; border-radius: 3px; }
+  .marca { background: #666; color: #fff; margin: -14px -12px 10px; padding: 26px 16px 16px; }
+  .marca .linha { background: #999; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .n { position: absolute; right: -6px; top: -9px; width: 20px; height: 20px; border-radius: 50%; background: #fff; color: #222; border: 2px solid #222;
+       font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 2; }
+  .rel { position: relative; }
+  .legenda { margin: 10px 0 0; padding: 0; list-style: none; font-size: 12px; line-height: 1.45; }
+  .legenda li { display: flex; gap: 8px; margin-bottom: 4px; }
+  .legenda li span { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #222; font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; background: #fff; }
+</style>
+</head>
+<body>
+<div class="folha">
+
+<!-- 1. Boas-vindas, passo 1 -->
+<section class="tela" id="t1">
+  <h1>1. Boas-vindas · passo 1<small>Primeiro acesso: quem é o motorista</small></h1>
+  <div class="cel">
+    <div class="marca rel"><div class="row"><div class="img"></div><b class="tit">KM Real</b></div><div class="linha" style="width:85%;margin-top:10px"></div><div class="linha" style="width:55%"></div><div class="n" style="top:22px;right:10px">1</div></div>
+    <div class="passos">PASSO 1 DE 2</div><div class="passos-barra rel"><span style="width:50%"></span><div class="n">2</div></div>
+    <div class="bloco">
+      <b style="font-size:13px">Primeiro, sobre você</b>
+      <div class="campo" style="margin-top:8px"><p class="rot">Como podemos te chamar?</p><div class="caixa"></div></div>
+      <div class="campo rel"><p class="rot">Em quais apps você roda?</p><div class="chips"><span class="chip on">Uber</span><span class="chip on">99</span></div><div class="n">3</div></div>
+      <div class="campo rel"><p class="rot">Quanto você quer lucrar por dia?</p><div class="caixa">R$</div><p class="rot" style="margin-top:3px">O que sobra no bolso, depois dos custos do carro</p><div class="n">4</div></div>
+      <div class="btn">Continuar</div>
+    </div>
+    <div style="height:24px"></div>
+  </div>
+  <ul class="legenda">
+    <li><span>1</span>Marca e frase da proposta de valor: o motorista entende o app em uma frase.</li>
+    <li><span>2</span>Progresso do cadastro: só 2 passos, para não assustar.</li>
+    <li><span>3</span>Apps em que roda: define quais campos de ganho aparecem no lançamento.</li>
+    <li><span>4</span>Meta diária de lucro, usada na barra de meta do Início.</li>
+  </ul>
+</section>
+
+<!-- 2. Boas-vindas, passo 2 -->
+<section class="tela" id="t2">
+  <h1>2. Boas-vindas · passo 2<small>Dados do carro para calcular o custo por km</small></h1>
+  <div class="cel">
+    <div class="marca" style="padding:16px"><div class="row"><div class="img"></div><b class="tit">KM Real</b></div></div>
+    <div class="passos">PASSO 2 DE 2</div><div class="passos-barra"><span style="width:100%"></span></div>
+    <div class="bloco">
+      <b style="font-size:13px">Agora, o seu carro</b>
+      <div class="campo" style="margin-top:8px"><p class="rot">Modelo do carro</p><div class="caixa">Ex.: Onix 1.0 2020</div></div>
+      <div class="sec rel"><span class="q"></span>Combustível<div class="n">1</div></div>
+      <div class="dois"><div class="campo"><p class="rot">Preço do litro</p><div class="caixa">R$</div></div><div class="campo"><p class="rot">Km por litro</p><div class="caixa"><span></span>km/l</div></div></div>
+      <div class="sec rel"><span class="q"></span>Quanto você roda<div class="n">2</div></div>
+      <div class="campo"><p class="rot">Km num dia normal de trabalho</p><div class="caixa"><span></span>km/dia</div></div>
+      <p class="rot">Dias de trabalho por semana</p>
+      <div class="chips" style="margin-bottom:4px"><span class="chip dia">1</span><span class="chip dia">2</span><span class="chip dia">3</span><span class="chip dia">4</span><span class="chip dia">5</span><span class="chip dia on">6</span><span class="chip dia">7</span></div>
+      <p class="rot">Dá uns 0.000 km por mês</p>
+      <div class="sanfona rel">Custos fixos do carro <span>Não informado ▾</span><div class="n">3</div></div>
+      <div class="bloco rel" style="background:#f4f4f4"><p class="rot">Quanto cada km custa para você</p><div class="lin"><span>Combustível</span><span>R$ 0,00/km</span></div><div class="lin"><span>Custos fixos</span><span>R$ 0,00/km</span></div><div class="lin total"><span>Seu custo por km</span><span>R$ 0,00</span></div><div class="n">4</div></div>
+      <div class="dois"><div class="btn claro">Voltar</div><div class="btn">Começar a usar</div></div>
+    </div>
+    <div style="height:8px"></div>
+  </div>
+  <ul class="legenda">
+    <li><span>1</span>Combustível: preço do litro e consumo, a parte variável do custo.</li>
+    <li><span>2</span>Rotina: km por dia e dias por semana viram os km do mês.</li>
+    <li><span>3</span>Custos fixos em seção recolhida (parcela, seguro, IPVA, manutenção...), mostrando o total.</li>
+    <li><span>4</span>Prévia do custo por km com a conta aberta, atualizada enquanto digita.</li>
+  </ul>
+</section>
+
+<!-- 3. Início -->
+<section class="tela" id="t3">
+  <h1>3. Início<small>Dashboard: lucro de hoje, semana e mês</small></h1>
+  <div class="cel">
+    <div class="topo"><div class="img"></div><b class="tit">KM Real</b><span class="chip-topo">Modelo do carro</span></div>
+    <div class="bloco escuro rel">
+      <p class="rot">Olá, nome</p><p class="rot">Lucro estimado de hoje</p>
+      <div class="grande-num">R$ 000,00</div>
+      <p class="rot">Meta do dia · 00%</p><div class="barra"><span></span></div>
+      <p class="rot">Faltam R$ 00,00 para a meta</p>
+      <div class="btn branco">+ Lançar o dia de hoje</div>
+      <div class="n">1</div>
+    </div>
+    <div class="tres rel">
+      <div class="mini"><div class="q"></div><b>R$ 0,00</b>custo por km</div>
+      <div class="mini"><div class="q"></div><b>R$ 0,00</b>ganho por km</div>
+      <div class="mini"><div class="q"></div><b>000 km</b>rodados hoje</div>
+      <div class="n">2</div>
+    </div>
+    <div class="bloco rel">
+      <b style="font-size:12px">Últimos 7 dias</b>
+      <div class="grafico"><div class="meta" style="bottom:45%"></div><i style="height:80%"><s style="height:55%"></s></i><i style="height:70%"><s style="height:45%"></s></i><i style="height:90%"><s style="height:60%"></s></i><i style="height:55%"><s style="height:40%"></s></i><i style="height:0;border:0"></i><i style="height:85%"><s style="height:55%"></s></i><i style="height:60%"><s style="height:50%"></s></i></div>
+      <div class="eixo"><span>qua</span><span>qui</span><span>sex</span><span>sáb</span><span>dom</span><span>seg</span><span>ter</span></div>
+      <div class="lin"><span>Ganho bruto</span><span>R$ 0.000,00</span></div><div class="lin total"><span>Lucro estimado</span><span>R$ 0.000,00</span></div>
+      <div class="n">3</div>
+    </div>
+    <div class="bloco rel"><b style="font-size:12px">Fechamento do mês</b> <span class="rot">‹ outubro ›</span><div class="barra"><span style="width:75%"></span></div><div class="lin total"><span>Lucro do mês, ajustado</span><span>R$ 0.000,00</span></div><div class="n">4</div></div>
+    <div class="nav"><div class="on"><div class="q"></div>Início</div><div><div class="q"></div>Lançar</div><div><div class="q"></div>Histórico</div><div><div class="q"></div>Perfil</div></div>
+  </div>
+  <ul class="legenda">
+    <li><span>1</span>Destaque do dia: lucro estimado, progresso da meta e atalho para lançar.</li>
+    <li><span>2</span>Indicadores rápidos; tocar no custo por km abre "Entender o cálculo".</li>
+    <li><span>3</span>Gráfico da semana (bruto, lucro e linha da meta); tocar numa barra mostra o dia.</li>
+    <li><span>4</span>Fechamento do mês: custos fixos previstos x cobertos e lucro ajustado.</li>
+  </ul>
+</section>
+
+<!-- 4. Lançar dia -->
+<section class="tela" id="t4">
+  <h1>4. Lançar dia<small>Registro diário em menos de 1 minuto</small></h1>
+  <div class="cel">
+    <div class="topo"><div class="img"></div><b class="tit">Lançar dia</b><span class="chip-topo">Modelo do carro</span></div>
+    <div class="bloco">
+      <div class="campo rel"><p class="rot">Data</p><div class="caixa">dd/mm/aaaa <span>▢</span></div><div class="n">1</div></div>
+      <div class="sec rel"><span class="q"></span>Ganhos do dia<div class="n">2</div></div>
+      <div class="dois"><div class="campo"><p class="rot">Uber</p><div class="caixa">R$</div></div><div class="campo"><p class="rot">99</p><div class="caixa">R$</div></div></div>
+      <div class="campo"><p class="rot">Outros ganhos</p><div class="caixa">R$</div></div>
+      <div class="sec"><span class="q"></span>Rodagem</div>
+      <div class="dois"><div class="campo"><p class="rot">Km rodados</p><div class="caixa"><span></span>km</div></div><div class="campo"><p class="rot">Horas online</p><div class="caixa">8:30 <span>h</span></div></div></div>
+      <div class="sec"><span class="q"></span>Outros gastos</div>
+      <div class="campo"><p class="rot">Lavagem, alimentação, pedágio</p><div class="caixa">R$</div></div>
+    </div>
+    <div class="bloco rel" style="background:#f4f4f4">
+      <p class="rot">Como fica o seu dia</p>
+      <div class="lin"><span>Ganho bruto</span><span>R$ 000,00</span></div><div class="lin"><span>Combustível</span><span>−R$ 00,00</span></div><div class="lin"><span>Custos fixos do carro</span><span>−R$ 00,00</span></div><div class="lin"><span>Outros gastos</span><span>−R$ 00,00</span></div><div class="lin total"><span>Lucro estimado</span><span>R$ 000,00</span></div>
+      <div class="n">3</div>
+    </div>
+    <div class="acao rel"><div class="r">Lucro estimado<b>R$ 000,00</b></div><div class="btn">✓ Salvar dia</div><div class="n" style="right:6px;top:-10px">4</div></div>
+    <div class="nav"><div><div class="q"></div>Início</div><div class="on"><div class="q"></div>Lançar</div><div><div class="q"></div>Histórico</div><div><div class="q"></div>Perfil</div></div>
+  </div>
+  <ul class="legenda">
+    <li><span>1</span>Data (padrão: hoje); escolher um dia já lançado abre a edição.</li>
+    <li><span>2</span>Campos agrupados: ganhos, rodagem e outros gastos (combustível não entra aqui).</li>
+    <li><span>3</span>Conta aberta do dia, recalculada a cada número digitado.</li>
+    <li><span>4</span>Barra fixa com o lucro e o botão de salvar, sempre ao alcance do polegar.</li>
+  </ul>
+</section>
+
+<!-- 5. Histórico -->
+<section class="tela" id="t5">
+  <h1>5. Histórico<small>Dias lançados, do mais recente ao mais antigo</small></h1>
+  <div class="cel">
+    <div class="topo"><div class="img"></div><b class="tit">Histórico</b><span class="chip-topo">Modelo do carro</span></div>
+    <div class="item rel"><div class="c"><b>Terça-feira, 27 de outubro</b><em>R$ 000,00</em><small>000 km · bruto R$ 000,00</small></div><div class="lixo"></div><div class="n">1</div></div>
+    <div class="item"><div class="c"><b>Segunda-feira, 26 de outubro</b><em>R$ 000,00</em><small>000 km · bruto R$ 000,00</small></div><div class="lixo"></div></div>
+    <div class="item"><div class="c"><b>Sábado, 24 de outubro</b><em>−R$ 00,00</em><small>000 km · bruto R$ 000,00</small></div><div class="lixo"></div></div>
+    <div class="item"><div class="c"><b>Sexta-feira, 23 de outubro</b><em>R$ 000,00</em><small>000 km · bruto R$ 000,00</small></div><div class="lixo"></div></div>
+    <div class="item rel"><div class="c"><b>Quinta-feira, 22 de outubro</b><em>R$ 000,00</em><small>000 km · bruto R$ 000,00</small></div><div class="lixo"></div><div class="n">2</div></div>
+    <div class="item"><div class="c"><div class="linha" style="width:70%"></div><div class="linha" style="width:40%"></div></div><div class="lixo"></div></div>
+    <div style="height:30px"></div>
+    <div class="nav"><div><div class="q"></div>Início</div><div><div class="q"></div>Lançar</div><div class="on"><div class="q"></div>Histórico</div><div><div class="q"></div>Perfil</div></div>
+  </div>
+  <ul class="legenda">
+    <li><span>1</span>Cada dia mostra o lucro em destaque (negativo indica prejuízo), km e bruto.</li>
+    <li><span>2</span>Tocar no dia abre a edição; a lixeira exclui, com confirmação.</li>
+  </ul>
+</section>
+
+<!-- 6. Perfil e veículo -->
+<section class="tela" id="t6">
+  <h1>6. Perfil e veículo<small>Editar meta, apps e custos do carro</small></h1>
+  <div class="cel">
+    <div class="topo"><div class="img"></div><b class="tit">Perfil e veículo</b><span class="chip-topo">Modelo do carro</span></div>
+    <div class="bloco">
+      <div class="rel"><b style="font-size:12px">Sobre você</b><div class="n">1</div></div>
+      <div class="campo" style="margin-top:6px"><p class="rot">Nome</p><div class="caixa"></div></div>
+      <div class="campo"><p class="rot">Em quais apps você roda?</p><div class="chips"><span class="chip on">Uber</span><span class="chip on">99</span></div></div>
+      <div class="campo"><p class="rot">Meta de lucro por dia</p><div class="caixa">R$</div></div>
+      <div class="sec rel"><span class="q"></span>Seu carro<div class="n">2</div></div>
+      <div class="dois"><div class="campo"><p class="rot">Preço do litro</p><div class="caixa">R$</div></div><div class="campo"><p class="rot">Km por litro</p><div class="caixa"><span></span>km/l</div></div></div>
+      <div class="campo"><p class="rot">Km num dia normal</p><div class="caixa"><span></span>km/dia</div></div>
+      <div class="sanfona">Custos fixos do carro <span>R$ 0.000/mês ▾</span></div>
+    </div>
+    <div class="bloco rel" style="background:#f4f4f4"><p class="rot">Quanto o carro custa no seu mês</p><div class="lin"><span>Combustível</span><span>R$ 0.000,00</span></div><div class="lin"><span>Custos fixos</span><span>R$ 0.000,00</span></div><div class="lin total"><span>Total por mês</span><span>R$ 0.000,00</span></div><p class="rot" style="margin-top:6px">Para lucrar a meta, fature R$ 000,00 por dia</p><div class="n">3</div></div>
+    <div class="acao"><div class="r">Custo por km<b>R$ 0,00</b></div><div class="btn">✓ Salvar alterações</div></div>
+    <div class="nav"><div><div class="q"></div>Início</div><div><div class="q"></div>Lançar</div><div><div class="q"></div>Histórico</div><div class="on"><div class="q"></div>Perfil</div></div>
+  </div>
+  <ul class="legenda">
+    <li><span>1</span>Dados pessoais e meta, separados dos dados do carro.</li>
+    <li><span>2</span>Mesmos campos do cadastro, para corrigir quando o preço do combustível muda.</li>
+    <li><span>3</span>Resumo do mês e quanto faturar por dia para bater a meta.</li>
+  </ul>
+</section>
+
+</div>
+</body>
+</html>

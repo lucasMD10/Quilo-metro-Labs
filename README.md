@@ -37,15 +37,16 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 - [Guia de estilo](docs/guia-de-estilo/): marca, cores, tipografia, ícones e componentes.
 - [Telas em alta fidelidade](docs/telas/): prints do app no celular e no computador.
 - [Requisitos](docs/requisitos.md): funcionais, não funcionais e regras de negócio.
-- [Teste de usabilidade](docs/teste-de-usabilidade.md): roteiro, tarefas, SUS e ficha de registro.
+- [Teste de usabilidade](docs/teste-de-usabilidade.md): roteiro curto com 1 ou 2 motoristas.
 
 ## Equipe
 
 | Integrante | Função | Responsabilidades |
 |---|---|---|
-| Lucas/Vinicius | Product Owner | Visão do produto, prioridades do backlog, pesquisa com motoristas, pitch |
-| _Rafael/lucas_ | Tech Lead / Dev Full-stack | Arquitetura, back-end, banco de dados, integração e repositório |
-| _Rafael/Vinicius_ | UX/UI Designer | Protótipos no Figma, identidade visual, telas e testes de usabilidade |
+| Rafael e Vinicius | Product Owner | Visão do produto, prioridades, pesquisa com motoristas e pitch |
+| Lucas | Desenvolvedor full-stack | Arquitetura, back-end, front-end, banco de dados e repositório |
+| Lucas e Rafael | UI/UX Designer | Wireframes, identidade visual, guia de estilo e protótipo no Figma |
+| Vinicius | Testador | Teste de usabilidade com motoristas e testes do app antes da entrega |
 
 ---
 

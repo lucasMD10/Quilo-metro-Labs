@@ -36,6 +36,8 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 - [Wireframes de baixa fidelidade](docs/wireframes/): estrutura das 6 telas.
 - [Guia de estilo](docs/guia-de-estilo/): marca, cores, tipografia, ícones e componentes.
 - [Telas em alta fidelidade](docs/telas/): prints do app no celular e no computador.
+- [Requisitos](docs/requisitos.md): funcionais, não funcionais e regras de negócio.
+- [Teste de usabilidade](docs/teste-de-usabilidade.md): roteiro, tarefas, SUS e ficha de registro.
 
 ## Equipe
 

@@ -1,7 +1,8 @@
 import { apiNavegador } from './api-navegador.js';
 
 // Na versão do GitHub Pages (build com --mode pages) não há backend: tudo roda no navegador.
-export const MODO_NAVEGADOR = import.meta.env.VITE_MODO === 'navegador';
+// __MODO_NAVEGADOR__ é trocado por true ou false na hora do build (vite.config.js).
+export const MODO_NAVEGADOR = __MODO_NAVEGADOR__;
 
 // Funções que conversam com o backend. Todas devolvem uma Promise com o JSON da resposta.
 async function chamar(caminho, opcoes = {}) {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Campo from '../components/Campo.jsx';
 import SeletorApps from './SeletorApps.jsx';
-import { api } from '../api.js';
+import { api, MODO_NAVEGADOR } from '../api.js';
 import CamposVeiculo, { ResumoVeiculo } from '../components/CamposVeiculo.jsx';
 import KmIcon from '../components/KmIcon.jsx';
 import marcaNome from '../assets/marca-nome.svg';
@@ -26,6 +26,17 @@ export default function BoasVindas({ onConcluir }) {
     } catch (err) {
       setErro(err.message);
     } finally {
+      setSalvando(false);
+    }
+  }
+
+  // Só na versão do navegador (GitHub Pages): abre direto com o motorista de exemplo, para demonstrar.
+  async function verExemplo() {
+    setSalvando(true);
+    try {
+      onConcluir(await api.carregarExemplo());
+    } catch (err) {
+      setErro(err.message);
       setSalvando(false);
     }
   }
@@ -65,6 +76,11 @@ export default function BoasVindas({ onConcluir }) {
             <Campo rotulo="Quanto você quer lucrar por dia?" nome="meta_diaria" valor={form.meta_diaria} onChange={mudar} prefixo="R$" dica="O que sobra no bolso, depois dos custos do carro." />
             {erro && <p className="erro">{erro}</p>}
             <button className="botao">Continuar</button>
+            {MODO_NAVEGADOR && (
+              <button type="button" className="link-botao" onClick={verExemplo} disabled={salvando}>
+                <KmIcon name="detalhar" size={18} /> Ver com dados de exemplo
+              </button>
+            )}
           </form>
         ) : (
           <form className="cartao" onSubmit={concluir}>

@@ -1,3 +1,8 @@
+import { apiNavegador } from './api-navegador.js';
+
+// Na versão do GitHub Pages (build com --mode pages) não há backend: tudo roda no navegador.
+export const MODO_NAVEGADOR = import.meta.env.VITE_MODO === 'navegador';
+
 // Funções que conversam com o backend. Todas devolvem uma Promise com o JSON da resposta.
 async function chamar(caminho, opcoes = {}) {
   const resp = await fetch(`/api${caminho}`, {
@@ -15,7 +20,7 @@ async function chamar(caminho, opcoes = {}) {
   return dados;
 }
 
-export const api = {
+const apiServidor = {
   perfil: () => chamar('/perfil'),
   salvarPerfil: (dados) => chamar('/perfil', { method: 'PUT', body: dados }),
   resumo: (ate, dias = 7) => chamar(`/resumo?ate=${ate}&dias=${dias}`),
@@ -25,3 +30,5 @@ export const api = {
   salvarLancamento: (data, dados) => chamar(`/lancamentos/${data}`, { method: 'PUT', body: dados }),
   excluirLancamento: (data) => chamar(`/lancamentos/${data}`, { method: 'DELETE' }),
 };
+
+export const api = MODO_NAVEGADOR ? apiNavegador : apiServidor;

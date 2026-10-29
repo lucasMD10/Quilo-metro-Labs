@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from './api.js';
+import { api, MODO_NAVEGADOR } from './api.js';
 import BoasVindas from './pages/BoasVindas.jsx';
 import Inicio from './pages/Inicio.jsx';
 import LancarDia from './pages/LancarDia.jsx';
@@ -19,7 +19,7 @@ export default function App() {
   const [toast, setToast] = useState('');
 
   useEffect(() => {
-    api.perfil().then(setPerfil).catch(() => setErro('Não foi possível conectar à API. Confira se o backend está rodando (npm run dev).'));
+    api.perfil().then(setPerfil).catch((e) => setErro(MODO_NAVEGADOR ? e.message : 'Não foi possível conectar à API. Confira se o backend está rodando (npm run dev).'));
   }, []);
 
   function abrirLancamento(data) {

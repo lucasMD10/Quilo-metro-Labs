@@ -38,6 +38,7 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 - [Guia de estilo](docs/guia-de-estilo/): marca, cores, tipografia, ícones e componentes.
 - [Telas em alta fidelidade](docs/telas/): prints do app no celular e no computador.
 - [Requisitos](docs/requisitos.md): funcionais, não funcionais e regras de negócio.
+- [Relatório final em PDF](docs/relatorio/KM-Real-Relatorio-Final.pdf): as 6 seções pedidas no enunciado.
 - [Teste de usabilidade](docs/teste-de-usabilidade.md): roteiro curto com 1 ou 2 motoristas.
 
 ## Equipe
@@ -244,7 +245,7 @@ Erros retornam `{ "erro": "mensagem" }` com o status HTTP adequado (400, 404, 40
 
 - Importação automática de ganhos. Uber e 99 não oferecem API pública para isso hoje, então o lançamento é manual.
 - Múltiplos usuários com login.
-- Simulador de corrida: "essa corrida compensa?" antes de aceitar.
+- Valor mínimo por km: quanto cada km precisa render para cobrir os custos e bater a meta, como referência para o motorista.
 - Alertas de manutenção por quilometragem.
 - Versão instalável no celular (PWA).
 

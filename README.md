@@ -39,6 +39,7 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 - [Telas em alta fidelidade](docs/telas/): prints do app no celular e no computador.
 - [Requisitos](docs/requisitos.md): funcionais, não funcionais e regras de negócio.
 - [Relatório final em PDF](docs/relatorio/KM-Real-Relatorio-Final.pdf): as 6 seções pedidas no enunciado.
+- [Pitch](docs/pitch/): slides em PDF e roteiro de fala da apresentação final.
 - [Teste de usabilidade](docs/teste-de-usabilidade.md): roteiro curto com 1 ou 2 motoristas.
 
 ## Equipe

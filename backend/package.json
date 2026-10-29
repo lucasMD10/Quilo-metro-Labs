@@ -7,10 +7,10 @@
   "scripts": {
     "dev": "node --disable-warning=ExperimentalWarning --watch src/server.js",
     "start": "node --disable-warning=ExperimentalWarning src/server.js",
-    "seed": "node --disable-warning=ExperimentalWarning src/seed.js"
+    "seed": "node --disable-warning=ExperimentalWarning src/seed.js",
+    "start:rede": "node --disable-warning=ExperimentalWarning src/server.js --rede"
   },
   "dependencies": {
-    "cors": "^2.8.5",
     "express": "^4.21.2"
   }
 }

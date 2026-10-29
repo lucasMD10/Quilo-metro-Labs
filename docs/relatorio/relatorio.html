@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>KM Real · Relatório final · Quilômetro Labs</title>
+<style>
+@font-face { font-family: 'Nunito Sans'; font-weight: 200 1000; src: url('../../node_modules/@fontsource-variable/nunito-sans/files/nunito-sans-latin-wght-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito Sans'; font-style: italic; font-weight: 200 1000; src: url('../../node_modules/@fontsource-variable/nunito-sans/files/nunito-sans-latin-wght-italic.woff2') format('woff2'); }
+@page { size: A4; margin: 16mm 16mm 18mm; }
+:root { --marca:#102C46; --marca-suave:#EDF2F7; --marca-linha:#C9D5E1; --fundo:#F5F7FA; --texto:#13283C; --suave:#5E6872; --borda:#E1E7ED; --lucro:#15803D; --prejuizo:#C93C3C; }
+* { box-sizing: border-box; }
+body { font-family: 'Nunito Sans', system-ui, sans-serif; color: var(--texto); font-size: 10.5pt; line-height: 1.5; margin: 0; }
+h1 { break-before: page; font-size: 22pt; font-weight: 800; color: var(--marca); margin: 0 0 4mm; line-height: 1.15; }
+h1 small { display: block; font-size: 10pt; font-weight: 700; color: var(--suave); letter-spacing: .04em; margin-bottom: 2mm; }
+h2 { font-size: 13pt; font-weight: 800; color: var(--marca); margin: 7mm 0 2mm; break-after: avoid; }
+h3 { font-size: 11pt; font-weight: 800; margin: 4mm 0 1.5mm; break-after: avoid; }
+p { margin: 0 0 2.5mm; }
+ul, ol { margin: 0 0 3mm; padding-left: 5mm; } li { margin-bottom: 1mm; }
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.5pt; break-inside: avoid; }
+th { text-align: left; background: var(--marca); color: #fff; font-weight: 700; padding: 2mm 2.5mm; }
+td { border-bottom: 1px solid var(--borda); padding: 2mm 2.5mm; vertical-align: top; }
+tr:nth-child(even) td { background: #FAFBFC; }
+code { font-family: ui-monospace, Consolas, monospace; font-size: 8.8pt; background: var(--marca-suave); padding: .3mm 1.2mm; border-radius: 1mm; }
+pre { font-family: ui-monospace, Consolas, monospace; font-size: 8.8pt; background: var(--fundo); border: 1px solid var(--borda); border-radius: 2mm; padding: 3mm 4mm; margin: 0 0 4mm; white-space: pre-wrap; break-inside: avoid; }
+blockquote { margin: 0 0 3mm; padding: 2.5mm 4mm; border-left: 1.2mm solid var(--marca); background: var(--marca-suave); border-radius: 0 2mm 2mm 0; font-style: italic; }
+.destaque { background: var(--marca); color: #fff; border-radius: 3mm; padding: 5mm 6mm; margin: 3mm 0 5mm; break-inside: avoid; }
+.destaque b { font-size: 26pt; font-weight: 800; display: block; line-height: 1.1; }
+.caixa { border: 1px solid var(--borda); border-radius: 3mm; padding: 4mm 5mm; margin: 0 0 4mm; break-inside: avoid; }
+.legenda { font-size: 8.5pt; color: var(--suave); text-align: center; margin-top: 1.5mm; }
+figure { margin: 0 0 4mm; break-inside: avoid; }
+img { max-width: 100%; display: block; }
+.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+.telas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; break-inside: avoid; }
+.telas figure img { height: 92mm; width: 100%; object-fit: cover; object-position: top; border: 1px solid var(--borda); border-radius: 2.5mm; }
+.cores { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2.5mm; margin-bottom: 4mm; }
+.cores div { font-size: 8pt; color: var(--suave); } .cores i { display: block; height: 11mm; border-radius: 2mm; border: 1px solid var(--borda); margin-bottom: 1mm; } .cores b { display: block; color: var(--texto); font-size: 8.5pt; }
+.arq { display: flex; align-items: center; gap: 2.5mm; margin: 2mm 0 5mm; break-inside: avoid; }
+.arq div { flex: 1; border: 1.5px solid var(--marca); border-radius: 2.5mm; padding: 3mm; text-align: center; font-size: 9pt; } .arq div b { display: block; color: var(--marca); font-size: 10pt; }
+.arq span { color: var(--marca); font-weight: 800; }
+.link { color: var(--marca); font-weight: 800; }
+
+/* capa */
+.capa { display: block; }
+.capa .topo { background: var(--marca); color: #fff; border-radius: 4mm; padding: 10mm 10mm; }
+.capa .marca { display: flex; align-items: center; gap: 6mm; }
+.capa .marca img { height: 24mm; filter: brightness(0) invert(1); }
+.capa .marca h2 { color: #fff; font-size: 34pt; margin: 0; line-height: 1; }
+.capa .marca p { margin: 2mm 0 0; opacity: .85; font-size: 12pt; }
+.capa .titulo { margin: 10mm 0 6mm; }
+.capa .titulo p { font-size: 10pt; color: var(--suave); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+.capa .titulo h2 { font-size: 24pt; margin: 2mm 0 0; }
+.capa .rodape { margin-top: 8mm; font-size: 9.5pt; color: var(--suave); border-top: 1px solid var(--borda); padding-top: 4mm; }
+</style>
+</head>
+<body>
+
+<!-- 1. CAPA -->
+<section class="capa">
+  <div class="topo">
+    <div class="marca">
+      <img src="../../frontend/src/assets/marca.svg" alt="Logo KM Real">
+      <div><h2>KM Real</h2><p>Quanto sobra de verdade a cada quilômetro que você roda.</p></div>
+    </div>
+  </div>
+  <div class="titulo">
+    <p>Relatório final do Projeto Integrador</p>
+    <h2>Gestão financeira para motoristas de aplicativo (Uber e 99)</h2>
+  </div>
+
+  <h3>Empresa</h3>
+  <p><b>Quilômetro Labs</b>, empresa de tecnologia fundada para o Projeto Integrador. Produto: <b>KM Real</b>.</p>
+
+  <h3>Integrantes e atribuições</h3>
+  <table>
+    <tr><th>Integrante</th><th>Função</th><th>Responsabilidades</th></tr>
+    <tr><td>Rafael e Vinicius</td><td>Product Owner</td><td>Visão do produto, prioridades, pesquisa com motoristas e pitch</td></tr>
+    <tr><td>Lucas</td><td>Desenvolvedor full-stack</td><td>Arquitetura, back-end, front-end, banco de dados e repositório</td></tr>
+    <tr><td>Lucas e Rafael</td><td>UI/UX Designer</td><td>Wireframes, identidade visual, guia de estilo e protótipo no Figma</td></tr>
+    <tr><td>Vinicius</td><td>Testador</td><td>Teste de usabilidade com motoristas e testes do app antes da entrega</td></tr>
+  </table>
+
+  <h3>Sumário</h3>
+  <ol>
+    <li>Capa e identificação da empresa</li>
+    <li>Justificativa e conexão com os dados globais</li>
+    <li>Relatório da pesquisa primária</li>
+    <li>Documentação de design (UI/UX)</li>
+    <li>Especificação técnica do MVP</li>
+    <li>Repositório GitHub e guia de execução</li>
+  </ol>
+
+  <div class="rodape">
+    Disciplina: Design Profissional · Docente: Prof. Me. Sedenilso Antonio Machado<br>
+    Universidade Positivo · Curitiba, novembro de 2026
+  </div>
+</section>
+
+<!-- 2. JUSTIFICATIVA -->
+<h1><small>Seção 2</small>Justificativa e conexão com os dados globais</h1>
+
+<p>A pesquisa do Prof. Sedenilso Machado, feita ao longo de dois anos com mais de 40 mil entrevistados, comparou o nível de necessidade percebido em 15 segmentos de software. O segmento escolhido pela Quilômetro Labs ficou em primeiro lugar.</p>
+
+<div class="destaque"><b>92%</b>de necessidade percebida para "Gestão Financeira para Uber/99", o maior índice entre os 15 segmentos estudados.</div>
+
+<h2>O problema</h2>
+<p>O motorista de aplicativo vê o valor bruto de cada corrida, mas esse número não desconta combustível, parcela ou aluguel do carro, seguro, IPVA, manutenção e gastos do dia. Muitos acham que estão lucrando bem e, na prática, rodam perto do prejuízo. Sem saber o custo real de cada quilômetro, ele também não consegue definir uma meta diária que faça sentido.</p>
+
+<h2>Como o KM Real responde às descobertas da pesquisa</h2>
+<table>
+  <tr><th style="width:38%">Descoberta da pesquisa</th><th>Como o KM Real responde</th></tr>
+  <tr><td><b>Uso utilitário vs. abandono rápido:</b> sistemas que não resolvem uma dor financeira direta são abandonados por mais de 78% dos usuários em 30 dias.</td><td>O app resolve uma dor financeira direta: mostra quanto sobrou no bolso no dia, logo no primeiro uso.</td></tr>
+  <tr><td><b>Demanda por soluções de nicho:</b> preferência por apps especialistas em vez de planilhas ou sistemas genéricos.</td><td>Feito só para motorista de Uber e 99, com a linguagem dele ("o que caiu pra você", "sobra no bolso") e campos que ele conhece (km rodados, horas online, ganho por app).</td></tr>
+  <tr><td><b>Decisão baseada em ROI pessoal:</b> engajamento 3 vezes maior quando a ferramenta mostra o ganho financeiro direto.</td><td>O lucro real do dia, o custo por km e o quanto precisa faturar para bater a meta aparecem em destaque, com a conta aberta.</td></tr>
+  <tr><td><b>Simplificação de processos:</b> demanda por trocar controles informais por algo simples.</td><td>Substitui o controle "de cabeça" ou no caderno por um lançamento de um minuto no fim do dia.</td></tr>
+</table>
+
+<h2>Proposta de valor</h2>
+<p>O KM Real calcula o <b>custo real por quilômetro</b> do carro do motorista e, a cada dia lançado, mostra o <b>lucro líquido</b>, o progresso da <b>meta diária</b>, a evolução da semana e o <b>fechamento do mês</b>. Lucro, no KM Real, é a sobra no bolso: ganhos menos tudo o que sai do bolso por causa do carro.</p>
+
+<!-- 3. PESQUISA -->
+<h1><small>Seção 3</small>Relatório da pesquisa primária</h1>
+
+<p>Conversa com <b>2 motoristas de aplicativo</b> seguindo um roteiro curto: primeiro eles contaram como controlam o dinheiro hoje, depois conheceram o KM Real.</p>
+
+<table>
+  <tr><th></th><th>Motorista 1</th><th>Motorista 2</th></tr>
+  <tr><td><b>Rotina</b></td><td>Roda o dia inteiro, com Uber e 99</td><td>Faz corridas depois do trabalho</td></tr>
+  <tr><td><b>Objetivo</b></td><td>Renda principal</td><td>Renda extra</td></tr>
+</table>
+
+<h2>Resumo das entrevistas</h2>
+<h3>Motorista 1</h3>
+<blockquote>"Eu vejo quanto entrou nos aplicativos, mas não sei direito quanto sobrou. Abasteço, pago as contas do carro e vou trabalhando. Tem dia que entra bastante dinheiro, mas parece que não sobra nada."</blockquote>
+<p>Depois de conhecer o KM Real:</p>
+<blockquote>"Eu usaria, sim. Gostei de ele mostrar o que sobra depois dos gastos. Só precisa ser rápido de preencher, porque no fim do dia a gente já tá cansado."</blockquote>
+
+<h3>Motorista 2</h3>
+<blockquote>"Eu rodo pra fazer uma renda extra, mas às vezes fico na dúvida se tá compensando. Gasolina eu consigo acompanhar, mas pneu, óleo e essas coisas eu só lembro quando tenho que pagar."</blockquote>
+<p>Depois de conhecer o KM Real:</p>
+<blockquote>"Achei útil pra saber se essas horas a mais tão valendo a pena. Só não sei de cabeça todos os gastos do carro. Ia precisar preencher aos poucos."</blockquote>
+
+<h2>Matriz de dores e oportunidades</h2>
+<table>
+  <tr><th style="width:24%">Dor</th><th style="width:36%">Frase do motorista</th><th>Oportunidade no KM Real</th></tr>
+  <tr><td>Vê quanto entrou, mas não quanto sobrou</td><td>"Vejo quanto entrou nos aplicativos, mas não sei direito quanto sobrou."</td><td>Lucro do dia já descontando combustível, custos do carro e gastos.</td></tr>
+  <tr><td>Gastos que não aparecem no dia a dia</td><td>"Pneu, óleo e essas coisas eu só lembro quando tenho que pagar."</td><td>A manutenção entra como valor por mês e é descontada um pouco a cada km rodado.</td></tr>
+  <tr><td>Não sabe se está compensando</td><td>"Às vezes fico na dúvida se tá compensando."</td><td>Lucro por hora e meta diária na tela inicial.</td></tr>
+  <tr><td>Cansaço no fim do dia</td><td>"Só precisa ser rápido de preencher."</td><td>Lançamento numa tela só, com poucos campos e a conta aparecendo enquanto digita.</td></tr>
+  <tr><td>Não sabe todos os gastos de cabeça</td><td>"Ia precisar preencher aos poucos."</td><td>No cadastro, uma estimativa já serve; os custos podem ser ajustados depois no Perfil.</td></tr>
+</table>
+
+<h2>Conclusões</h2>
+<ol>
+  <li><b>A dor principal se confirmou:</b> os dois sabem quanto entra, mas não quanto sobra.</li>
+  <li><b>Rapidez importa:</b> o lançamento precisa ser curto, porque é feito no fim do expediente.</li>
+  <li><b>O cadastro não pode exigir precisão:</b> o app aceita uma estimativa e deixa ajustar depois.</li>
+  <li><b>Os dois usariam o app:</b> o que mais chamou atenção foi ver o que sobra depois dos gastos.</li>
+</ol>
+
+<!-- 4. DESIGN -->
+<h1><small>Seção 4</small>Documentação de design (UI/UX)</h1>
+
+<h2>Persona</h2>
+<div class="caixa">
+  <p><b>Carlos, motorista de app</b> (persona criada a partir dos dois relatos)</p>
+  <ul>
+    <li><b>Quem é:</b> roda com Uber e 99 e usa o carro como fonte de renda.</li>
+    <li><b>Como controla hoje:</b> de cabeça. Olha o que entrou no app, abastece e paga as contas do carro conforme aparecem.</li>
+    <li><b>O que quer:</b> saber quanto sobra de verdade no fim do dia e se as horas rodadas estão valendo a pena.</li>
+    <li><b>O que atrapalha:</b> gastos que aparecem de surpresa (pneu, óleo) e o cansaço no fim do dia.</li>
+  </ul>
+  <blockquote style="margin:0">"Tem dia que entra bastante dinheiro, mas parece que não sobra nada."</blockquote>
+</div>
+
+<h2>Jornada do usuário</h2>
+<table>
+  <tr><th>Etapa</th><th>O que ele faz</th><th>O que sente</th><th>Oportunidade</th></tr>
+  <tr><td>Durante o dia</td><td>Roda e vê os ganhos entrando no app</td><td>Animado quando o dia rende</td><td>—</td></tr>
+  <tr><td>Abastece e paga contas</td><td>Paga gasolina e as contas do carro conforme aparecem</td><td>Perde a noção do total</td><td>Custo por km calculado uma vez, no cadastro</td></tr>
+  <tr><td>Fim do dia</td><td>Olha só o valor bruto</td><td>Cansado, sem saber quanto sobrou</td><td>Lançar o dia rápido e ver o lucro real</td></tr>
+  <tr><td>Gasto surpresa</td><td>Paga pneu ou óleo de uma vez</td><td>Frustrado: "não sobra nada"</td><td>Manutenção já descontada aos poucos, a cada km</td></tr>
+  <tr><td>Fim do mês</td><td>Compara o que ganhou com o que pagou</td><td>Dúvida se compensou</td><td>Fechamento do mês com o lucro ajustado</td></tr>
+</table>
+
+<h2>Requisitos principais</h2>
+<p>A análise da pesquisa gerou os requisitos do sistema. Os principais:</p>
+<ul>
+  <li>Cadastro em 2 passos: motorista (nome, apps, meta) e carro (combustível, km por dia, dias por semana e custos fixos separados).</li>
+  <li>Cálculo do custo real por km, separado entre combustível e custos fixos, com a conta explicada.</li>
+  <li>Lançamento do dia com ganhos por app, km, horas e gastos, mostrando o lucro enquanto o motorista digita.</li>
+  <li>Tela inicial com lucro de hoje, meta, gráfico dos últimos 7 dias e fechamento do mês.</li>
+  <li>Histórico com edição e exclusão, e perfil editável a qualquer momento.</li>
+</ul>
+<p>A lista completa, com prioridade e regras de negócio, está em <code>docs/requisitos.md</code> no repositório.</p>
+
+<h2>Protótipo de baixa fidelidade (wireframes)</h2>
+<p>Estrutura das 6 telas no celular, sem identidade visual: só a organização das informações e o fluxo.</p>
+<figure><img src="../wireframes/00-visao-geral.png" alt="Wireframes das 6 telas" style="max-height:150mm;margin:0 auto"><div class="legenda">Wireframes: boas-vindas (passos 1 e 2), início, lançar dia, histórico, perfil e veículo.</div></figure>
+
+<h2>Identidade visual e guia de estilo</h2>
+<p>Uma cor de marca (navy) e o resto neutro: quem chama atenção é o dinheiro. Verde e vermelho só aparecem em valores de lucro e prejuízo. Tipografia única, <b>Nunito Sans</b>, com valores em ExtraBold para leitura de relance. O símbolo junta um pino de localização com a estrada em "S".</p>
+<div class="cores">
+  <div><i style="background:#102C46"></i><b>Marca</b>#102C46</div>
+  <div><i style="background:#F5F7FA"></i><b>Fundo</b>#F5F7FA</div>
+  <div><i style="background:#13283C"></i><b>Texto</b>#13283C</div>
+  <div><i style="background:#5E6872"></i><b>Texto suave</b>#5E6872</div>
+  <div><i style="background:#15803D"></i><b>Lucro</b>#15803D</div>
+  <div><i style="background:#C93C3C"></i><b>Prejuízo</b>#C93C3C</div>
+</div>
+<p>O guia completo (cores, tipografia, 21 ícones, componentes e espaçamentos) está em <code>docs/guia-de-estilo/</code>.</p>
+
+<h2>Protótipo de alta fidelidade</h2>
+<p>Protótipo navegável no Figma, com componentes ligados às cores e estilos do guia, as 6 telas do celular e dois fluxos: "Primeiro acesso" e "Uso diário".</p>
+<p><b>Link:</b> <a class="link" href="https://www.figma.com/design/WvEst2KBErrDpuNFzeXu67">figma.com/design/WvEst2KBErrDpuNFzeXu67</a></p>
+<div class="telas">
+  <figure><img src="../telas/cel-01-boas-vindas-passo-1.png" alt=""><div class="legenda">Boas-vindas</div></figure>
+  <figure><img src="../telas/cel-03-inicio.png" alt=""><div class="legenda">Início</div></figure>
+  <figure><img src="../telas/cel-06-lancar-dia.png" alt=""><div class="legenda">Lançar dia</div></figure>
+  <figure><img src="../telas/cel-08-perfil.png" alt=""><div class="legenda">Perfil e veículo</div></figure>
+</div>
+<p class="legenda">Telas do app funcionando, com o mesmo layout do protótipo no Figma.</p>
+
+<!-- 5. ESPECIFICAÇÃO TÉCNICA -->
+<h1><small>Seção 5</small>Especificação técnica do MVP</h1>
+
+<h2>Funcionalidades implementadas</h2>
+<table>
+  <tr><th style="width:28%">Funcionalidade</th><th>O que faz</th></tr>
+  <tr><td>Cadastro inicial</td><td>Dois passos: motorista (nome, apps, meta diária) e carro (combustível, km por dia, dias por semana e cada custo fixo separado), com prévia do custo por km e avisos para valores que parecem errados.</td></tr>
+  <tr><td>Custo real por km</td><td>Separado entre combustível e custos fixos, com "Entender o cálculo" na tela inicial.</td></tr>
+  <tr><td>Lançamento do dia</td><td>Ganhos por app, km, horas online e outros gastos, com a conta do dia aberta enquanto o motorista digita. Cada dia guarda o custo por km da época.</td></tr>
+  <tr><td>Tela inicial</td><td>Lucro de hoje, progresso da meta, indicadores rápidos, gráfico interativo dos últimos 7 dias e totais da semana.</td></tr>
+  <tr><td>Fechamento do mês</td><td>Compara os custos fixos reais do período com o que os dias já descontaram e mostra o lucro do mês ajustado.</td></tr>
+  <tr><td>Histórico</td><td>Lista dos dias lançados, com edição e exclusão.</td></tr>
+  <tr><td>Perfil e veículo</td><td>Tudo editável; o novo custo por km vale para os próximos lançamentos.</td></tr>
+  <tr><td>Celular e computador</td><td>Menu inferior e botão de salvar fixos no celular; menu lateral e duas colunas no computador.</td></tr>
+</table>
+
+<h2>Tecnologias</h2>
+<table>
+  <tr><th style="width:28%">Camada</th><th>Tecnologia</th></tr>
+  <tr><td>Front-end</td><td>React 18 + Vite 6 (JavaScript), CSS puro com variáveis de design</td></tr>
+  <tr><td>Back-end</td><td>Node.js 22 com Express 4 (API REST)</td></tr>
+  <tr><td>Banco de dados</td><td>SQLite, pelo módulo nativo <code>node:sqlite</code> (sem driver para instalar)</td></tr>
+  <tr><td>Organização</td><td>npm workspaces e concurrently (front e back sobem juntos)</td></tr>
+  <tr><td>Design</td><td>Figma (protótipo e componentes)</td></tr>
+</table>
+
+<h2>Arquitetura</h2>
+<div class="arq">
+  <div><b>Motorista</b>navegador do celular ou do computador</div><span>→</span>
+  <div><b>Front-end</b>React + Vite</div><span>→</span>
+  <div><b>API REST</b>Node + Express<br>validação e regras</div><span>→</span>
+  <div><b>Banco</b>SQLite<br><code>km.db</code></div>
+</div>
+<p>O front-end nunca acessa o banco diretamente: ele chama a API, que valida os dados, aplica as regras de cálculo e grava no SQLite. As regras ficam isoladas em <code>backend/src/calculos.js</code>.</p>
+
+<h2>Regras de cálculo</h2>
+<pre>custos fixos do mês = parcela + seguro + IPVA ÷ 12 + manutenção + reserva para troca + outros
+km por mês          = km por dia × dias por semana × 52 ÷ 12
+
+custo por km        = preço do litro ÷ consumo  +  custos fixos do mês ÷ km por mês
+lucro do dia        = ganhos − km rodados × custo por km − outros gastos do dia</pre>
+<p>Exemplo com os dados de demonstração: gasolina a R$ 6,29 e consumo de 12 km/l dão R$ 0,52 por km; R$ 1.450 de custos fixos para 4.940 km por mês dão R$ 0,29 por km. Custo total: <b>R$ 0,82 por km</b>.</p>
+
+<h2>Banco de dados e API</h2>
+<p>Duas tabelas: <b>perfil</b> (dados do motorista, do carro e dos custos) e <b>lancamentos</b> (um registro por dia, com ganhos, km, horas, gastos e o custo por km aplicado naquele dia).</p>
+<table>
+  <tr><th style="width:12%">Método</th><th style="width:36%">Rota</th><th>Descrição</th></tr>
+  <tr><td>GET / PUT</td><td><code>/api/perfil</code></td><td>Lê ou salva o perfil e devolve o custo por km</td></tr>
+  <tr><td>GET</td><td><code>/api/lancamentos</code></td><td>Lista os dias lançados</td></tr>
+  <tr><td>GET / PUT / DELETE</td><td><code>/api/lancamentos/:data</code></td><td>Lê, salva ou exclui o lançamento de um dia</td></tr>
+  <tr><td>GET</td><td><code>/api/resumo</code></td><td>Hoje, meta, últimos dias e totais</td></tr>
+  <tr><td>GET</td><td><code>/api/resumo/mes</code></td><td>Fechamento do mês</td></tr>
+</table>
+
+<h2>Validação do fluxo</h2>
+<p>O fluxo principal foi apresentado aos dois motoristas da pesquisa, que disseram que usariam o app. Os pontos levantados por eles (preencher rápido e poder estimar os gastos) já são atendidos pelo lançamento numa tela só e pelo perfil editável. O roteiro do teste de usabilidade, com 4 tarefas, está em <code>docs/teste-de-usabilidade.md</code>.</p>
+
+<h2>Próximos passos</h2>
+<ul>
+  <li>Importar os ganhos direto da Uber e da 99 (hoje não há API pública para isso).</li>
+  <li>Simulador "essa corrida compensa?" antes de aceitar.</li>
+  <li>Alertas de manutenção por quilometragem.</li>
+  <li>Login, banco na nuvem e versão instalável no celular.</li>
+</ul>
+
+<!-- 6. GITHUB -->
+<h1><small>Seção 6</small>Repositório GitHub e guia de execução</h1>
+
+<p><b>Repositório oficial:</b> <a class="link" href="https://github.com/lucasMD10/Quil-metro-Labs">github.com/lucasMD10/Quil-metro-Labs</a></p>
+<p>O README do repositório traz a descrição do produto, a equipe, a arquitetura, as regras de cálculo, o modelo de dados, a API e os links da documentação de design.</p>
+
+<h2>Pré-requisitos</h2>
+<ul>
+  <li><b>Node.js 22.13 ou mais novo</b> (<a href="https://nodejs.org">nodejs.org</a>). Para conferir: <code>node -v</code>.</li>
+  <li>Git, para clonar o repositório (ou baixar o ZIP pelo botão "Code" do GitHub).</li>
+</ul>
+
+<h2>Passo a passo</h2>
+<pre># 1. Baixar o projeto
+git clone https://github.com/lucasMD10/Quil-metro-Labs.git
+cd Quil-metro-Labs
+
+# 2. Instalar as dependências (front e back de uma vez)
+npm install
+
+# 3. (Opcional) Carregar um motorista com dias de exemplo
+npm run seed
+
+# 4. Compilar o front e subir o sistema
+npm start</pre>
+<p>Depois, abra <b>http://localhost:3001</b> no navegador. Sem o passo 3, o app abre no cadastro inicial.</p>
+
+<h2>Abrir no celular</h2>
+<ol>
+  <li>Ligue o computador e o celular na mesma rede Wi-Fi.</li>
+  <li>Rode <code>npm start</code>. O terminal mostra uma linha como <code>No celular (mesmo Wi-Fi): http://192.168.0.10:3001</code>.</li>
+  <li>Digite esse endereço no navegador do celular.</li>
+</ol>
+
+<h2>Outros comandos</h2>
+<table>
+  <tr><th style="width:28%">Comando</th><th>O que faz</th></tr>
+  <tr><td><code>npm run dev</code></td><td>Modo de desenvolvimento: API na porta 3001 e front na 5173, com recarga automática</td></tr>
+  <tr><td><code>npm run seed</code></td><td>Recria o banco com dados de exemplo</td></tr>
+  <tr><td><code>npm run build</code></td><td>Gera a versão de produção do front</td></tr>
+</table>
+<p>Para recomeçar do zero, apague o arquivo <code>backend/data/km.db</code>.</p>
+
+
+
+</body>
+</html>

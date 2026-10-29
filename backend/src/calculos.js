@@ -102,5 +102,9 @@ export function fechamentoDoMes(lancamentos, perfil, { diasNoMes, diasConsiderad
     diferenca: arred(diferenca),
     lucro_dias: arred(lucroDias),
     lucro_ajustado: arred(lucroDias + diferenca),
+    // Parte dos custos fixos do período que os dias já cobriram (0 a 1), para a barra do fechamento.
+    cobertura: custosFixosPeriodo > 0 ? arred(Math.min(fixosDescontados / custosFixosPeriodo, 1), 4) : 1,
+    // Diferença de até 50 centavos conta como "certinho".
+    situacao: diferenca < -0.5 ? 'rodou_menos' : diferenca > 0.5 ? 'rodou_mais' : 'certinho',
   };
 }

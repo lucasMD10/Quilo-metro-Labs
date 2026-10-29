@@ -7,6 +7,7 @@ import KmIcon from '../components/KmIcon.jsx';
 import marcaNome from '../assets/marca-nome.svg';
 import marca from '../assets/marca.svg';
 import { perfilParaForm, formParaPerfil, temNumeroInvalido } from './campos-perfil.js';
+import { usePrevia } from '../usePrevia.js';
 
 // Cadastro inicial em duas etapas: 1) você e sua meta, 2) seu carro.
 export default function BoasVindas({ onConcluir }) {
@@ -15,6 +16,7 @@ export default function BoasVindas({ onConcluir }) {
   const [erro, setErro] = useState('');
   const [salvando, setSalvando] = useState(false);
   const mudar = (nome, valor) => { setErro(''); setForm((f) => ({ ...f, [nome]: valor })); };
+  const previa = usePrevia(api.previaVeiculo, formParaPerfil(form), etapa === 2);
 
   async function concluir(e) {
     e.preventDefault();
@@ -86,8 +88,8 @@ export default function BoasVindas({ onConcluir }) {
           <form className="cartao" onSubmit={concluir}>
             <h2 className="cartao__titulo">Agora, o seu carro</h2>
             <p className="grupo__dica">Com esses dados o app calcula quanto cada km rodado custa para você. Uma estimativa já serve, dá para ajustar depois.</p>
-            <CamposVeiculo form={form} onChange={mudar} />
-            <ResumoVeiculo form={form} />
+            <CamposVeiculo form={form} onChange={mudar} previa={previa} />
+            <ResumoVeiculo form={form} previa={previa} />
             {erro && <p className="erro">{erro}</p>}
             <div className="acoes">
               <button type="button" className="botao botao--secundario" onClick={() => setEtapa(1)}>Voltar</button>

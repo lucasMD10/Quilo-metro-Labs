@@ -35,7 +35,12 @@ if (existsSync(pastaFront)) {
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   if (status === 500) console.error(err);
-  res.status(status).json({ erro: status === 500 ? 'Erro interno no servidor.' : err.message });
+  // JSON malformado ou corpo grande demais chegam do express.json com mensagem em inglês.
+  const mensagem = status === 500 ? 'Erro interno no servidor.'
+    : err.type === 'entity.parse.failed' ? 'Os dados enviados não estão no formato certo.'
+    : err.type === 'entity.too.large' ? 'Os dados enviados são grandes demais.'
+    : err.message;
+  res.status(status).json({ erro: mensagem, ...(err.confirmar ? { confirmar: true } : {}) });
 });
 
 const servidor = app.listen(PORTA, NA_REDE ? '0.0.0.0' : '127.0.0.1', () => {

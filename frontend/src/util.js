@@ -43,18 +43,5 @@ export function horasTexto(h) {
   return minutos ? `${inteiras}h${String(minutos).padStart(2, '0')}` : String(inteiras);
 }
 
-// Mesmo cálculo do backend, usado para mostrar a prévia enquanto o motorista digita.
-// O custo do carro é separado em combustível e custos fixos, as duas partes do custo por km.
-export function previaDoDia(form, custo) {
-  const n = (v) => lerNumero(v) || 0;
-  const bruto = n(form.ganho_uber) + n(form.ganho_99) + n(form.ganho_outros);
-  const km = n(form.km_rodados);
-  // Dias lançados antes da separação só têm o custo total: ele entra inteiro como "combustível".
-  const combustivel = km * (custo.combustivel_km ?? custo.total_km);
-  const fixo = km * (custo.fixo_km ?? 0);
-  const gastos = n(form.gastos_extras);
-  return { bruto, combustivel, fixo, gastos, lucro: bruto - combustivel - fixo - gastos };
-}
-
 // Converte "12,5" -> 12.5 antes de mandar para a API.
 export const paraNumero = (v) => lerNumero(v);

@@ -245,14 +245,23 @@ erDiagram
 | GET | `/api/saude` | Verifica se a API está no ar |
 | GET | `/api/perfil` | Perfil + custo por km (ou `null` se não cadastrado) |
 | PUT | `/api/perfil` | Cria ou atualiza o perfil |
+| POST | `/api/perfil/previa` | Custo por km e do mês enquanto o motorista preenche (não grava) |
 | GET | `/api/lancamentos?de=&ate=` | Lista os dias lançados com indicadores |
+| POST | `/api/lancamentos/previa` | A conta do dia enquanto o motorista digita (não grava) |
 | GET | `/api/lancamentos/:data` | Lançamento de um dia |
 | PUT | `/api/lancamentos/:data` | Cria ou atualiza o lançamento do dia |
 | DELETE | `/api/lancamentos/:data` | Exclui o lançamento do dia |
 | GET | `/api/resumo?ate=&dias=7` | Hoje, meta, série diária e totais do período |
 | GET | `/api/resumo/mes?mes=AAAA-MM&hoje=` | Fechamento do mês: custos fixos do período x descontados nos dias e lucro ajustado |
 
-Erros retornam `{ "erro": "mensagem" }` com o status HTTP adequado (400, 404, 409).
+Erros retornam `{ "erro": "mensagem" }` com o status HTTP adequado (400, 404, 409). Valores suspeitos (ganho acima de R$ 2.000 num dia, ganho sem km) voltam com status 422 e `"confirmar": true`: o front pergunta ao motorista e reenvia com `"confirmado": true`.
+
+## Segurança
+
+- **Regra de negócio fica só no backend.** Validações, limites e contas ficam em `backend/src/regras.js` e `backend/src/calculos.js`. O front não calcula nada: até a prévia que aparece enquanto o motorista digita vem da API (`/previa`). A exceção é a versão do GitHub Pages, que não tem servidor e roda esses mesmos módulos no navegador, com os dados no próprio aparelho.
+- **Nenhuma variável `VITE_` ou `NEXT_PUBLIC_`.** Tudo com esse prefixo vai parar no JavaScript que o navegador baixa. O build do front falha se aparecer um `.env` ou uma dessas variáveis. Chaves e senhas, se um dia existirem, ficam só no backend.
+- **A API só atende o próprio computador.** A rede local só é liberada com `npm run start:celular`.
+- **Sem CORS:** outros sites abertos no navegador não conseguem ler nem alterar a API.
 
 ---
 

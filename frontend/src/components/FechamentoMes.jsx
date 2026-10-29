@@ -29,7 +29,7 @@ export default function FechamentoMes() {
   }, [mes]);
 
   const d = dados && dados.mes === mes ? dados : null;
-  const cobertura = d && d.custos_fixos_periodo > 0 ? Math.min(d.fixos_descontados / d.custos_fixos_periodo, 1) : 1;
+  const cobertura = d?.cobertura ?? 1; // parte dos custos fixos já coberta, calculada na API
 
   return (
     <section className="cartao fechamento">
@@ -68,9 +68,9 @@ export default function FechamentoMes() {
             <div className="linhas__total"><dt>Lucro do mês, ajustado</dt><dd className={d.lucro_ajustado < 0 ? 'neg' : 'pos'}>{moeda(d.lucro_ajustado)}</dd></div>
           </dl>
           <p className="nota">
-            {d.diferenca < -0.5 && `Você rodou menos que o previsto: faltam ${moeda(-d.diferenca)} de custos fixos, que saem do lucro.`}
-            {d.diferenca > 0.5 && `Você rodou mais que o previsto: os dias descontaram ${moeda(d.diferenca)} a mais de custos fixos, que voltam para o lucro.`}
-            {Math.abs(d.diferenca) <= 0.5 && 'Os dias cobriram certinho os custos fixos do período.'}
+            {d.situacao === 'rodou_menos' && `Você rodou menos que o previsto: faltam ${moeda(-d.diferenca)} de custos fixos, que saem do lucro.`}
+            {d.situacao === 'rodou_mais' && `Você rodou mais que o previsto: os dias descontaram ${moeda(d.diferenca)} a mais de custos fixos, que voltam para o lucro.`}
+            {d.situacao === 'certinho' && 'Os dias cobriram certinho os custos fixos do período.'}
           </p>
         </>
       )}

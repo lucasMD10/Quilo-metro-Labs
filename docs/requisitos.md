@@ -51,7 +51,7 @@ Lista de requisitos do MVP, levantada a partir da pesquisa de mercado (segmento 
 | ID | Requisito | Prioridade |
 |---|---|---|
 | RF18 | Importar ganhos direto da Uber e da 99 (hoje não há API pública para isso). | Futuro |
-| RF19 | Simulador "essa corrida compensa?" antes de aceitar. | Futuro |
+| RF19 | Valor mínimo por km: quanto cada km precisa render para cobrir os custos e bater a meta, como referência para o motorista. | Futuro |
 | RF20 | Alertas de manutenção por quilometragem. | Futuro |
 | RF21 | Login e vários motoristas no mesmo sistema. | Futuro |
 | RF22 | Instalar no celular como app (PWA) e funcionar sem internet. | Futuro |

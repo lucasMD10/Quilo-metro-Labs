@@ -245,7 +245,7 @@ Erros retornam `{ "erro": "mensagem" }` com o status HTTP adequado (400, 404, 40
 
 - Importação automática de ganhos. Uber e 99 não oferecem API pública para isso hoje, então o lançamento é manual.
 - Múltiplos usuários com login.
-- Simulador de corrida: "essa corrida compensa?" antes de aceitar.
+- Valor mínimo por km: quanto cada km precisa render para cobrir os custos e bater a meta, como referência para o motorista.
 - Alertas de manutenção por quilometragem.
 - Versão instalável no celular (PWA).
 

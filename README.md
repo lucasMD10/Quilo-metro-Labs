@@ -144,10 +144,14 @@ Sem o passo 3, o app abre na tela de cadastro inicial. Para recomeçar do zero, 
 
 ### Abrir no celular
 
-1. Ligue o computador e o celular **na mesma rede Wi-Fi**.
-2. Rode o sistema (`npm start` ou `npm run dev`). O terminal mostra uma linha como `No celular (mesmo Wi-Fi): http://192.168.0.10:3001`.
-3. Digite esse endereço no navegador do celular. Com `npm run dev`, use o endereço "Network" que o Vite mostra (porta 5173).
+Por segurança, `npm start` e `npm run dev` só atendem o próprio computador. Para abrir no celular, a rede local precisa ser liberada de propósito:
+
+1. Ligue o computador e o celular **na mesma rede Wi-Fi** (ou no hotspot do celular).
+2. Rode `npm run start:celular`. O terminal mostra uma linha como `No celular (mesmo Wi-Fi): http://192.168.0.10:3001`. Em desenvolvimento, use `npm run dev:celular` e o endereço "Network" que o Vite mostra (porta 5173).
+3. Digite esse endereço no navegador do celular.
 4. Na primeira vez, o Windows pode perguntar se o Node.js pode usar a rede: escolha **Permitir** em redes privadas.
+
+Com a rede liberada, qualquer pessoa conectada ao mesmo Wi-Fi consegue abrir o app e ver ou alterar os dados, porque não há login. Use só em rede de confiança.
 
 Dica: no Chrome do celular, menu ⋮ → **Adicionar à tela inicial** cria um atalho com cara de app.
 
@@ -156,7 +160,9 @@ Dica: no Chrome do celular, menu ⋮ → **Adicionar à tela inicial** cria um a
 | Comando | O que faz |
 |---|---|
 | `npm run dev` | Sobe API (3001) e front (5173) juntos |
+| `npm run dev:celular` | Igual ao `dev`, liberando o front na rede local para abrir no celular |
 | `npm start` | Compila o front e sobe tudo numa porta só (http://localhost:3001), sem o Vite |
+| `npm run start:celular` | Igual ao `start`, liberando a rede local para abrir no celular |
 | `npm run seed` | Recria o banco com dados de exemplo |
 | `npm run build` | Gera a versão de produção do front em `frontend/dist` |
 

@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import { existsSync } from 'node:fs';
 import { exec } from 'node:child_process';
 import { networkInterfaces } from 'node:os';
@@ -12,8 +11,11 @@ import { resumoRouter } from './routes/resumo.js';
 
 const app = express();
 const PORTA = process.env.PORT || 3001;
+// Por padrão a API só atende este computador. Para abrir no celular, a rede local é liberada de propósito
+// (npm run start:celular ou ABRIR-NO-CELULAR.bat): quem estiver no mesmo Wi-Fi passa a ver e alterar os dados.
+const NA_REDE = process.argv.includes('--rede');
 
-app.use(cors());
+// Sem CORS: o front é servido pela própria API (ou pelo proxy do Vite), então outros sites não leem a API.
 app.use(express.json());
 
 app.get('/api/saude', (req, res) => res.json({ ok: true, app: 'KM Real API' }));
@@ -36,12 +38,17 @@ app.use((err, req, res, next) => {
   res.status(status).json({ erro: status === 500 ? 'Erro interno no servidor.' : err.message });
 });
 
-const servidor = app.listen(PORTA, () => {
+const servidor = app.listen(PORTA, NA_REDE ? '0.0.0.0' : '127.0.0.1', () => {
   const url = `http://localhost:${PORTA}`;
   console.log(`KM Real rodando em ${url}`);
-  // Endereços na rede local, para abrir no celular conectado ao mesmo Wi-Fi.
-  const ips = Object.values(networkInterfaces()).flat().filter((i) => i && i.family === 'IPv4' && !i.internal);
-  for (const { address } of ips) console.log(`No celular (mesmo Wi-Fi): http://${address}:${PORTA}`);
+  if (NA_REDE) {
+    // Endereços na rede local, para abrir no celular conectado ao mesmo Wi-Fi.
+    const ips = Object.values(networkInterfaces()).flat().filter((i) => i && i.family === 'IPv4' && !i.internal);
+    for (const { address } of ips) console.log(`No celular (mesmo Wi-Fi): http://${address}:${PORTA}`);
+    console.log('Atenção: quem estiver nessa rede consegue abrir o app. Use só em rede de confiança.');
+  } else {
+    console.log('Só este computador acessa. Para abrir no celular, use npm run start:celular.');
+  }
   // Usado pelo INICIAR.bat: o navegador só abre depois que o servidor subiu de verdade.
   if (process.env.ABRIR_NAVEGADOR) {
     const comando = process.platform === 'win32' ? `start "" ${url}` : process.platform === 'darwin' ? `open ${url}` : `xdg-open ${url}`;

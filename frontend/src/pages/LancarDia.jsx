@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import Campo from '../components/Campo.jsx';
 import KmIcon from '../components/KmIcon.jsx';
 import { api } from '../api.js';
-import { moeda, numeroBR, hojeISO, previaDoDia, paraNumero, lerHoras, horasTexto } from '../util.js';
+import { moeda, numeroBR, hojeISO, paraNumero, lerHoras, horasTexto } from '../util.js';
+import { usePrevia } from '../usePrevia.js';
 
 const NUMERICOS = ['ganho_uber', 'ganho_99', 'ganho_outros', 'km_rodados', 'horas_trabalhadas', 'gastos_extras'];
 
@@ -49,37 +50,32 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
     return () => { atual = false; };
   }, [data, tentativa]);
 
-  // Dia já lançado usa o custo por km da época, a não ser que o motorista peça para recalcular.
-  const custoDaEpoca = salvo && {
-    total_km: salvo.custo_km_aplicado,
-    combustivel_km: salvo.combustivel_km_aplicado,
-    fixo_km: salvo.fixo_km_aplicado,
-  };
-  const custo = custoDaEpoca && !recalcular ? custoDaEpoca : perfil.custo;
-  const custoMudou = custoDaEpoca && Math.abs(custoDaEpoca.total_km - perfil.custo.total_km) >= 0.005;
-  const semSeparacao = custo.combustivel_km == null; // dia lançado antes de existir a separação
-  const previa = previaDoDia(form, custo);
+  // A conta do dia vem da API (custo por km congelado do dia, recalcular, separação combustível/fixos).
+  // Campo ainda inválido entra como zero na prévia; ao salvar ele é barrado.
+  const valores = Object.fromEntries(NUMERICOS.map((k) => [k, ler(k, form[k]) || 0]));
+  const previa = usePrevia(api.previaLancamento, { data, ...valores, recalcular_custo: recalcular }, carga === 'ok');
+  const custo = previa?.custo || perfil.custo;
+  const semSeparacao = !!previa?.sem_separacao;
 
   async function salvar(e) {
     e.preventDefault();
     setErro('');
     if (NUMERICOS.some((k) => Number.isNaN(ler(k, form[k])))) return setErro('Corrija os campos marcados em vermelho.');
-    const v = Object.fromEntries(NUMERICOS.map((k) => [k, ler(k, form[k])]));
-    const ganhos = v.ganho_uber + v.ganho_99 + v.ganho_outros;
-    if (NUMERICOS.every((k) => !v[k])) return setErro('O dia está vazio. Preencha pelo menos os ganhos ou os km rodados.');
-    if (v.horas_trabalhadas > 24) return setErro('Um dia tem no máximo 24 horas. Confira as horas online.');
-    if (v.km_rodados > 1500) return setErro('Mais de 1.500 km num dia não parece real. Confira os km rodados.');
-    if (ganhos > 2000 && !window.confirm(`Ganho de ${moeda(ganhos)} num dia só. O valor está certo?`)) return;
-    if (ganhos > 0 && !v.km_rodados && !window.confirm('Você lançou ganhos sem km rodados, então nenhum custo do carro será descontado. Salvar assim mesmo?')) return;
+    const dados = Object.fromEntries(
+      Object.entries(form).map(([k, v]) => [k, k === 'observacao' ? v : ler(k, v)])
+    );
     setSalvando(true);
     try {
-      const dados = Object.fromEntries(
-        Object.entries(form).map(([k, v]) => [k, k === 'observacao' ? v : ler(k, v)])
-      );
-      await api.salvarLancamento(data, { ...dados, recalcular_custo: recalcular });
+      try {
+        await api.salvarLancamento(data, { ...dados, recalcular_custo: recalcular });
+      } catch (err) {
+        // A API pede confirmação para valores suspeitos (ganho alto, ganho sem km).
+        if (!err.confirmar || !window.confirm(err.message)) throw err.confirmar ? null : err;
+        await api.salvarLancamento(data, { ...dados, recalcular_custo: recalcular, confirmado: true });
+      }
       onSalvo(salvo ? 'Alterações salvas.' : 'Dia salvo. Bom trabalho!');
     } catch (err) {
-      setErro(err.message);
+      if (err) setErro(err.message);
     } finally {
       setSalvando(false);
     }
@@ -125,13 +121,13 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
       </div>
 
       <aside className="pagina-form__resumo">
-        {custoMudou && (
+        {previa?.custo_mudou && salvo && (
           <div className="info">
             <KmIcon name="detalhar" size={20} />
             <div>
               <p>
-                Este dia foi lançado com o custo de <strong>{moeda(custoDaEpoca.total_km)}/km</strong>.
-                Hoje o seu custo é <strong>{moeda(perfil.custo.total_km)}/km</strong>. Editar o dia não muda isso.
+                Este dia foi lançado com o custo de <strong>{moeda(salvo.custo_km_aplicado)}/km</strong>.
+                Hoje o seu custo é <strong>{moeda(previa.custo_atual.total_km)}/km</strong>. Editar o dia não muda isso.
               </p>
               <label className="interruptor">
                 <input type="checkbox" checked={recalcular} onChange={(e) => setRecalcular(e.target.checked)} />
@@ -143,17 +139,17 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
 
         <div className="resultado">
           <p className="resultado__titulo"><KmIcon name="lucro-real" size={20} /> Como fica o seu dia</p>
-          <div><span>Ganho bruto<small>Uber + 99 + outros</small></span><strong>{moeda(previa.bruto)}</strong></div>
+          <div><span>Ganho bruto<small>Uber + 99 + outros</small></span><strong>{moeda(previa?.bruto)}</strong></div>
           {semSeparacao ? (
-            <div><span>Custo do carro<small>{kmTexto} km × {moeda(custo.total_km)}/km</small></span><strong className="custo">−{moeda(previa.combustivel)}</strong></div>
+            <div><span>Custo do carro<small>{kmTexto} km × {moeda(custo.total_km)}/km</small></span><strong className="custo">−{moeda(previa?.combustivel)}</strong></div>
           ) : (
             <>
-              <div><span>Combustível<small>{kmTexto} km × {moeda(custo.combustivel_km)}/km</small></span><strong className="custo">−{moeda(previa.combustivel)}</strong></div>
-              <div><span>Custos fixos do carro<small>{kmTexto} km × {moeda(custo.fixo_km)}/km</small></span><strong className="custo">−{moeda(previa.fixo)}</strong></div>
+              <div><span>Combustível<small>{kmTexto} km × {moeda(custo.combustivel_km)}/km</small></span><strong className="custo">−{moeda(previa?.combustivel)}</strong></div>
+              <div><span>Custos fixos do carro<small>{kmTexto} km × {moeda(custo.fixo_km)}/km</small></span><strong className="custo">−{moeda(previa?.fixo)}</strong></div>
             </>
           )}
-          <div><span>Outros gastos do dia</span><strong className="custo">−{moeda(previa.gastos)}</strong></div>
-          <div className="resultado__total"><span>Lucro estimado</span><strong className={previa.lucro < 0 ? 'neg' : 'pos'}>{moeda(previa.lucro)}</strong></div>
+          <div><span>Outros gastos do dia</span><strong className="custo">−{moeda(previa?.gastos)}</strong></div>
+          <div className="resultado__total"><span>Lucro estimado</span><strong className={previa?.lucro < 0 ? 'neg' : 'pos'}>{moeda(previa?.lucro)}</strong></div>
           <p className="resultado__nota">
             {salvo && !recalcular
               ? 'O combustível e os custos fixos usam o custo por km do dia em que ele foi lançado.'
@@ -165,7 +161,7 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
         <div className="barra-acao">
           <div className="barra-acao__resumo">
             <span>Lucro estimado</span>
-            <strong className={previa.lucro < 0 ? 'neg' : 'pos'}>{moeda(previa.lucro)}</strong>
+            <strong className={previa?.lucro < 0 ? 'neg' : 'pos'}>{moeda(previa?.lucro)}</strong>
           </div>
           {/* onMouseDown: tocar em salvar não tira o foco do campo, senão a tela se mexe no meio do toque */}
           <button className="botao" disabled={salvando || carga !== 'ok'} onMouseDown={(e) => e.preventDefault()}>

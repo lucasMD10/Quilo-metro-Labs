@@ -28,7 +28,7 @@ export default function Inicio({ perfil, onLancar, onPerfil }) {
         <p className="hero__saudacao">Olá, {perfil.nome}</p>
         <p className="hero__rotulo">Lucro estimado de hoje</p>
         <ValorAnimado valor={hoje.lucro} className="hero__valor" />
-        <FaixaMeta lucro={hoje.lucro} meta={meta_diaria} />
+        <FaixaMeta hoje={hoje} meta={meta_diaria} />
         <button className="botao botao--claro" onClick={() => onLancar(hojeISO())}>
           <KmIcon name={hoje.lancado ? 'editar' : 'lancar'} size={20} />
           {hoje.lancado ? 'Editar o dia de hoje' : 'Lançar o dia de hoje'}

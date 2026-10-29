@@ -253,7 +253,7 @@ img { max-width: 100%; display: block; }
   <div><b>API REST</b>Node + Express<br>validação e regras</div><span>→</span>
   <div><b>Banco</b>SQLite<br><code>km.db</code></div>
 </div>
-<p>O front-end nunca acessa o banco diretamente: ele chama a API, que valida os dados, aplica as regras de cálculo e grava no SQLite. As regras ficam isoladas em <code>backend/src/calculos.js</code>.</p>
+<p>O front-end nunca acessa o banco diretamente e não calcula nada: ele chama a API, que valida os dados, aplica as regras de negócio e grava no SQLite. Até a prévia que aparece enquanto o motorista digita vem da API. As regras ficam isoladas em <code>backend/src/regras.js</code> e <code>backend/src/calculos.js</code>.</p>
 
 <h2>Regras de cálculo</h2>
 <pre>custos fixos do mês = parcela + seguro + IPVA ÷ 12 + manutenção + reserva para troca + outros
@@ -268,10 +268,10 @@ lucro do dia        = ganhos − km rodados × custo por km − outros gastos do
 <table>
   <tr><th style="width:12%">Método</th><th style="width:36%">Rota</th><th>Descrição</th></tr>
   <tr><td>GET / PUT</td><td><code>/api/perfil</code></td><td>Lê ou salva o perfil e devolve o custo por km</td></tr>
+  <tr><td>POST</td><td><code>/api/…/previa</code></td><td>Prévias do carro e do dia enquanto o motorista digita</td></tr>
   <tr><td>GET</td><td><code>/api/lancamentos</code></td><td>Lista os dias lançados</td></tr>
   <tr><td>GET / PUT / DELETE</td><td><code>/api/lancamentos/:data</code></td><td>Lê, salva ou exclui o lançamento de um dia</td></tr>
-  <tr><td>GET</td><td><code>/api/resumo</code></td><td>Hoje, meta, últimos dias e totais</td></tr>
-  <tr><td>GET</td><td><code>/api/resumo/mes</code></td><td>Fechamento do mês</td></tr>
+  <tr><td>GET</td><td><code>/api/resumo</code> e <code>/mes</code></td><td>Hoje, meta, últimos dias, totais e fechamento do mês</td></tr>
 </table>
 
 <h2>Validação do fluxo</h2>

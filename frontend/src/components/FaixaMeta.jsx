@@ -2,10 +2,11 @@ import { moeda } from '../util.js';
 import KmIcon from './KmIcon.jsx';
 
 // Progresso do lucro do dia até a meta. A barra é uma estrada: a parte percorrida acende.
-export default function FaixaMeta({ lucro, meta }) {
+// hoje: o dia como vem do /api/resumo, com meta_pct, falta_para_meta e meta_batida calculados na API.
+export default function FaixaMeta({ hoje, meta }) {
   if (!meta) return <p className="meta__texto">Defina uma meta diária na aba Perfil para acompanhar seu progresso.</p>;
-  const pct = Math.max(0, Math.min(lucro / meta, 1));
-  const falta = Math.max(meta - lucro, 0);
+  const pct = hoje.meta_pct;
+  const lucro = hoje.lucro;
   return (
     <div className="meta">
       <div className="meta__topo">
@@ -16,7 +17,7 @@ export default function FaixaMeta({ lucro, meta }) {
         <div className="meta__percorrido" style={{ width: `${pct * 100}%` }} />
       </div>
       <p className="meta__texto">
-        {falta === 0 ? `Meta de ${moeda(meta)} batida. Boa!` : `Faltam ${moeda(falta)} para a meta de ${moeda(meta)}.`}
+        {hoje.meta_batida ? `Meta de ${moeda(meta)} batida. Boa!` : `Faltam ${moeda(hoje.falta_para_meta)} para a meta de ${moeda(meta)}.`}
       </p>
     </div>
   );

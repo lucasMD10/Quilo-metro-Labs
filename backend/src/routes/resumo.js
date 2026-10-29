@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { db } from '../db.js';
 import { indicadoresDoDia, totalizar, fechamentoDoMes } from '../calculos.js';
 import { dataISO, erro } from '../validacao.js';
+import { progressoMeta } from '../regras.js';
 import { buscarPerfil } from './perfil.js';
 
 export const resumoRouter = Router();
@@ -42,7 +43,7 @@ resumoRouter.get('/', (req, res) => {
   res.json({
     periodo: { de, ate, dias: qtd },
     meta_diaria: meta,
-    hoje: { ...hoje, falta_para_meta: Math.max(meta - hoje.lucro, 0), meta_batida: meta > 0 && hoje.lucro >= meta },
+    hoje: { ...hoje, ...progressoMeta(hoje.lucro, meta) },
     dias,
     totais: totalizar(dias),
     dias_meta_batida: meta > 0 ? dias.filter((d) => d.lancado && d.lucro >= meta).length : 0,

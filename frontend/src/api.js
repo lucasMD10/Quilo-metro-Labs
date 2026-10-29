@@ -16,6 +16,7 @@ async function chamar(caminho, opcoes = {}) {
   if (!resp.ok) {
     const erro = new Error(dados?.erro || 'Não foi possível falar com o servidor.');
     erro.status = resp.status; // 404 = não existe; o resto é falha de verdade
+    erro.confirmar = !!dados?.confirmar; // 422 com confirmar: a API pede uma confirmação antes de gravar
     throw erro;
   }
   return dados;
@@ -24,10 +25,12 @@ async function chamar(caminho, opcoes = {}) {
 const apiServidor = {
   perfil: () => chamar('/perfil'),
   salvarPerfil: (dados) => chamar('/perfil', { method: 'PUT', body: dados }),
+  previaVeiculo: (dados) => chamar('/perfil/previa', { method: 'POST', body: dados }),
   resumo: (ate, dias = 7) => chamar(`/resumo?ate=${ate}&dias=${dias}`),
   fechamento: (mes, hoje) => chamar(`/resumo/mes?mes=${mes}&hoje=${hoje}`),
   lancamentos: () => chamar('/lancamentos'),
   lancamento: (data) => chamar(`/lancamentos/${data}`),
+  previaLancamento: (dados) => chamar('/lancamentos/previa', { method: 'POST', body: dados }),
   salvarLancamento: (data, dados) => chamar(`/lancamentos/${data}`, { method: 'PUT', body: dados }),
   excluirLancamento: (data) => chamar(`/lancamentos/${data}`, { method: 'DELETE' }),
 };

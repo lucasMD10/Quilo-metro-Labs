@@ -226,7 +226,7 @@ img { max-width: 100%; display: block; }
 <h2>Funcionalidades implementadas</h2>
 <table>
   <tr><th style="width:28%">Funcionalidade</th><th>O que faz</th></tr>
-  <tr><td>Cadastro inicial</td><td>Dois passos: motorista (nome, apps, meta diária) e carro (combustível, km por dia, dias por semana e cada custo fixo separado), com prévia do custo por km e avisos para valores que parecem errados.</td></tr>
+  <tr><td>Cadastro inicial</td><td>Dois passos: motorista (nome, apps, meta diária) e carro (combustível, km por dia, dias por semana e cada custo fixo separado; seguro e manutenção por mês ou por ano), com prévia do custo por km e avisos para valores que parecem errados.</td></tr>
   <tr><td>Custo real por km</td><td>Separado entre combustível e custos fixos, com "Entender o cálculo" na tela inicial.</td></tr>
   <tr><td>Lançamento do dia</td><td>Ganhos por app, km, horas online e outros gastos, com a conta do dia aberta enquanto o motorista digita. Cada dia guarda o custo por km da época.</td></tr>
   <tr><td>Tela inicial</td><td>Lucro de hoje, progresso da meta, indicadores rápidos, gráfico interativo dos últimos 7 dias e totais da semana.</td></tr>
@@ -257,6 +257,7 @@ img { max-width: 100%; display: block; }
 
 <h2>Regras de cálculo</h2>
 <pre>custos fixos do mês = parcela + seguro + IPVA ÷ 12 + manutenção + reserva para troca + outros
+                      (seguro e manutenção informados por ano entram ÷ 12)
 km por mês          = km por dia × dias por semana × 52 ÷ 12
 
 custo por km        = preço do litro ÷ consumo  +  custos fixos do mês ÷ km por mês

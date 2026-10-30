@@ -13,9 +13,11 @@ export function perfilExemplo() {
     km_por_dia: 190,
     dias_por_semana: 6,
     custo_parcela: 800,
-    custo_seguro: 180,
+    custo_seguro: 2160, // pago à vista: R$ 2.160 por ano (R$ 180 por mês)
+    custo_seguro_periodo: 'ano',
     custo_ipva: 1800, // por ano
     custo_manutencao: 200,
+    custo_manutencao_periodo: 'mes',
     custo_depreciacao: 0, // carro financiado: a parcela já cobre a perda de valor
     custo_outros: 120, // rastreador e internet do celular
   };

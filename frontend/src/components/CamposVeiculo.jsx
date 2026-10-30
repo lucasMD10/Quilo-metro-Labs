@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Campo from './Campo.jsx';
+import SeletorPeriodo from './SeletorPeriodo.jsx';
 import KmIcon from './KmIcon.jsx';
 import { moeda, numeroBR, lerNumero } from '../util.js';
 import { CUSTOS_FIXOS } from '../pages/campos-perfil.js';
@@ -59,7 +60,10 @@ export default function CamposVeiculo({ form, onChange, previa }) {
         <div className="sanfona__conteudo">
           <p className="grupo__dica">Gastos que existem mesmo com o carro parado. Deixe em branco o que não se aplica. Não coloque combustível aqui.</p>
           {CUSTOS_FIXOS.map((c) => (
-            <Campo key={c.nome} rotulo={c.rotulo} nome={c.nome} valor={form[c.nome]} onChange={onChange} prefixo="R$" sufixo={c.sufixo} dica={c.dica} />
+            <Campo
+              key={c.nome} rotulo={c.rotulo} nome={c.nome} valor={form[c.nome]} onChange={onChange} prefixo="R$" sufixo={c.sufixo} dica={c.dica}
+              acessorio={c.periodo && <SeletorPeriodo nome={`${c.nome}_periodo`} valor={form[`${c.nome}_periodo`]} onChange={onChange} rotulo={c.rotulo} />}
+            />
           ))}
         </div>
       )}

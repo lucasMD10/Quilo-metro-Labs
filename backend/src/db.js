@@ -28,9 +28,11 @@ db.exec(`
     km_por_dia            REAL,              -- km num dia normal de trabalho
     dias_por_semana       REAL,              -- dias trabalhados por semana
     custo_parcela         REAL,              -- detalhamento dos custos fixos (R$ por mês)
-    custo_seguro          REAL,
+    custo_seguro          REAL,              -- valor como o motorista informou (ver custo_seguro_periodo)
+    custo_seguro_periodo  TEXT    NOT NULL DEFAULT 'mes', -- 'mes' ou 'ano'
     custo_ipva            REAL,              -- R$ por ano (IPVA + licenciamento)
     custo_manutencao      REAL,
+    custo_manutencao_periodo TEXT NOT NULL DEFAULT 'mes', -- 'mes' ou 'ano'
     custo_depreciacao     REAL,
     custo_outros          REAL,
     atualizado_em         TEXT    NOT NULL DEFAULT (datetime('now'))
@@ -61,6 +63,10 @@ const colunasNovas = ['km_por_dia', 'dias_por_semana', 'custo_parcela', 'custo_s
 const colunasPerfil = db.prepare('PRAGMA table_info(perfil)').all().map((c) => c.name);
 for (const coluna of colunasNovas) {
   if (!colunasPerfil.includes(coluna)) db.exec(`ALTER TABLE perfil ADD COLUMN ${coluna} REAL`);
+}
+// Seguro e manutenção podem ser informados por mês ou por ano.
+for (const coluna of ['custo_seguro_periodo', 'custo_manutencao_periodo']) {
+  if (!colunasPerfil.includes(coluna)) db.exec(`ALTER TABLE perfil ADD COLUMN ${coluna} TEXT NOT NULL DEFAULT 'mes'`);
 }
 
 const colunasLancamentos = db.prepare('PRAGMA table_info(lancamentos)').all().map((c) => c.name);

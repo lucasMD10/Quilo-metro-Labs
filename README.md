@@ -174,6 +174,7 @@ Dica: no Chrome do celular, menu ⋮ → **Adicionar à tela inicial** cria um a
 
 ```
 custos fixos do mês = parcela/aluguel + seguro + IPVA ÷ 12 + manutenção + reserva para troca + outros
+                      (seguro e manutenção podem ser informados por ano: entram ÷ 12)
 km rodados por mês  = km por dia × dias por semana × 4,33 (52 semanas ÷ 12 meses)
 
 combustível por km = preço do litro ÷ consumo (km/l)
@@ -185,7 +186,7 @@ custo do dia       = km rodados × custo real por km + gastos extras
 lucro real do dia  = ganho bruto − custo do dia
 ```
 
-O motorista informa cada custo fixo separado e quantos km roda num dia normal; o backend calcula o total do mês e os km do mês (`calculos.js`). Bancos criados antes desse detalhamento ganham as colunas novas automaticamente ao iniciar.
+O motorista informa cada custo fixo separado e quantos km roda num dia normal; o backend calcula o total do mês e os km do mês (`calculos.js`). Seguro e manutenção têm um seletor **Mês | Ano**: o motorista digita do jeito que paga e o backend divide por 12 quando é anual, guardando o valor e a escolha como foram informados. Bancos criados antes desse detalhamento ganham as colunas novas automaticamente ao iniciar.
 
 **Fechamento do mês.** Como os custos fixos são rateados pelos km previstos, o fechamento compara o que os dias lançados já descontaram com o que os custos fixos custaram no período (proporcional aos dias, contando a partir do primeiro dia lançado no app):
 
@@ -214,9 +215,11 @@ erDiagram
     real km_por_dia
     real dias_por_semana
     real custo_parcela "R$ por mês"
-    real custo_seguro "R$ por mês"
+    real custo_seguro "R$ por mês ou por ano"
+    text custo_seguro_periodo "mes ou ano"
     real custo_ipva "R$ por ano"
-    real custo_manutencao "R$ por mês"
+    real custo_manutencao "R$ por mês ou por ano"
+    text custo_manutencao_periodo "mes ou ano"
     real custo_depreciacao "reserva para troca, R$ por mês"
     real custo_outros "R$ por mês"
     real custos_fixos_mensais "calculado"

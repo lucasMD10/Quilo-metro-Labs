@@ -279,6 +279,16 @@ svg { flex-shrink: 0; }
 .campo__erro { display: block; font-size: .8125rem; color: var(--prejuizo); font-weight: 700; margin-top: 5px; }
 .campo--invalido .campo__caixa { border-color: var(--prejuizo); }
 .campo--invalido .campo__caixa:focus-within { box-shadow: 0 0 0 4px rgba(201, 60, 60, .12); }
+/* Seletor mês/ano dentro do campo (seguro e manutenção) */
+.periodo { display: flex; flex-shrink: 0; margin: 4px; padding: 3px; gap: 2px; border-radius: 8px; background: var(--marca-suave); }
+.periodo__opcao {
+  min-width: 48px; min-height: 36px; padding: 0 10px; border: 0; border-radius: 6px; cursor: pointer;
+  background: transparent; color: var(--texto-suave); font: inherit; font-size: .875rem; font-weight: 700;
+  transition: background .15s, color .15s;
+}
+.periodo__opcao:hover { color: var(--marca); }
+.periodo__opcao--ativa { background: var(--superficie); color: var(--marca); box-shadow: 0 1px 2px rgba(16, 44, 70, .12); }
+.periodo__opcao:focus-visible { outline: 2px solid var(--marca); outline-offset: 1px; }
 .duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 .chips { display: flex; gap: 8px; }

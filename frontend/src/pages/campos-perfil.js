@@ -9,9 +9,9 @@ const n = (v) => lerNumero(v) || 0;
 // "depreciação" virou uma reserva opcional para a troca do carro (a coluna continua custo_depreciacao).
 export const CUSTOS_FIXOS = [
   { nome: 'custo_parcela', rotulo: 'Parcela ou aluguel do carro', sufixo: '/mês' },
-  { nome: 'custo_seguro', rotulo: 'Seguro', sufixo: '/mês', dica: 'Se você paga por ano, divida por 12.' },
+  { nome: 'custo_seguro', rotulo: 'Seguro', periodo: true, dica: 'Do jeito que você paga: a parcela do mês ou o valor do ano.' },
   { nome: 'custo_ipva', rotulo: 'IPVA e licenciamento', sufixo: '/ano', dica: 'Valor do ano inteiro. O app divide por 12.' },
-  { nome: 'custo_manutencao', rotulo: 'Manutenção', sufixo: '/mês', dica: 'Média por mês com óleo, pneus, freios e revisão.' },
+  { nome: 'custo_manutencao', rotulo: 'Manutenção', periodo: true, dica: 'Óleo, pneus, freios e revisão. Se for mais fácil, informe o total do ano.' },
   { nome: 'custo_depreciacao', rotulo: 'Reserva para trocar de carro', sufixo: '/mês', dica: 'Opcional. Quanto você separa por mês para a troca do carro.' },
   { nome: 'custo_outros', rotulo: 'Outros custos fixos', sufixo: '/mês', dica: 'Rastreador, internet do celular, contador.' },
 ];
@@ -28,6 +28,8 @@ export function perfilParaForm(p) {
     km_por_dia: txt(p?.km_por_dia),
     dias_por_semana: String(p?.dias_por_semana || 6),
     ...Object.fromEntries(CUSTOS_FIXOS.map((c) => [c.nome, txt(p?.[c.nome])])),
+    // Seguro e manutenção: 'mes' ou 'ano', do jeito que o motorista informou.
+    ...Object.fromEntries(CUSTOS_FIXOS.filter((c) => c.periodo).map((c) => [`${c.nome}_periodo`, p?.[`${c.nome}_periodo`] || 'mes'])),
   };
 }
 

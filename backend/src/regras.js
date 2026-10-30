@@ -32,6 +32,11 @@ export function dadosPerfil(b = {}) {
   if (!apps.length) throw erro('Escolha pelo menos um app.');
 
   const custo = (v, campo) => numero(v, { campo, max: LIMITES.custoFixo });
+  const periodo = (v, campo) => {
+    if (v === undefined || v === null || v === '') return 'mes';
+    if (v !== 'mes' && v !== 'ano') throw erro(`Informe se ${campo} é por mês ou por ano.`);
+    return v;
+  };
   const dados = {
     nome,
     apps: apps.join(','),
@@ -43,8 +48,10 @@ export function dadosPerfil(b = {}) {
     dias_por_semana: dias,
     custo_parcela: custo(b.custo_parcela, 'a parcela ou aluguel'),
     custo_seguro: custo(b.custo_seguro, 'o seguro'),
+    custo_seguro_periodo: periodo(b.custo_seguro_periodo, 'o seguro'),
     custo_ipva: custo(b.custo_ipva, 'o IPVA'),
     custo_manutencao: custo(b.custo_manutencao, 'a manutenção'),
+    custo_manutencao_periodo: periodo(b.custo_manutencao_periodo, 'a manutenção'),
     custo_depreciacao: custo(b.custo_depreciacao, 'a reserva para trocar de carro'),
     custo_outros: custo(b.custo_outros, 'os outros custos'),
   };
@@ -104,6 +111,8 @@ export function previaVeiculo(b = {}) {
     dias_por_semana: n(b.dias_por_semana), meta_diaria: n(b.meta_diaria),
     custo_parcela: n(b.custo_parcela), custo_seguro: n(b.custo_seguro), custo_ipva: n(b.custo_ipva),
     custo_manutencao: n(b.custo_manutencao), custo_depreciacao: n(b.custo_depreciacao), custo_outros: n(b.custo_outros),
+    custo_seguro_periodo: b.custo_seguro_periodo === 'ano' ? 'ano' : 'mes',
+    custo_manutencao_periodo: b.custo_manutencao_periodo === 'ano' ? 'ano' : 'mes',
   };
   const custosMes = custosFixosMensais(p);
   const kmMes = kmMensal(p);

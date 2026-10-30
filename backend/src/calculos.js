@@ -5,12 +5,18 @@ const arred = (valor, casas = 2) => Math.round(valor * 10 ** casas) / 10 ** casa
 
 export const SEMANAS_POR_MES = 52 / 12;
 
+/** Valor por mês de um custo que pode ter sido informado por mês ou por ano. */
+export const porMes = (valor, periodo) => (periodo === 'ano' ? valor / 12 : valor);
+
 /**
  * Custos fixos do mês a partir do detalhamento.
- * O IPVA é informado por ano, então entra dividido por 12.
+ * O IPVA é informado por ano, então entra dividido por 12. Seguro e manutenção vêm por mês ou por ano.
  */
 export function custosFixosMensais(p) {
-  return arred(p.custo_parcela + p.custo_seguro + p.custo_ipva / 12 + p.custo_manutencao + p.custo_depreciacao + p.custo_outros);
+  return arred(
+    p.custo_parcela + porMes(p.custo_seguro, p.custo_seguro_periodo) + p.custo_ipva / 12
+    + porMes(p.custo_manutencao, p.custo_manutencao_periodo) + p.custo_depreciacao + p.custo_outros
+  );
 }
 
 /** Km rodados no mês = km por dia × dias por semana × semanas no mês. */

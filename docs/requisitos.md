@@ -27,7 +27,7 @@ Lista de requisitos do MVP, levantada a partir da pesquisa de mercado (segmento 
 |---|---|---|---|---|
 | RF08 | O motorista lança o dia com ganhos por app (Uber, 99, outros), km rodados, horas online, outros gastos e observação. | Deve | Feito | Lançar dia |
 | RF09 | Enquanto digita, o app mostra a conta do dia aberta: ganho bruto, combustível, custos fixos, outros gastos e lucro estimado. | Deve | Feito | Lançar dia |
-| RF10 | Cada dia guarda o custo por km da época. Mudar o preço do combustível não altera dias antigos, a não ser que o motorista peça para recalcular. | Deve | Feito | Lançar dia |
+| RF10 | Cada dia guarda o custo por km da época e o combustível usado (tipo, preço do litro e consumo). Mudar o preço do combustível não altera dias antigos, a não ser que o motorista peça para recalcular. Ao lançar, ele pode ajustar o combustível do dia e escolher se vira o padrão dos próximos dias. | Deve | Feito | Lançar dia |
 | RF11 | O motorista pode lançar ou editar dias anteriores escolhendo a data (o seletor não oferece datas futuras). | Deveria | Feito | Lançar dia |
 
 ### Acompanhamento

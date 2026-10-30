@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Campo from '../components/Campo.jsx';
 import KmIcon from '../components/KmIcon.jsx';
+import CombustivelDoDia from '../components/CombustivelDoDia.jsx';
 import { api } from '../api.js';
 import { moeda, numeroBR, hojeISO, paraNumero, lerHoras, horasTexto } from '../util.js';
 import { usePrevia } from '../usePrevia.js';
@@ -21,6 +22,9 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
   const [recalcular, setRecalcular] = useState(false);
   const [erro, setErro] = useState('');
   const [salvando, setSalvando] = useState(false);
+  // Ajuste do combustível do dia (null = sem ajuste) e se ele vira o padrão dos próximos dias.
+  const [ajuste, setAjuste] = useState(null);
+  const [usarProximos, setUsarProximos] = useState(true);
   const apps = perfil.apps.split(',');
   const mudar = (nome, valor) => { setErro(''); setForm((f) => ({ ...f, [nome]: valor })); };
 
@@ -31,6 +35,9 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
     setErro('');
     setCarga('carregando');
     setRecalcular(false);
+    setAjuste(null);
+    // Hoje: o que ele ajustar provavelmente vale para amanhã também. Dia antigo: corrigir não muda o padrão.
+    setUsarProximos(data === hojeISO());
     api.lancamento(data)
       .then((l) => {
         if (!atual) return;
@@ -53,27 +60,38 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
   // A conta do dia vem da API (custo por km congelado do dia, recalcular, separação combustível/fixos).
   // Campo ainda inválido entra como zero na prévia; ao salvar ele é barrado.
   const valores = Object.fromEntries(NUMERICOS.map((k) => [k, ler(k, form[k]) || 0]));
-  const previa = usePrevia(api.previaLancamento, { data, ...valores, recalcular_custo: recalcular }, carga === 'ok');
+  const combustivel = ajuste
+    ? { combustivel_tipo: ajuste.tipo, combustivel_preco: paraNumero(ajuste.preco), combustivel_consumo: paraNumero(ajuste.consumo) }
+    : {};
+  const previa = usePrevia(api.previaLancamento, { data, ...valores, ...combustivel, recalcular_custo: recalcular }, carga === 'ok');
   const custo = previa?.custo || perfil.custo;
   const semSeparacao = !!previa?.sem_separacao;
 
   async function salvar(e) {
     e.preventDefault();
     setErro('');
-    if (NUMERICOS.some((k) => Number.isNaN(ler(k, form[k])))) return setErro('Corrija os campos marcados em vermelho.');
-    const dados = Object.fromEntries(
-      Object.entries(form).map(([k, v]) => [k, k === 'observacao' ? v : ler(k, v)])
-    );
+    if (NUMERICOS.some((k) => Number.isNaN(ler(k, form[k])))
+      || (ajuste && [combustivel.combustivel_preco, combustivel.combustivel_consumo].some(Number.isNaN))) {
+      return setErro('Corrija os campos marcados em vermelho.');
+    }
+    const dados = {
+      ...Object.fromEntries(Object.entries(form).map(([k, v]) => [k, k === 'observacao' ? v : ler(k, v)])),
+      ...combustivel,
+      ...(ajuste ? { usar_nos_proximos: usarProximos } : {}),
+    };
     setSalvando(true);
     try {
+      let resposta;
       try {
-        await api.salvarLancamento(data, { ...dados, recalcular_custo: recalcular });
+        resposta = await api.salvarLancamento(data, { ...dados, recalcular_custo: recalcular });
       } catch (err) {
         // A API pede confirmação para valores suspeitos (ganho alto, ganho sem km).
         if (!err.confirmar || !window.confirm(err.message)) throw err.confirmar ? null : err;
-        await api.salvarLancamento(data, { ...dados, recalcular_custo: recalcular, confirmado: true });
+        resposta = await api.salvarLancamento(data, { ...dados, recalcular_custo: recalcular, confirmado: true });
       }
-      onSalvo(salvo ? 'Alterações salvas.' : 'Dia salvo. Bom trabalho!');
+      const msg = salvo ? 'Alterações salvas.' : 'Dia salvo. Bom trabalho!';
+      // Se o combustível virou o padrão, o app passa a usar o perfil atualizado.
+      onSalvo(resposta.perfil_atualizado ? `${msg} O combustível vale para os próximos dias.` : msg, resposta.perfil_atualizado);
     } catch (err) {
       if (err) setErro(err.message);
     } finally {
@@ -113,6 +131,10 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
           <Campo rotulo="Km rodados" nome="km_rodados" valor={form.km_rodados} onChange={mudar} sufixo="km" dica="Pelo painel do carro." />
           <Campo rotulo="Horas online" nome="horas_trabalhadas" valor={form.horas_trabalhadas} onChange={mudar} sufixo="h" dica="Tempo logado nos apps." ler={lerHoras} caracteres={/[^\d.,:hH]/g} placeholder="8:30" />
         </div>
+        <CombustivelDoDia
+          previa={previa} perfil={perfil} ajuste={ajuste} onAjuste={(a) => { setErro(''); setAjuste(a); }}
+          usarProximos={usarProximos} onUsarProximos={setUsarProximos}
+        />
 
         <h3 className="grupo"><KmIcon name="gastos-extras" size={20} /> Outros gastos</h3>
         <Campo rotulo="Outros gastos do dia" nome="gastos_extras" valor={form.gastos_extras} onChange={mudar} prefixo="R$" dica="Lavagem, alimentação, pedágio, estacionamento. Não inclua combustível: ele já é descontado pelos km rodados." />

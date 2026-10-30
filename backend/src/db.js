@@ -57,6 +57,9 @@ db.exec(`
     custo_km_aplicado  REAL    NOT NULL,           -- foto do custo/km no momento do lançamento
     combustivel_km_aplicado REAL,                  -- as duas partes dessa foto (nulas em dias antigos)
     fixo_km_aplicado        REAL,
+    combustivel_tipo        TEXT,                  -- combustível usado no dia (gasolina ou etanol)
+    preco_litro_aplicado    REAL,                  -- preço do litro usado no dia
+    consumo_aplicado        REAL,                  -- km por litro usado no dia
     observacao         TEXT,
     criado_em          TEXT    NOT NULL DEFAULT (datetime('now')),
     atualizado_em      TEXT    NOT NULL DEFAULT (datetime('now'))
@@ -85,6 +88,8 @@ for (const coluna of ['custo_seguro_periodo', 'custo_manutencao_periodo']) {
 }
 
 const colunasLancamentos = db.prepare('PRAGMA table_info(lancamentos)').all().map((c) => c.name);
-for (const coluna of ['combustivel_km_aplicado', 'fixo_km_aplicado']) {
+for (const coluna of ['combustivel_km_aplicado', 'fixo_km_aplicado', 'preco_litro_aplicado', 'consumo_aplicado']) {
   if (!colunasLancamentos.includes(coluna)) db.exec(`ALTER TABLE lancamentos ADD COLUMN ${coluna} REAL`);
 }
+// Dias lançados antes disso ficam sem tipo/preço/consumo: só o custo por km congelado vale para eles.
+if (!colunasLancamentos.includes('combustivel_tipo')) db.exec('ALTER TABLE lancamentos ADD COLUMN combustivel_tipo TEXT');

@@ -197,13 +197,68 @@ export function previaVeiculo(b = {}) {
   };
 }
 
-/** Custo por km que vale para um dia: o congelado no lançamento, a não ser que o motorista peça para recalcular. */
-function custoDoDia(perfil, existente, recalcular) {
-  const atual = custoPorKm(perfil);
-  if (existente && !recalcular) {
-    return { total_km: existente.custo_km_aplicado, combustivel_km: existente.combustivel_km_aplicado, fixo_km: existente.fixo_km_aplicado };
+/**
+ * Combustível do dia: tipo, preço do litro e consumo que entram na conta.
+ * Sem ajuste: os congelados no dia já lançado ou, para dia novo (ou recalcular), o padrão do perfil.
+ * Com ajuste (combustivel_tipo, combustivel_preco, combustivel_consumo): valida e usa esses valores neste dia.
+ * Campo do ajuste que não veio usa o valor do perfil para aquele combustível.
+ */
+const ajustouCombustivel = (b) => b.combustivel_tipo !== undefined || b.combustivel_preco !== undefined || b.combustivel_consumo !== undefined;
+
+function combustivelDoDia(b, perfil, existente) {
+  const p = perfilCompleto(perfil);
+  if (!ajustouCombustivel(b)) {
+    if (existente && !b.recalcular_custo) {
+      return { tipo: existente.combustivel_tipo ?? null, preco: existente.preco_litro_aplicado ?? null, consumo: existente.consumo_aplicado ?? null, ajustado: false };
+    }
+    return { tipo: p.combustivel_padrao, preco: p.preco_combustivel, consumo: p.consumo_km_l, ajustado: false };
   }
-  return atual;
+  const tipo = b.combustivel_tipo ?? existente?.combustivel_tipo ?? p.combustivel_padrao;
+  if (!COMBUSTIVEIS.includes(tipo)) throw erro('Escolha gasolina ou etanol.');
+  const preco = numero(b.combustivel_preco ?? p[`preco_${tipo}`], { campo: `o preço do litro ${DO[tipo]}`, obrigatorio: true, maiorQueZero: true, max: 50 });
+  const consumo = numero(b.combustivel_consumo ?? p[`consumo_${tipo}`], { campo: `quantos km o carro faz por litro ${COM[tipo]}`, obrigatorio: true, maiorQueZero: true, max: 100 });
+  return { tipo, preco, consumo, ajustado: true };
+}
+
+/**
+ * Custo por km que vale para um dia. Dia já lançado fica com o custo congelado, a não ser que o motorista
+ * peça para recalcular (custos de hoje) ou ajuste o combustível (só a parte do combustível muda).
+ */
+function custoDoDia(b, perfil, existente) {
+  const comb = combustivelDoDia(b, perfil, existente);
+  const congelado = existente && !b.recalcular_custo;
+  if (!comb.ajustado) {
+    const custo = congelado
+      ? { total_km: existente.custo_km_aplicado, combustivel_km: existente.combustivel_km_aplicado, fixo_km: existente.fixo_km_aplicado }
+      : custoPorKm(perfil);
+    return { custo, comb };
+  }
+  const combustivelKm = comb.preco / comb.consumo;
+  const fixoKm = congelado && existente.fixo_km_aplicado != null ? existente.fixo_km_aplicado : perfil.custos_fixos_mensais / perfil.km_mensal_estimado;
+  return {
+    custo: { combustivel_km: arred(combustivelKm, 4), fixo_km: arred(fixoKm, 4), total_km: arred(combustivelKm + fixoKm, 4) },
+    comb,
+  };
+}
+
+/**
+ * Perfil com o combustível do dia como novo padrão ("Usar nos próximos dias"). Só quando o motorista
+ * ajustou o combustível; o combustível passa a fazer parte dos que o carro usa.
+ */
+export function novoPadraoCombustivel(b, dia, perfil) {
+  // Sem ajuste não há o que levar adiante (marcar a opção num dia antigo não pode trazer o preço antigo de volta).
+  if (!b.usar_nos_proximos || !ajustouCombustivel(b) || !dia.combustivel_tipo) return null;
+  const p = perfilCompleto(perfil);
+  const tipo = dia.combustivel_tipo;
+  const lista = listaCombustiveis(`${p.combustiveis},${tipo}`);
+  return {
+    combustiveis: COMBUSTIVEIS.filter((c) => lista.includes(c)).join(','),
+    combustivel_padrao: tipo,
+    [`preco_${tipo}`]: dia.preco_litro_aplicado,
+    [`consumo_${tipo}`]: dia.consumo_aplicado,
+    preco_combustivel: dia.preco_litro_aplicado,
+    consumo_km_l: dia.consumo_aplicado,
+  };
 }
 
 /** Lê e valida os campos de um dia. Usado para gravar e para a prévia. */
@@ -230,7 +285,7 @@ export function previaLancamento(b = {}, { perfil, existente }) {
   if (!perfil) throw erro('Cadastre seu veículo antes de lançar um dia.', 409);
   const campos = camposDoDia(b);
   const atual = custoPorKm(perfil);
-  const custo = custoDoDia(perfil, existente, b.recalcular_custo);
+  const { custo, comb } = custoDoDia(b, perfil, existente);
   const semSeparacao = custo.combustivel_km == null; // dia lançado antes de existir a separação
   const bruto = campos.ganho_uber + campos.ganho_99 + campos.ganho_outros;
   const combustivel = campos.km_rodados * (semSeparacao ? custo.total_km : custo.combustivel_km);
@@ -242,6 +297,8 @@ export function previaLancamento(b = {}, { perfil, existente }) {
     gastos: arred(campos.gastos_extras),
     lucro: arred(bruto - combustivel - fixo - campos.gastos_extras),
     custo,
+    // Combustível usado na conta, para mostrar "Gasolina · R$ 6,29/l · 12 km/l" (tipo/preço nulos em dias antigos).
+    combustivel_info: { tipo: comb.tipo, preco: comb.preco, consumo: comb.consumo, ajustado: comb.ajustado },
     custo_atual: atual,
     sem_separacao: semSeparacao,
     custo_mudou: !!existente && Math.abs(existente.custo_km_aplicado - atual.total_km) >= 0.005,
@@ -275,14 +332,18 @@ export function dadosLancamento(b = {}, { data: dataBruta, perfil, existente, ho
   }
 
   // O custo por km fica "congelado" no dia em que foi lançado: editar um dia antigo não muda o lucro dele
-  // só porque a gasolina subiu. O motorista pode pedir para recalcular com o custo atual (recalcular_custo).
-  const custo = custoDoDia(perfil, existente, b.recalcular_custo);
+  // só porque a gasolina subiu. O motorista pode recalcular com o custo atual (recalcular_custo)
+  // ou ajustar o combustível daquele dia (combustivel_tipo/preco/consumo).
+  const { custo, comb } = custoDoDia(b, perfil, existente);
   return {
     data,
     ...campos,
     custo_km_aplicado: custo.total_km,
     combustivel_km_aplicado: custo.combustivel_km,
     fixo_km_aplicado: custo.fixo_km,
+    combustivel_tipo: comb.tipo,
+    preco_litro_aplicado: comb.preco,
+    consumo_aplicado: comb.consumo,
     observacao: texto(b.observacao, 300, 'A observação') || null,
   };
 }

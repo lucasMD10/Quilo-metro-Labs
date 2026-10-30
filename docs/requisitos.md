@@ -9,7 +9,7 @@ Lista de requisitos do MVP, levantada a partir da pesquisa de mercado (segmento 
 | ID | Requisito | Prioridade | Situação | Tela |
 |---|---|---|---|---|
 | RF01 | O motorista informa nome, apps em que roda (Uber, 99 ou os dois) e meta de lucro por dia. | Deve | Feito | Boas-vindas 1 |
-| RF02 | O motorista informa os dados do carro: modelo, preço do litro, consumo (km/l), km num dia normal e dias de trabalho por semana. | Deve | Feito | Boas-vindas 2 |
+| RF02 | O motorista informa os dados do carro: modelo, combustível (gasolina, etanol ou os dois, cada um com preço do litro e consumo em km/l), km num dia normal e dias de trabalho por semana. | Deve | Feito | Boas-vindas 2 |
 | RF03 | O motorista informa cada custo fixo separado: parcela ou aluguel, seguro, IPVA e licenciamento (por ano), manutenção, reserva para trocar de carro e outros. Seguro e manutenção podem ser informados por mês ou por ano, do jeito que ele paga. | Deve | Feito | Boas-vindas 2, Perfil |
 | RF04 | Enquanto preenche, o app mostra a prévia do custo por km, do custo do carro no mês e de quanto ele precisa faturar por dia para bater a meta. | Deveria | Feito | Boas-vindas 2, Perfil |
 | RF05 | O app avisa quando um valor parece digitado errado (consumo, preço do litro ou km por dia fora do normal, custo por km alto). | Deveria | Feito | Boas-vindas 2, Perfil |

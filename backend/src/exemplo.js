@@ -8,7 +8,14 @@ export function perfilExemplo() {
     apps: 'uber,99',
     meta_diaria: 180,
     modelo_veiculo: 'Onix 1.0 2020',
-    consumo_km_l: 12,
+    // Carro flex: abastece com gasolina hoje, mas também usa etanol.
+    combustiveis: 'gasolina,etanol',
+    combustivel_padrao: 'gasolina',
+    preco_gasolina: 6.29,
+    consumo_gasolina: 12,
+    preco_etanol: 4.19,
+    consumo_etanol: 8.5,
+    consumo_km_l: 12, // os do combustível padrão
     preco_combustivel: 6.29,
     km_por_dia: 190,
     dias_por_semana: 6,

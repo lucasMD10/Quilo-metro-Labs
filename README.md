@@ -177,7 +177,7 @@ custos fixos do mês = parcela/aluguel + seguro + IPVA ÷ 12 + manutenção + re
                       (seguro e manutenção podem ser informados por ano: entram ÷ 12)
 km rodados por mês  = km por dia × dias por semana × 4,33 (52 semanas ÷ 12 meses)
 
-combustível por km = preço do litro ÷ consumo (km/l)
+combustível por km = preço do litro ÷ consumo (km/l), do combustível que ele está usando agora
 fixo por km        = custos fixos do mês ÷ km rodados por mês
 custo real por km  = combustível por km + fixo por km
 
@@ -186,7 +186,7 @@ custo do dia       = km rodados × custo real por km + gastos extras
 lucro real do dia  = ganho bruto − custo do dia
 ```
 
-O motorista informa cada custo fixo separado e quantos km roda num dia normal; o backend calcula o total do mês e os km do mês (`calculos.js`). Seguro e manutenção têm um seletor **Mês | Ano**: o motorista digita do jeito que paga e o backend divide por 12 quando é anual, guardando o valor e a escolha como foram informados. Bancos criados antes desse detalhamento ganham as colunas novas automaticamente ao iniciar.
+O motorista informa cada custo fixo separado e quantos km roda num dia normal; o backend calcula o total do mês e os km do mês (`calculos.js`). O carro pode usar **gasolina, etanol ou os dois**, cada um com o próprio preço e consumo (o app não estima o consumo do etanol a partir da gasolina: o motorista informa). Com os dois, ele diz com qual está abastecendo agora; esse é o combustível da conta, e o backend avisa qual sai mais barato por km. Seguro e manutenção têm um seletor **Mês | Ano**: o motorista digita do jeito que paga e o backend divide por 12 quando é anual, guardando o valor e a escolha como foram informados. Bancos criados antes desse detalhamento ganham as colunas novas automaticamente ao iniciar.
 
 **Fechamento do mês.** Como os custos fixos são rateados pelos km previstos, o fechamento compara o que os dias lançados já descontaram com o que os custos fixos custaram no período (proporcional aos dias, contando a partir do primeiro dia lançado no app):
 
@@ -210,8 +210,14 @@ erDiagram
     text apps "ex.: uber,99"
     real meta_diaria
     text modelo_veiculo
-    real consumo_km_l
-    real preco_combustivel
+    real consumo_km_l "do combustível padrão"
+    real preco_combustivel "do combustível padrão"
+    text combustiveis "gasolina, etanol ou os dois"
+    text combustivel_padrao "com qual abastece agora"
+    real preco_gasolina
+    real consumo_gasolina
+    real preco_etanol
+    real consumo_etanol
     real km_por_dia
     real dias_por_semana
     real custo_parcela "R$ por mês"

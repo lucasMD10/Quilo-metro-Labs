@@ -23,6 +23,13 @@ db.exec(`
     modelo_veiculo        TEXT,
     consumo_km_l          REAL    NOT NULL,  -- quantos km o carro faz com 1 litro
     preco_combustivel     REAL    NOT NULL,  -- R$ por litro
+    -- consumo_km_l e preco_combustivel são sempre os do combustível padrão (cópia das colunas abaixo)
+    combustiveis          TEXT    NOT NULL DEFAULT 'gasolina', -- 'gasolina', 'etanol' ou 'gasolina,etanol'
+    combustivel_padrao    TEXT    NOT NULL DEFAULT 'gasolina', -- com qual está abastecendo agora
+    preco_gasolina        REAL,
+    consumo_gasolina      REAL,
+    preco_etanol          REAL,
+    consumo_etanol        REAL,
     custos_fixos_mensais  REAL    NOT NULL DEFAULT 0, -- seguro, IPVA, parcela/aluguel, manutenção...
     km_mensal_estimado    REAL    NOT NULL,  -- usado para diluir os custos fixos por km
     km_por_dia            REAL,              -- km num dia normal de trabalho
@@ -64,6 +71,14 @@ const colunasPerfil = db.prepare('PRAGMA table_info(perfil)').all().map((c) => c
 for (const coluna of colunasNovas) {
   if (!colunasPerfil.includes(coluna)) db.exec(`ALTER TABLE perfil ADD COLUMN ${coluna} REAL`);
 }
+// Gasolina e etanol: cada um com preço e consumo. Perfis antigos viram "só gasolina" com os valores que já tinham.
+for (const [coluna, tipo] of [['combustiveis', "TEXT NOT NULL DEFAULT 'gasolina'"], ['combustivel_padrao', "TEXT NOT NULL DEFAULT 'gasolina'"],
+  ['preco_gasolina', 'REAL'], ['consumo_gasolina', 'REAL'], ['preco_etanol', 'REAL'], ['consumo_etanol', 'REAL']]) {
+  if (!colunasPerfil.includes(coluna)) db.exec(`ALTER TABLE perfil ADD COLUMN ${coluna} ${tipo}`);
+}
+db.exec(`UPDATE perfil SET preco_gasolina = preco_combustivel, consumo_gasolina = consumo_km_l
+         WHERE preco_gasolina IS NULL AND preco_etanol IS NULL`);
+
 // Seguro e manutenção podem ser informados por mês ou por ano.
 for (const coluna of ['custo_seguro_periodo', 'custo_manutencao_periodo']) {
   if (!colunasPerfil.includes(coluna)) db.exec(`ALTER TABLE perfil ADD COLUMN ${coluna} TEXT NOT NULL DEFAULT 'mes'`);

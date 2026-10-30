@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Campo from './Campo.jsx';
 import SeletorPeriodo from './SeletorPeriodo.jsx';
+import Segmentado from './Segmentado.jsx';
 import KmIcon from './KmIcon.jsx';
 import { moeda, numeroBR, lerNumero } from '../util.js';
-import { CUSTOS_FIXOS } from '../pages/campos-perfil.js';
+import { CUSTOS_FIXOS, COMBUSTIVEIS, usaCombustivel } from '../pages/campos-perfil.js';
 
 // Campos do carro agrupados por assunto. Usado no cadastro inicial e na aba Perfil.
 // Os custos fixos ficam numa seção que abre e fecha, mostrando o total quando fechada.
@@ -20,10 +21,7 @@ export default function CamposVeiculo({ form, onChange, previa }) {
       <Campo rotulo="Modelo do carro" nome="modelo_veiculo" valor={form.modelo_veiculo} onChange={onChange} placeholder="Ex.: Onix 1.0 2020" />
 
       <h3 className="grupo"><KmIcon name="combustivel" size={20} /> Combustível</h3>
-      <div className="duas-colunas">
-        <Campo rotulo="Preço do litro" nome="preco_combustivel" valor={form.preco_combustivel} onChange={onChange} prefixo="R$" dica="O que você paga no posto." />
-        <Campo rotulo="Km por litro" nome="consumo_km_l" valor={form.consumo_km_l} onChange={onChange} sufixo="km/l" dica="Quantos km o carro faz com 1 litro." />
-      </div>
+      <Combustiveis form={form} onChange={onChange} />
 
       <h3 className="grupo"><KmIcon name="quilometragem" size={20} /> Quanto você roda</h3>
       <Campo rotulo="Km num dia normal de trabalho" nome="km_por_dia" valor={form.km_por_dia} onChange={onChange} sufixo="km/dia" />
@@ -71,9 +69,54 @@ export default function CamposVeiculo({ form, onChange, previa }) {
   );
 }
 
+// Quais combustíveis o carro usa e, para cada um, preço e consumo. Com os dois, o motorista diz
+// com qual está abastecendo agora (é o que entra na conta).
+function Combustiveis({ form, onChange }) {
+  const usados = COMBUSTIVEIS.filter(([c]) => usaCombustivel(form, c));
+  const dois = usados.length > 1;
+  function alternar(c) {
+    const lista = usados.map(([u]) => u);
+    if (lista.length === 1 && lista[0] === c) return; // o carro usa pelo menos um
+    const nova = lista.includes(c) ? lista.filter((u) => u !== c) : [...lista, c];
+    onChange('combustiveis', COMBUSTIVEIS.map(([u]) => u).filter((u) => nova.includes(u)).join(','));
+  }
+  return (
+    <>
+      <fieldset className="campo">
+        <legend className="campo__rotulo">Qual combustível você usa?</legend>
+        <div className="chips">
+          {COMBUSTIVEIS.map(([c, nome]) => (
+            <button type="button" key={c} className={`chip ${usaCombustivel(form, c) ? 'chip--ativo' : ''}`} aria-pressed={usaCombustivel(form, c)} onClick={() => alternar(c)}>
+              {nome}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+      {dois && (
+        <div className="campo">
+          <span className="campo__rotulo">Com qual está abastecendo agora?</span>
+          <Segmentado opcoes={COMBUSTIVEIS} valor={form.combustivel_padrao} onChange={(v) => onChange('combustivel_padrao', v)} rotulo="Com qual está abastecendo agora?" />
+          <span className="campo__dica">É o que entra na conta. Dá para trocar depois ao lançar o dia.</span>
+        </div>
+      )}
+      {usados.map(([c, nome], i) => (
+        <div key={c}>
+          {dois && <p className="combustivel__titulo">{nome}</p>}
+          <div className="duas-colunas">
+            <Campo rotulo={dois ? `Preço ${c === 'gasolina' ? 'da gasolina' : 'do etanol'}` : 'Preço do litro'} nome={`preco_${c}`} valor={form[`preco_${c}`]} onChange={onChange} prefixo="R$" dica={i === 0 ? 'O que você paga no posto.' : undefined} />
+            <Campo rotulo={dois ? `Km/l com ${c}` : 'Km por litro'} nome={`consumo_${c}`} valor={form[`consumo_${c}`]} onChange={onChange} sufixo="km/l" dica={i === 0 ? 'Quantos km o carro faz com 1 litro.' : undefined} />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
 // A conta do custo por km e do mês, aberta, mais os avisos. Fica ao lado dos campos no computador.
 export function ResumoVeiculo({ form, previa }) {
   if (!previa) return null;
+  const padrao = previa.combustivel_padrao || 'gasolina';
+  const dois = usaCombustivel(form, 'gasolina') && usaCombustivel(form, 'etanol');
   const meta = lerNumero(form.meta_diaria) || 0;
   const kmDia = lerNumero(form.km_por_dia) || 0;
 
@@ -84,7 +127,7 @@ export function ResumoVeiculo({ form, previa }) {
       <div className="resultado">
         <p className="resultado__titulo"><KmIcon name="custo-km" size={20} /> Quanto cada km custa para você</p>
         <div>
-          <span>Combustível<small>{moeda(lerNumero(form.preco_combustivel) || 0)} o litro ÷ {form.consumo_km_l || 0} km/l</small></span>
+          <span>Combustível{dois ? ` (${padrao})` : ''}<small>{moeda(lerNumero(form[`preco_${padrao}`]) || 0)} o litro ÷ {form[`consumo_${padrao}`] || 0} km/l</small></span>
           <strong>{moeda(previa.combustivel_km)}/km</strong>
         </div>
         <div>
@@ -94,6 +137,11 @@ export function ResumoVeiculo({ form, previa }) {
         <div className="resultado__total"><span>Seu custo por km</span><strong>{moeda(previa.total_km)}</strong></div>
         {previa.total_km > 0 && (
           <p className="resultado__nota">Ou seja: a cada 100 km rodados, {moeda(previa.custo_100km)} vão para o carro.</p>
+        )}
+        {previa.comparacao && (
+          <p className="resultado__nota">
+            Com esses preços, {previa.comparacao.mais_barato} sai {moeda(previa.comparacao.diferenca_km)} mais barato por km.
+          </p>
         )}
       </div>
 

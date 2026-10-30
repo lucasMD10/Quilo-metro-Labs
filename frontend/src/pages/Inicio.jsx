@@ -58,7 +58,7 @@ export default function Inicio({ perfil, onLancar, onPerfil }) {
         <section className="cartao calculo" aria-label="Como o custo por km é calculado">
           <h2 className="cartao__titulo"><KmIcon name="detalhar" size={20} /> Como chegamos em {moeda(custo.total_km)} por km</h2>
           <dl className="linhas">
-            <div><dt><KmIcon name="combustivel" size={18} /> Combustível<small>{moeda(perfil.preco_combustivel)} o litro ÷ {numeroBR(perfil.consumo_km_l, 1)} km/l</small></dt><dd>{moeda(custo.combustivel_km)}/km</dd></div>
+            <div><dt><KmIcon name="combustivel" size={18} /> Combustível<small>{perfil.combustiveis?.includes(',') ? `${perfil.combustivel_padrao === 'etanol' ? 'Etanol' : 'Gasolina'}: ` : ''}{moeda(perfil.preco_combustivel)} o litro ÷ {numeroBR(perfil.consumo_km_l, 1)} km/l</small></dt><dd>{moeda(custo.combustivel_km)}/km</dd></div>
             <div><dt><KmIcon name="custos-fixos" size={18} /> Custos fixos<small>{moeda(perfil.custos_fixos_mensais)} por mês ÷ {numeroBR(perfil.km_mensal_estimado)} km por mês</small></dt><dd>{moeda(custo.fixo_km)}/km</dd></div>
             <div className="linhas__total"><dt>Custo por km</dt><dd>{moeda(custo.total_km)}</dd></div>
           </dl>

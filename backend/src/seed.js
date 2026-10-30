@@ -12,9 +12,11 @@ db.prepare(`INSERT INTO perfil (id, ${colunas.join(', ')}) VALUES (1, ${colunas.
 
 const inserir = db.prepare(`
   INSERT INTO lancamentos (data, ganho_uber, ganho_99, ganho_outros, km_rodados, horas_trabalhadas, gastos_extras,
-                           custo_km_aplicado, combustivel_km_aplicado, fixo_km_aplicado)
+                           custo_km_aplicado, combustivel_km_aplicado, fixo_km_aplicado,
+                           combustivel_tipo, preco_litro_aplicado, consumo_aplicado)
   VALUES (:data, :ganho_uber, :ganho_99, :ganho_outros, :km_rodados, :horas_trabalhadas, :gastos_extras,
-          :custo_km_aplicado, :combustivel_km_aplicado, :fixo_km_aplicado)
+          :custo_km_aplicado, :combustivel_km_aplicado, :fixo_km_aplicado,
+          :combustivel_tipo, :preco_litro_aplicado, :consumo_aplicado)
 `);
 for (const { observacao, ...dia } of lancamentosExemplo(perfil)) inserir.run(dia);
 

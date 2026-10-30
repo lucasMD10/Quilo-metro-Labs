@@ -54,6 +54,9 @@ export function lancamentosExemplo(perfil, hoje = new Date()) {
       custo_km_aplicado: custo.total_km,
       combustivel_km_aplicado: custo.combustivel_km,
       fixo_km_aplicado: custo.fixo_km,
+      combustivel_tipo: perfil.combustivel_padrao,
+      preco_litro_aplicado: perfil.preco_combustivel,
+      consumo_aplicado: perfil.consumo_km_l,
       observacao: null,
     });
   }

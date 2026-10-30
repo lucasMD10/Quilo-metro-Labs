@@ -3,7 +3,7 @@
 // vêm dos mesmos módulos do backend (regras.js e calculos.js).
 import { indicadoresDoDia, totalizar, fechamentoDoMes } from '../../backend/src/calculos.js';
 import { dataISO, erro } from '../../backend/src/validacao.js';
-import { dadosPerfil, perfilCompleto, previaVeiculo, dadosLancamento, previaLancamento, progressoMeta } from '../../backend/src/regras.js';
+import { dadosPerfil, perfilCompleto, previaVeiculo, dadosLancamento, previaLancamento, progressoMeta, novoPadraoCombustivel } from '../../backend/src/regras.js';
 import { perfilExemplo, lancamentosExemplo } from '../../backend/src/exemplo.js';
 
 const CHAVE = 'km-real:v1';
@@ -53,8 +53,11 @@ function salvarLancamento(dataBruta, b = {}) {
   const dados = ler();
   const data = dataISO(dataBruta);
   const dia = dadosLancamento(b, { data, perfil: dados.perfil, existente: dados.lancamentos[data] });
-  gravar({ ...dados, lancamentos: { ...dados.lancamentos, [data]: dia } });
-  return comIndicadores(dia);
+  // "Usar nos próximos dias": o combustível ajustado vira o padrão do perfil (gravado junto com o dia).
+  const padrao = novoPadraoCombustivel(b, dia, dados.perfil);
+  const perfil = padrao ? { ...dados.perfil, ...padrao } : dados.perfil;
+  gravar({ ...dados, perfil, lancamentos: { ...dados.lancamentos, [data]: dia } });
+  return { ...comIndicadores(dia), ...(padrao ? { perfil_atualizado: perfilCompleto(perfil) } : {}) };
 }
 
 function previaDoDia(b = {}) {

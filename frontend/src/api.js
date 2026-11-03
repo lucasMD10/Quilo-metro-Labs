@@ -33,6 +33,10 @@ const apiServidor = {
   previaLancamento: (dados) => chamar('/lancamentos/previa', { method: 'POST', body: dados }),
   salvarLancamento: (data, dados) => chamar(`/lancamentos/${data}`, { method: 'PUT', body: dados }),
   excluirLancamento: (data) => chamar(`/lancamentos/${data}`, { method: 'DELETE' }),
+  abastecimentos: ({ de, ate } = {}) => chamar(`/abastecimentos${de ? `?de=${de}&ate=${ate}` : ''}`),
+  // id nulo = novo abastecimento; com id = correção.
+  salvarAbastecimento: (id, dados) => chamar(id == null ? '/abastecimentos' : `/abastecimentos/${id}`, { method: id == null ? 'POST' : 'PUT', body: dados }),
+  excluirAbastecimento: (id) => chamar(`/abastecimentos/${id}`, { method: 'DELETE' }),
 };
 
 export const api = MODO_NAVEGADOR ? apiNavegador : apiServidor;

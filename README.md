@@ -23,7 +23,7 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 - **Lançamento do dia** com ganhos por app, km rodados, horas online e gastos extras, com prévia do lucro enquanto digita.
 - **Dashboard** com o lucro de hoje, o progresso da meta diária, indicadores rápidos (com "Entender o cálculo" do custo por km) e gráfico dos últimos 7 dias.
 - **Layout para celular e computador**: barra de navegação inferior no celular, menu lateral e telas em duas colunas no computador.
-- **Histórico** com edição e exclusão de dias lançados.
+- **Histórico** com edição e exclusão de dias lançados, e o registro de **abastecimentos** (só controle do que foi pago no posto).
 - **Perfil e veículo** editáveis, com recálculo automático do custo por km para os próximos lançamentos.
 
 ## Design
@@ -202,6 +202,8 @@ Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`, 
 
 **Combustível do dia.** Na tela de lançar, logo abaixo dos km, aparece o combustível estimado com os valores usados (ex.: "Gasolina · R$ 6,29/l · 12 km/l"). Em **Ajustar**, o motorista troca o tipo, o preço do litro e o consumo só daquele dia; com **Usar nos próximos dias** (marcado por padrão no dia de hoje, desmarcado ao corrigir um dia antigo), o backend grava esses valores como o novo padrão do perfil junto com o dia, na mesma transação. Cada dia guarda `combustivel_tipo`, `preco_litro_aplicado` e `consumo_aplicado`; ajustar um dia antigo muda só a parte do combustível dele, e os custos fixos congelados continuam.
 
+**Abastecimentos.** No Histórico, em **Dias | Abastecimentos**, o motorista registra o que pagou no posto: data, valor, combustível e, se quiser, os litros. É só controle: o abastecimento **não entra no lucro**, porque o combustível do trabalho já é descontado pelos km rodados (descontar os dois seria contar o mesmo combustível duas vezes), e um abastecimento pode ser usado em vários dias. Também não calcula consumo: litros colocados não são litros gastos desde o último abastecimento.
+
 ## Modelo de dados
 
 ```mermaid
@@ -250,6 +252,13 @@ erDiagram
     real consumo_aplicado
     text observacao
   }
+  ABASTECIMENTOS {
+    int id PK
+    text data "AAAA-MM-DD"
+    real valor "R$ pagos no posto"
+    text combustivel_tipo "gasolina ou etanol"
+    real litros "opcional"
+  }
 ```
 
 ## API REST
@@ -265,6 +274,9 @@ erDiagram
 | GET | `/api/lancamentos/:data` | Lançamento de um dia |
 | PUT | `/api/lancamentos/:data` | Cria ou atualiza o lançamento do dia |
 | DELETE | `/api/lancamentos/:data` | Exclui o lançamento do dia |
+| GET | `/api/abastecimentos?de=&ate=` | Lista os abastecimentos (com preço por litro, quando há litros) |
+| POST | `/api/abastecimentos` | Registra um abastecimento |
+| PUT / DELETE | `/api/abastecimentos/:id` | Corrige ou exclui um abastecimento |
 | GET | `/api/resumo?ate=&dias=7` | Hoje, meta, série diária e totais do período |
 | GET | `/api/resumo/mes?mes=AAAA-MM&hoje=` | Fechamento do mês: custos fixos do período x descontados nos dias e lucro ajustado |
 

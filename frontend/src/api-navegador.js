@@ -3,17 +3,19 @@
 // vêm dos mesmos módulos do backend (regras.js e calculos.js).
 import { indicadoresDoDia, totalizar, fechamentoDoMes } from '../../backend/src/calculos.js';
 import { dataISO, erro } from '../../backend/src/validacao.js';
-import { dadosPerfil, perfilCompleto, previaVeiculo, dadosLancamento, previaLancamento, progressoMeta, novoPadraoCombustivel } from '../../backend/src/regras.js';
-import { perfilExemplo, lancamentosExemplo } from '../../backend/src/exemplo.js';
+import { dadosPerfil, perfilCompleto, previaVeiculo, dadosLancamento, previaLancamento, progressoMeta, novoPadraoCombustivel, dadosAbastecimento, comPrecoLitro } from '../../backend/src/regras.js';
+import { perfilExemplo, lancamentosExemplo, abastecimentosExemplo } from '../../backend/src/exemplo.js';
 
 const CHAVE = 'km-real:v1';
 
 function ler() {
   try {
     const salvo = JSON.parse(localStorage.getItem(CHAVE));
-    if (salvo && typeof salvo === 'object') return { perfil: salvo.perfil || null, lancamentos: salvo.lancamentos || {} };
+    if (salvo && typeof salvo === 'object') {
+      return { perfil: salvo.perfil || null, lancamentos: salvo.lancamentos || {}, abastecimentos: salvo.abastecimentos || [] };
+    }
   } catch { /* sem armazenamento: começa vazio */ }
-  return { perfil: null, lancamentos: {} };
+  return { perfil: null, lancamentos: {}, abastecimentos: [] };
 }
 
 function gravar(dados) {
@@ -132,9 +134,42 @@ function fechamento(mesBruto, hojeBruto) {
 
 function carregarExemplo() {
   const perfil = { id: 1, ...perfilExemplo() };
-  const lancamentos = Object.fromEntries(lancamentosExemplo(perfil).map((l) => [l.data, l]));
-  gravar({ perfil, lancamentos });
+  const dias = lancamentosExemplo(perfil);
+  const lancamentos = Object.fromEntries(dias.map((l) => [l.data, l]));
+  const abastecimentos = abastecimentosExemplo(perfil, dias).map((a, i) => ({ id: i + 1, ...a }));
+  gravar({ perfil, lancamentos, abastecimentos });
   return perfilCompleto(perfil);
+}
+
+// Abastecimentos: só registro do que foi pago no posto (não mexem no lucro), como no backend.
+const ordenarAbastecimentos = (lista) => [...lista].sort((a, b) => b.data.localeCompare(a.data) || b.id - a.id);
+
+function listarAbastecimentos({ de = '0000-01-01', ate = '9999-12-31' } = {}) {
+  return ordenarAbastecimentos(ler().abastecimentos.filter((a) => a.data >= de && a.data <= ate)).map(comPrecoLitro);
+}
+
+function salvarAbastecimento(id, b = {}) {
+  const dados = ler();
+  const novo = dadosAbastecimento(b);
+  let lista;
+  let salvo;
+  if (id == null) {
+    salvo = { id: Math.max(0, ...dados.abastecimentos.map((a) => a.id)) + 1, ...novo };
+    lista = [...dados.abastecimentos, salvo];
+  } else {
+    if (!dados.abastecimentos.some((a) => a.id === Number(id))) throw erro('Abastecimento não encontrado.', 404);
+    salvo = { id: Number(id), ...novo };
+    lista = dados.abastecimentos.map((a) => (a.id === Number(id) ? salvo : a));
+  }
+  gravar({ ...dados, abastecimentos: lista });
+  return comPrecoLitro(salvo);
+}
+
+function excluirAbastecimento(id) {
+  const dados = ler();
+  if (!dados.abastecimentos.some((a) => a.id === Number(id))) throw erro('Abastecimento não encontrado.', 404);
+  gravar({ ...dados, abastecimentos: dados.abastecimentos.filter((a) => a.id !== Number(id)) });
+  return null;
 }
 
 // Mesma interface do api.js: tudo devolve Promise, e os erros carregam .status.
@@ -152,4 +187,7 @@ export const apiNavegador = {
   salvarLancamento: assincrono(salvarLancamento),
   excluirLancamento: assincrono(excluirLancamento),
   carregarExemplo: assincrono(carregarExemplo),
+  abastecimentos: assincrono(listarAbastecimentos),
+  salvarAbastecimento: assincrono(salvarAbastecimento),
+  excluirAbastecimento: assincrono(excluirAbastecimento),
 };

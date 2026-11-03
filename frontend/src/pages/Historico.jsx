@@ -2,11 +2,26 @@ import { useEffect, useState } from 'react';
 import { api } from '../api.js';
 import { moeda, numeroBR, dataBR } from '../util.js';
 import KmIcon from '../components/KmIcon.jsx';
+import Segmentado from '../components/Segmentado.jsx';
+import Abastecimentos from '../components/Abastecimentos.jsx';
 
 // "segunda-feira, 26 de outubro" -> "Segunda-feira, 26 de outubro"
 const titulo = (iso) => { const t = dataBR(iso); return t.charAt(0).toUpperCase() + t.slice(1); };
 
-export default function Historico({ onEditar }) {
+// Histórico com duas listas: os dias trabalhados e os abastecimentos.
+export default function Historico({ onEditar, perfil }) {
+  const [vista, setVista] = useState('dias');
+  return (
+    <>
+      <div className="historico__vista">
+        <Segmentado opcoes={[['dias', 'Dias'], ['abastecimentos', 'Abastecimentos']]} valor={vista} onChange={setVista} rotulo="Mostrar" />
+      </div>
+      {vista === 'dias' ? <Dias onEditar={onEditar} /> : <Abastecimentos perfil={perfil} />}
+    </>
+  );
+}
+
+function Dias({ onEditar }) {
   const [lista, setLista] = useState(null);
   const [erro, setErro] = useState('');
 

@@ -226,12 +226,12 @@ img { max-width: 100%; display: block; }
 <h2>Funcionalidades implementadas</h2>
 <table>
   <tr><th style="width:28%">Funcionalidade</th><th>O que faz</th></tr>
-  <tr><td>Cadastro inicial</td><td>Dois passos: motorista (nome, apps, meta diária) e carro (combustível, km por dia, dias por semana e cada custo fixo separado; seguro e manutenção por mês ou por ano), com prévia do custo por km e avisos para valores que parecem errados.</td></tr>
+  <tr><td>Cadastro inicial</td><td>Dois passos: motorista (nome, apps, meta diária) e carro (gasolina, etanol ou os dois, cada um com preço e consumo; km por dia, dias por semana e cada custo fixo separado; seguro e manutenção por mês ou por ano), com prévia do custo por km e avisos para valores que parecem errados.</td></tr>
   <tr><td>Custo real por km</td><td>Separado entre combustível e custos fixos, com "Entender o cálculo" na tela inicial.</td></tr>
-  <tr><td>Lançamento do dia</td><td>Ganhos por app, km, horas online e outros gastos, com a conta do dia aberta enquanto o motorista digita. Cada dia guarda o custo por km da época.</td></tr>
+  <tr><td>Lançamento do dia</td><td>Ganhos por app, km, horas online e outros gastos, com a conta do dia aberta enquanto o motorista digita. O combustível estimado aparece com os valores usados e pode ser ajustado (tipo, preço e consumo) só naquele dia ou como novo padrão. Cada dia guarda o custo por km e o combustível da época.</td></tr>
   <tr><td>Tela inicial</td><td>Lucro de hoje, progresso da meta, indicadores rápidos, gráfico interativo dos últimos 7 dias e totais da semana.</td></tr>
-  <tr><td>Fechamento do mês</td><td>Compara os custos fixos reais do período com o que os dias já descontaram e mostra o lucro do mês ajustado.</td></tr>
-  <tr><td>Histórico</td><td>Lista dos dias lançados, com edição e exclusão.</td></tr>
+  <tr><td>Fechamento do mês</td><td>Compara os custos fixos reais do período com o que os dias já descontaram e mostra o lucro do mês ajustado. Mostra à parte o combustível estimado no trabalho e os pagamentos no posto, sem mexer no lucro.</td></tr>
+  <tr><td>Histórico</td><td>Dias lançados, com edição e exclusão, e registro de abastecimentos (valor pago, combustível e litros), só para controle.</td></tr>
   <tr><td>Perfil e veículo</td><td>Tudo editável; o novo custo por km vale para os próximos lançamentos.</td></tr>
   <tr><td>Celular e computador</td><td>Menu inferior e botão de salvar fixos no celular; menu lateral e duas colunas no computador.</td></tr>
 </table>
@@ -265,13 +265,14 @@ lucro do dia        = ganhos − km rodados × custo por km − outros gastos do
 <p>Exemplo com os dados de demonstração: gasolina a R$ 6,29 e consumo de 12 km/l dão R$ 0,52 por km; R$ 1.450 de custos fixos para 4.940 km por mês dão R$ 0,29 por km. Custo total: <b>R$ 0,82 por km</b>.</p>
 
 <h2>Banco de dados e API</h2>
-<p>Duas tabelas: <b>perfil</b> (dados do motorista, do carro e dos custos) e <b>lancamentos</b> (um registro por dia, com ganhos, km, horas, gastos e o custo por km aplicado naquele dia).</p>
+<p>Três tabelas: <b>perfil</b> (dados do motorista, do carro, dos combustíveis e dos custos), <b>lancamentos</b> (um registro por dia, com ganhos, km, horas, gastos, o custo por km e o combustível usados naquele dia) e <b>abastecimentos</b> (valor pago no posto, combustível e litros).</p>
 <table>
   <tr><th style="width:12%">Método</th><th style="width:36%">Rota</th><th>Descrição</th></tr>
   <tr><td>GET / PUT</td><td><code>/api/perfil</code></td><td>Lê ou salva o perfil e devolve o custo por km</td></tr>
   <tr><td>POST</td><td><code>/api/…/previa</code></td><td>Prévias do carro e do dia enquanto o motorista digita</td></tr>
   <tr><td>GET</td><td><code>/api/lancamentos</code></td><td>Lista os dias lançados</td></tr>
   <tr><td>GET / PUT / DELETE</td><td><code>/api/lancamentos/:data</code></td><td>Lê, salva ou exclui o lançamento de um dia</td></tr>
+  <tr><td>GET / POST / PUT / DELETE</td><td><code>/api/abastecimentos</code></td><td>Lista, registra, corrige ou exclui abastecimentos</td></tr>
   <tr><td>GET</td><td><code>/api/resumo</code> e <code>/mes</code></td><td>Hoje, meta, últimos dias, totais e fechamento do mês</td></tr>
 </table>
 

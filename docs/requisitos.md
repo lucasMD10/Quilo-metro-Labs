@@ -37,7 +37,7 @@ Lista de requisitos do MVP, levantada a partir da pesquisa de mercado (segmento 
 | RF12 | O início mostra o lucro estimado de hoje e o progresso da meta diária. | Deve | Feito | Início |
 | RF13 | O início mostra indicadores rápidos: custo por km, ganho bruto por km e km rodados hoje. | Deveria | Feito | Início |
 | RF14 | O início mostra os últimos 7 dias em gráfico (lucro, ganho bruto e meta), com totais, lucro por hora e dias com meta batida. Tocar numa barra mostra os números daquele dia. | Deveria | Feito | Início |
-| RF15 | O fechamento do mês compara os custos fixos reais do período com o que os dias já descontaram e mostra o lucro do mês ajustado. | Deveria | Feito | Início |
+| RF15 | O fechamento do mês compara os custos fixos reais do período com o que os dias já descontaram e mostra o lucro do mês ajustado. Mostra também, separados e sem mexer no lucro, o combustível estimado no trabalho e os pagamentos no posto. | Deveria | Feito | Início |
 | RF16 | O histórico lista os dias lançados com lucro, km e ganho bruto, e permite abrir para editar ou excluir (com confirmação). | Deve | Feito | Histórico |
 
 ### Perfil

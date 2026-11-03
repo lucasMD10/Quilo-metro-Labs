@@ -290,6 +290,8 @@ svg { flex-shrink: 0; }
 .segmentado__opcao:hover { color: var(--marca); }
 .segmentado__opcao--ativa { background: var(--superficie); color: var(--marca); box-shadow: 0 1px 2px rgba(16, 44, 70, .12); }
 .segmentado__opcao:focus-visible { outline: 2px solid var(--marca); outline-offset: 1px; }
+.fechamento__combustivel { margin-top: 18px; padding-top: 4px; border-top: 1px solid var(--borda); }
+
 /* Histórico: Dias | Abastecimentos */
 .historico__vista { display: flex; margin: 0 0 14px; }
 .historico__vista .segmentado { flex: 1; }

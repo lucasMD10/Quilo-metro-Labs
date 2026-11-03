@@ -1,7 +1,7 @@
 // Versão da API que roda inteira no navegador (GitHub Pages): mesmas respostas das rotas do backend,
 // com os dados guardados no localStorage do aparelho. Não há regra própria aqui: validações e contas
 // vêm dos mesmos módulos do backend (regras.js e calculos.js).
-import { indicadoresDoDia, totalizar, fechamentoDoMes } from '../../backend/src/calculos.js';
+import { indicadoresDoDia, totalizar, fechamentoDoMes, combustivelDoMes } from '../../backend/src/calculos.js';
 import { dataISO, erro } from '../../backend/src/validacao.js';
 import { dadosPerfil, perfilCompleto, previaVeiculo, dadosLancamento, previaLancamento, progressoMeta, novoPadraoCombustivel, dadosAbastecimento, comPrecoLitro } from '../../backend/src/regras.js';
 import { perfilExemplo, lancamentosExemplo, abastecimentosExemplo } from '../../backend/src/exemplo.js';
@@ -125,10 +125,12 @@ function fechamento(mesBruto, hojeBruto) {
   const fim = mesAtual ? Number(hoje.slice(8, 10)) : diasNoMes;
   const diasConsiderados = Math.max(fim - inicio + 1, 0);
   const doMes = entre(lancamentos, `${mes}-01`, `${mes}-31`).sort((a, b) => a.data.localeCompare(b.data));
+  const abastecimentosDoMes = ler().abastecimentos.filter((a) => a.data >= `${mes}-01` && a.data <= `${mes}-31`);
 
   return {
     mes, mes_atual: mesAtual, primeiro_mes: primeiro.slice(0, 7), dia_inicio: inicio,
     ...fechamentoDoMes(doMes, perfil, { diasNoMes, diasConsiderados }),
+    combustivel: combustivelDoMes(doMes, abastecimentosDoMes, perfil),
   };
 }
 

@@ -114,3 +114,25 @@ export function fechamentoDoMes(lancamentos, perfil, { diasNoMes, diasConsiderad
     situacao: diferenca < -0.5 ? 'rodou_menos' : diferenca > 0.5 ? 'rodou_mais' : 'certinho',
   };
 }
+
+/**
+ * Combustível do mês, em dois números que NÃO se misturam:
+ *  - estimado_trabalho: o que os dias lançados descontaram de combustível (km × custo do combustível por km).
+ *  - pagamentos_posto: o que foi pago nos abastecimentos registrados no mês.
+ * A diferença não é erro a corrigir (combustível no tanque, uso fora do trabalho, consumo diferente do
+ * informado), por isso nada aqui ajusta o lucro: o combustível já é descontado pelos km.
+ */
+export function combustivelDoMes(lancamentos, abastecimentos, perfil) {
+  const custo = custoPorKm(perfil);
+  // Dias antigos sem a separação guardada: estima a parte do combustível pela proporção atual.
+  const parteCombustivel = custo.total_km > 0 ? custo.combustivel_km / custo.total_km : 0;
+  const estimado = lancamentos.reduce((acc, l) => acc + l.km_rodados * (l.combustivel_km_aplicado ?? l.custo_km_aplicado * parteCombustivel), 0);
+  const pagos = abastecimentos.reduce((acc, a) => acc + a.valor, 0);
+  const litros = abastecimentos.reduce((acc, a) => acc + (a.litros || 0), 0);
+  return {
+    estimado_trabalho: arred(estimado),
+    pagamentos_posto: arred(pagos),
+    abastecimentos: abastecimentos.length,
+    litros_registrados: litros ? arred(litros) : null,
+  };
+}

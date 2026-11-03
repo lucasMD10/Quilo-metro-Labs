@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db } from '../db.js';
-import { indicadoresDoDia, totalizar, fechamentoDoMes } from '../calculos.js';
+import { indicadoresDoDia, totalizar, fechamentoDoMes, combustivelDoMes } from '../calculos.js';
 import { dataISO, erro } from '../validacao.js';
 import { progressoMeta } from '../regras.js';
 import { buscarPerfil } from './perfil.js';
@@ -73,9 +73,12 @@ resumoRouter.get('/mes', (req, res) => {
   const fim = mesAtual ? Number(hoje.slice(8, 10)) : diasNoMes;
   const diasConsiderados = Math.max(fim - inicio + 1, 0);
   const lancamentos = db.prepare('SELECT * FROM lancamentos WHERE data BETWEEN ? AND ? ORDER BY data').all(`${mes}-01`, `${mes}-31`);
+  const abastecimentos = db.prepare('SELECT * FROM abastecimentos WHERE data BETWEEN ? AND ?').all(`${mes}-01`, `${mes}-31`);
 
   res.json({
     mes, mes_atual: mesAtual, primeiro_mes: primeiro.slice(0, 7), dia_inicio: inicio,
     ...fechamentoDoMes(lancamentos, perfil, { diasNoMes, diasConsiderados }),
+    // Mostrado à parte: não entra no lucro ajustado.
+    combustivel: combustivelDoMes(lancamentos, abastecimentos, perfil),
   });
 });

@@ -198,6 +198,8 @@ lucro do mês, ajustado  = lucro estimado dos dias + diferença
 
 Diferença negativa: o motorista rodou menos que o previsto e parte dos custos fixos ainda sai do lucro. Positiva: rodou mais e os dias descontaram a mais.
 
+O fechamento também mostra o **combustível do mês** em dois números separados: o **combustível estimado no trabalho** (km × custo do combustível por km de cada dia, que já sai do lucro) e os **pagamentos no posto** (soma dos abastecimentos registrados). A diferença entre eles não é ajustada no lucro: pode ser combustível que ficou no tanque, uso fora do trabalho ou consumo diferente do informado.
+
 Cada lançamento guarda o custo por km vigente no momento (`custo_km_aplicado`, mais as partes `combustivel_km_aplicado` e `fixo_km_aplicado`). Se o preço do combustível mudar, os dias antigos não são recalculados, nem quando editados. Para usar o custo atual num dia antigo, o motorista marca "Recalcular com o custo de hoje" (a API recebe `recalcular_custo: true`).
 
 **Combustível do dia.** Na tela de lançar, logo abaixo dos km, aparece o combustível estimado com os valores usados (ex.: "Gasolina · R$ 6,29/l · 12 km/l"). Em **Ajustar**, o motorista troca o tipo, o preço do litro e o consumo só daquele dia; com **Usar nos próximos dias** (marcado por padrão no dia de hoje, desmarcado ao corrigir um dia antigo), o backend grava esses valores como o novo padrão do perfil junto com o dia, na mesma transação. Cada dia guarda `combustivel_tipo`, `preco_litro_aplicado` e `consumo_aplicado`; ajustar um dia antigo muda só a parte do combustível dele, e os custos fixos congelados continuam.

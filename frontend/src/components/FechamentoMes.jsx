@@ -72,8 +72,34 @@ export default function FechamentoMes() {
             {d.situacao === 'rodou_mais' && `Você rodou mais que o previsto: os dias descontaram ${moeda(d.diferenca)} a mais de custos fixos, que voltam para o lucro.`}
             {d.situacao === 'certinho' && 'Os dias cobriram certinho os custos fixos do período.'}
           </p>
+          <Combustivel c={d.combustivel} />
         </>
       )}
     </section>
   );
 }
+
+// Combustível do mês: o estimado no trabalho e o pago no posto, lado a lado e sem mexer no lucro.
+// A diferença entre os dois não é um erro: o texto explica de onde ela pode vir.
+function Combustivel({ c }) {
+  if (!c) return null;
+  const pagos = c.abastecimentos > 0;
+  return (
+    <div className="fechamento__combustivel">
+      <h3 className="grupo"><KmIcon name="combustivel" size={20} /> Combustível do mês</h3>
+      <dl className="linhas">
+        <div><dt>Combustível estimado no trabalho<small>pelos km lançados, já descontado do lucro</small></dt><dd>{moeda(c.estimado_trabalho)}</dd></div>
+        <div>
+          <dt>Pagamentos no posto<small>{pagos ? `${c.abastecimentos} ${c.abastecimentos === 1 ? 'abastecimento registrado' : 'abastecimentos registrados'}` : 'nenhum abastecimento registrado'}</small></dt>
+          <dd>{pagos ? moeda(c.pagamentos_posto) : '—'}</dd>
+        </div>
+      </dl>
+      <p className="nota">
+        {pagos
+          ? 'A diferença pode ser combustível que ficou no tanque, uso fora do trabalho ou consumo diferente do informado. Os pagamentos no posto não entram no lucro.'
+          : 'Registre o que pagar no posto em Histórico › Abastecimentos para comparar com o estimado.'}
+      </p>
+    </div>
+  );
+}
+

@@ -32,7 +32,7 @@ O KM Real calcula o **custo real por quilômetro** do carro do motorista e, a ca
 |---|---|
 | ![Wireframe do início](docs/wireframes/03-inicio.png) | ![Início no app](docs/telas/cel-03-inicio.png) |
 
-- **[Protótipo navegável no Figma](https://www.figma.com/design/WvEst2KBErrDpuNFzeXu67)**: componentes, 6 telas do celular e fluxos "Primeiro acesso" e "Uso diário".
+- **[Protótipo navegável no Figma](https://www.figma.com/design/WvEst2KBErrDpuNFzeXu67)**: componentes, 9 telas do celular (com gasolina/etanol e abastecimentos) e fluxos "Primeiro acesso" e "Uso diário".
 - [Pesquisa com motoristas](docs/pesquisa.md): relatos, matriz de dores, persona e jornada.
 - [Wireframes de baixa fidelidade](docs/wireframes/): estrutura das 6 telas.
 - [Guia de estilo](docs/guia-de-estilo/): marca, cores, tipografia, ícones e componentes.

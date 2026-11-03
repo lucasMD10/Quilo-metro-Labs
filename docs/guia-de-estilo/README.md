@@ -51,7 +51,7 @@ Família única: **Nunito Sans**.
 
 ## Componentes
 
-Botão (primário, secundário, claro), campo (com prefixo, sufixo e dica), chip de app, dia da semana, indicador, linha de valor, item do histórico e menu inferior. No Figma, todos são componentes com propriedades editáveis, e as telas do protótipo usam só eles.
+Botão (primário, secundário, claro), campo (com prefixo, sufixo e dica), chip de app, dia da semana, indicador, linha de valor, item do histórico, menu inferior, seletor segmentado e combustível do dia. No Figma, todos são componentes com propriedades editáveis, e as telas do protótipo usam só eles.
 
 ## Forma e espaçamento
 

@@ -6,13 +6,13 @@
 
 Na página "KM Real" ficam:
 
-- **Componentes**: ícones, logo, botão, campo, chip, dia da semana, indicador, linha de valor, item do histórico e menu inferior, todos ligados às variáveis de cor e aos estilos de texto do [guia de estilo](../guia-de-estilo/).
-- **6 telas do celular (390 px)**: boas-vindas (passos 1 e 2), início, lançar dia, histórico, perfil e veículo.
-- **Protótipo navegável** com dois fluxos: **Primeiro acesso** (começa nas boas-vindas) e **Uso diário** (começa no início). O menu inferior e a barra de salvar ficam fixos enquanto a tela rola. Para testar, clique em ▶ (Present).
+- **Componentes**: ícones, logo, botão, campo, chip, dia da semana, indicador, linha de valor, item do histórico, menu inferior, seletor segmentado e bloco do combustível do dia, todos ligados às variáveis de cor e aos estilos de texto do [guia de estilo](../guia-de-estilo/).
+- **9 telas do celular (390 px)**: boas-vindas (passos 1 e 2), início, lançar dia, histórico, perfil e veículo, ajuste do combustível no dia, lista de abastecimentos e registro de abastecimento. O carro de exemplo é flex: gasolina e etanol aparecem nas boas-vindas, no perfil, no lançamento do dia e no fechamento do mês.
+- **Protótipo navegável** com dois fluxos: **Primeiro acesso** (começa nas boas-vindas) e **Uso diário** (começa no início). O menu inferior e a barra de salvar ficam fixos enquanto a tela rola. Em Lançar dia, "Ajustar" abre o ajuste do combustível; no Histórico, "Abastecimentos" leva à lista e "Registrar abastecimento" ao formulário. Para testar, clique em ▶ (Present).
 
 ## Telas do app funcionando
 
-Prints do app rodando com os dados de exemplo (`npm run seed`). As telas do Figma seguem o mesmo layout; o combustível (gasolina/etanol, ajuste no dia e abastecimentos) veio depois do protótipo e aparece só no app.
+Prints do app rodando com os dados de exemplo (`npm run seed`). As telas do Figma seguem o mesmo layout, incluindo o combustível.
 
 ### Celular
 

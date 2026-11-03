@@ -45,6 +45,7 @@ Lista de requisitos do MVP, levantada a partir da pesquisa de mercado (segmento 
 | ID | Requisito | Prioridade | Situação | Tela |
 |---|---|---|---|---|
 | RF17 | O motorista edita nome, apps, meta, dados e custos do carro. O novo custo por km vale para os próximos lançamentos. | Deve | Feito | Perfil |
+| RF23 | O motorista registra abastecimentos (data, valor pago, combustível e litros opcionais), corrige e exclui. É só controle: não entra no lucro dos dias nem calcula consumo. | Deveria | Feito | Histórico |
 
 ### Fora do MVP
 

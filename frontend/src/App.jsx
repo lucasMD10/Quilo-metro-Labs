@@ -61,7 +61,7 @@ export default function App() {
           {aba === 'lancar' && (
             <LancarDia key={dataEdicao || 'novo'} perfil={perfil} dataInicial={dataEdicao} onSalvo={(msg, perfilNovo) => { if (perfilNovo) setPerfil(perfilNovo); setToast(msg); setAba('inicio'); }} />
           )}
-          {aba === 'historico' && <Historico onEditar={abrirLancamento} />}
+          {aba === 'historico' && <Historico onEditar={abrirLancamento} perfil={perfil} />}
           {aba === 'perfil' && <Veiculo perfil={perfil} onSalvo={(p) => { setPerfil(p); setToast('Perfil salvo. Os próximos dias já usam o novo custo por km.'); }} />}
         </main>
       </div>

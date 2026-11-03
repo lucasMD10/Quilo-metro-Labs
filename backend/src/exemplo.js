@@ -62,3 +62,11 @@ export function lancamentosExemplo(perfil, hoje = new Date()) {
   }
   return dias;
 }
+
+// Abastecimentos de exemplo: a cada 3 dias de trabalho, entre R$ 150 e R$ 250 do combustível padrão.
+export function abastecimentosExemplo(perfil, dias) {
+  return dias.filter((_, i) => i % 3 === 0).map((d) => {
+    const valor = 150 + Math.round(Math.random() * 100);
+    return { data: d.data, valor, combustivel_tipo: perfil.combustivel_padrao, litros: Math.round((valor / perfil.preco_combustivel) * 100) / 100 };
+  });
+}

@@ -66,6 +66,20 @@ db.exec(`
   );
 
   CREATE INDEX IF NOT EXISTS idx_lancamentos_data ON lancamentos (data);
+
+  -- Abastecimentos: só registro do dinheiro pago no posto. Não entram no lucro (o combustível do
+  -- trabalho já é descontado pelos km) e não servem para calcular consumo.
+  CREATE TABLE IF NOT EXISTS abastecimentos (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    data              TEXT    NOT NULL,  -- AAAA-MM-DD
+    valor             REAL    NOT NULL,  -- R$ pagos no posto
+    combustivel_tipo  TEXT    NOT NULL,  -- gasolina ou etanol
+    litros            REAL,              -- opcional
+    criado_em         TEXT    NOT NULL DEFAULT (datetime('now')),
+    atualizado_em     TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_abastecimentos_data ON abastecimentos (data);
 `);
 
 // Bancos criados antes do detalhamento dos custos ganham as colunas novas.

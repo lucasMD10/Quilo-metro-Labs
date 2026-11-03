@@ -8,6 +8,7 @@ import './db.js';
 import { perfilRouter } from './routes/perfil.js';
 import { lancamentosRouter } from './routes/lancamentos.js';
 import { resumoRouter } from './routes/resumo.js';
+import { abastecimentosRouter } from './routes/abastecimentos.js';
 
 const app = express();
 const PORTA = process.env.PORT || 3001;
@@ -22,6 +23,7 @@ app.get('/api/saude', (req, res) => res.json({ ok: true, app: 'KM Real API' }));
 app.use('/api/perfil', perfilRouter);
 app.use('/api/lancamentos', lancamentosRouter);
 app.use('/api/resumo', resumoRouter);
+app.use('/api/abastecimentos', abastecimentosRouter);
 
 // Se o front já foi compilado (npm run build), a própria API serve a interface.
 // Assim basta um comando (npm start) e uma porta só, sem precisar do Vite.

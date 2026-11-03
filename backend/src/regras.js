@@ -348,6 +348,29 @@ export function dadosLancamento(b = {}, { data: dataBruta, perfil, existente, ho
   };
 }
 
+/**
+ * Valida um abastecimento. É só registro do que foi pago no posto: não entra no lucro dos dias.
+ * Litros são opcionais; com eles, o preço por litro resultante precisa fazer sentido.
+ */
+export function dadosAbastecimento(b = {}, { hoje = hojeLocal() } = {}) {
+  const data = dataISO(b.data);
+  if (data > hoje) throw erro('Não dá para registrar um abastecimento que ainda não aconteceu.');
+  const valor = numero(b.valor, { campo: 'o valor pago', obrigatorio: true, maiorQueZero: true, max: 2000 });
+  const tipo = b.combustivel_tipo;
+  if (!COMBUSTIVEIS.includes(tipo)) throw erro('Escolha gasolina ou etanol.');
+  const litros = b.litros === undefined || b.litros === null || b.litros === '' || b.litros === 0
+    ? null
+    : numero(b.litros, { campo: 'os litros', maiorQueZero: true, max: 200 });
+  if (litros) {
+    const preco = valor / litros;
+    if (preco < 1 || preco > 50) throw erro(`Com esses valores o litro sairia ${brl(preco)}. Confira o valor pago e os litros.`);
+  }
+  return { data, valor, combustivel_tipo: tipo, litros };
+}
+
+/** Abastecimento como o front recebe: com o preço por litro quando os litros foram informados. */
+export const comPrecoLitro = (a) => ({ ...a, preco_litro: a.litros ? arred(a.valor / a.litros, 3) : null });
+
 /** Progresso do lucro até a meta (0 a 1), quanto falta e se bateu. */
 export function progressoMeta(lucro, meta) {
   if (!meta) return { meta_pct: 0, falta_para_meta: 0, meta_batida: false };

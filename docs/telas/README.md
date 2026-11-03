@@ -12,7 +12,7 @@ Na página "KM Real" ficam:
 
 ## Telas do app funcionando
 
-Prints do app rodando com os dados de exemplo (`npm run seed`). As telas do Figma seguem o mesmo layout.
+Prints do app rodando com os dados de exemplo (`npm run seed`). As telas do Figma seguem o mesmo layout; o combustível (gasolina/etanol, ajuste no dia e abastecimentos) veio depois do protótipo e aparece só no app.
 
 ### Celular
 
@@ -25,6 +25,14 @@ Prints do app rodando com os dados de exemplo (`npm run seed`). As telas do Figm
 | ![](cel-06-lancar-dia.png) | ![](cel-07-historico.png) | ![](cel-08-perfil.png) |
 
 Outros estados: [entender o cálculo](cel-04-inicio-entender-calculo.png) · [dia selecionado no gráfico](cel-05-inicio-dia-selecionado.png) · [custos fixos abertos](cel-09-perfil-custos-abertos.png)
+
+#### Combustível
+
+| Ajustar o combustível do dia | Abastecimentos | Registrar abastecimento | Combustível no fechamento do mês |
+|---|---|---|---|
+| ![](cel-10-lancar-dia-combustivel.png) | ![](cel-11-abastecimentos.png) | ![](cel-12-registrar-abastecimento.png) | ![](cel-13-fechamento-combustivel.png) |
+
+O carro pode usar gasolina, etanol ou os dois (cada um com preço e consumo, no cadastro e no Perfil). Ao lançar o dia, o motorista ajusta o combustível só daquele dia ou como novo padrão. Os abastecimentos são só controle: no fechamento do mês aparecem ao lado do combustível estimado, sem mudar o lucro.
 
 ### Computador
 

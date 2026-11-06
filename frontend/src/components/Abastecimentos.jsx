@@ -60,7 +60,7 @@ export default function Abastecimentos({ perfil }) {
       {form ? (
         <form className="cartao abastecimento-form" onSubmit={salvar}>
           <h2 className="cartao__titulo"><KmIcon name="combustivel" size={20} /> {form.id ? 'Corrigir abastecimento' : 'Registrar abastecimento'}</h2>
-          <p className="grupo__dica">Só para controle do que você pagou no posto. Não muda o lucro dos dias: o combustível do trabalho já é descontado pelos km.</p>
+          <p className="grupo__dica">Só para controle do que você pagou no posto. O combustível é pelo que você rodou, não pelo que abasteceu: por isso o abastecimento não muda o lucro dos dias.</p>
           <Campo rotulo="Data" nome="data" tipo="date" valor={form.data} max={hojeISO()} onChange={(_, v) => mudar('data', v || hojeISO())} />
           <div className="campo">
             <span className="campo__rotulo">Combustível</span>
@@ -81,6 +81,7 @@ export default function Abastecimentos({ perfil }) {
           <KmIcon name="lancar" size={20} /> Registrar abastecimento
         </button>
       )}
+      {!form && <p className="grupo__dica">O combustível é pelo que você rodou, não pelo que abasteceu. Aqui fica só o que você pagou no posto, para comparar no fechamento do mês.</p>}
 
       {!form && erro && <p className="erro">{erro}</p>}
 

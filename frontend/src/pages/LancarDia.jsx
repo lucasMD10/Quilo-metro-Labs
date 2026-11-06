@@ -174,8 +174,8 @@ export default function LancarDia({ perfil, dataInicial, onSalvo }) {
           <div className="resultado__total"><span>Lucro estimado</span><strong className={previa?.lucro < 0 ? 'neg' : 'pos'}>{moeda(previa?.lucro)}</strong></div>
           <p className="resultado__nota">
             {salvo && !recalcular
-              ? 'O combustível e os custos fixos usam o custo por km do dia em que ele foi lançado.'
-              : `O combustível e os custos fixos saem do custo por km do seu carro (${moeda(perfil.custo.total_km)}/km). Se esse valor parecer errado, ajuste na aba Perfil.`}
+              ? 'O combustível é pelo que você rodou, não pelo que abasteceu. Ele e os custos fixos usam o custo por km do dia em que ele foi lançado.'
+              : `O combustível é pelo que você rodou, não pelo que abasteceu. Ele e os custos fixos saem do custo por km do seu carro (${moeda(perfil.custo.total_km)}/km). Se esse valor parecer errado, ajuste na aba Perfil.`}
           </p>
         </div>
 

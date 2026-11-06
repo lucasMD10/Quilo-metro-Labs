@@ -40,7 +40,8 @@ export default function Veiculo({ perfil, onSalvo }) {
         <CamposVeiculo form={form} onChange={mudar} previa={previa} />
       </div>
 
-      <aside className="pagina-form__resumo">
+      {/* Até a prévia chegar, o resumo está vazio: no computador o botão ficaria lá em cima e pularia para baixo */}
+      <aside className={`pagina-form__resumo${previa ? '' : ' pagina-form__resumo--carregando'}`}>
         <ResumoVeiculo form={form} previa={previa} />
         {erro && <p className="erro">{erro}</p>}
         <div className="barra-acao">

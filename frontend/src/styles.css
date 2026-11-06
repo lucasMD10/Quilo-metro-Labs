@@ -541,6 +541,7 @@ svg { flex-shrink: 0; }
 
   .pagina-form { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr); gap: 24px; align-items: start; }
   .pagina-form__resumo { position: sticky; top: 96px; margin-top: 0; }
+  .pagina-form__resumo--carregando { visibility: hidden; }
 
   .historico { max-width: 820px; }
 

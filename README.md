@@ -108,7 +108,7 @@ O front-end nunca acessa o banco diretamente. Ele chama a API REST, que valida o
 
 ## Testar sem instalar nada
 
-**https://lucasmd10.github.io/Quil-metro-Labs/**
+**https://lucasmd10.github.io/Quilo-metro-Labs/**
 
 Versão do app que roda inteira no navegador, publicada no GitHub Pages a cada push na `main` (`.github/workflows/pages.yml`). Abre no celular ou no computador, sem Node e sem servidor. As regras de cálculo são as mesmas do backend; a diferença é que os dados ficam salvos no próprio aparelho (localStorage), então cada pessoa vê só os dela. Na primeira tela, **Ver com dados de exemplo** abre direto com o motorista de demonstração.
 
@@ -125,8 +125,8 @@ Para gerar essa versão localmente: `npm run build:pages -w frontend` (sai em `f
 
 ```bash
 # 1. Clonar o repositório
-git clone https://github.com/lucasMD10/Quil-metro-Labs.git
-cd Quil-metro-Labs
+git clone https://github.com/lucasMD10/Quilo-metro-Labs.git
+cd Quilo-metro-Labs
 
 # 2. Instalar as dependências (front e back de uma vez)
 npm install

@@ -12,10 +12,11 @@ if (envs.length || publicas.length) {
 
 // O proxy faz as chamadas /api irem para o backend (porta 3001) durante o desenvolvimento.
 // Só este computador acessa; npm run dev:celular libera a rede local (vite --host).
-// No modo "pages" o app é publicado em lucasmd10.github.io/Quil-metro-Labs/ e roda sem backend.
+// No modo "pages" o app é publicado em lucasmd10.github.io/<nome do repositório>/ e roda sem backend.
+// O workflow passa o caminho em PAGES_BASE (só no build, não vai para o navegador), assim renomear o repositório não quebra o site.
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: mode === 'pages' ? '/Quil-metro-Labs/' : '/',
+  base: mode === 'pages' ? (process.env.PAGES_BASE || '/Quilo-metro-Labs/') : '/',
   build: mode === 'pages' ? { outDir: 'dist-pages' } : {},
   // Constante de build (true/false), sem variável de ambiente: nada do .env vai para o navegador.
   define: { __MODO_NAVEGADOR__: JSON.stringify(mode === 'pages') },

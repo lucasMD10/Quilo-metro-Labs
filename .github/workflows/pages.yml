@@ -1,4 +1,4 @@
-# Publica a versão do KM Real que roda só no navegador em https://lucasmd10.github.io/Quil-metro-Labs/
+# Publica a versão do KM Real que roda só no navegador em https://lucasmd10.github.io/Quilo-metro-Labs/
 # a cada push na main. Os dados ficam no próprio aparelho (localStorage); não há backend.
 name: GitHub Pages
 
@@ -30,6 +30,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:pages -w frontend
+        env:
+          PAGES_BASE: /${{ github.event.repository.name }}/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

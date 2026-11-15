@@ -4,6 +4,13 @@
 
 Aplicativo de gestão financeira para motoristas de aplicativo (Uber e 99), desenvolvido pela **Quilômetro Labs** como Projeto Integrador da disciplina de Design Profissional (Universidade Positivo).
 
+| | |
+|---|---|
+| **Atividade** | Projeto Integrador · **2º período** |
+| **Disciplina** | Design Profissional |
+| **Professor** | Prof. Me. Sedenilso Antonio Machado |
+| **Instituição** | Universidade Positivo · 2026 |
+
 ---
 
 ## O problema
@@ -303,4 +310,4 @@ Erros retornam `{ "erro": "mensagem" }` com o status HTTP adequado (400, 404, 40
 
 ---
 
-Quilômetro Labs · Projeto Integrador · Design Profissional · Universidade Positivo · 2026
+Quilômetro Labs · Projeto Integrador do 2º período · Design Profissional · Prof. Me. Sedenilso Antonio Machado · Universidade Positivo · 2026
